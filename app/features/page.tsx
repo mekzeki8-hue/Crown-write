@@ -10,47 +10,38 @@ export default function FeaturesPage() {
 
   const features = [
     {
-      icon: "✍️",
       title: "Natural Writing Patterns",
       description: "Our AI studies subtle fingerprints that make writing uniquely human: varied sentence rhythms, natural imperfections, and authentic voice."
     },
     {
-      icon: "🎯",
       title: "Bypass All Detectors",
       description: "Trained to reverse-engineer what AI detectors look for. Consistently passes GPTZero, Turnitin, Originality.ai, and more."
     },
     {
-      icon: "🎨",
       title: "Multiple Tone Options",
       description: "Choose from Academic, Professional, Creative, Casual, or Technical tones to match your specific content needs."
     },
     {
-      icon: "⚡",
       title: "Instant Processing",
       description: "Transform your text in seconds. No waiting, no delays. Paste, click, and get human-quality prose instantly."
     },
     {
-      icon: "🔒",
       title: "Privacy First",
       description: "Your content is never stored or used for training. Everything is processed securely and deleted immediately after."
     },
     {
-      icon: "📊",
       title: "Quality Metrics",
       description: "See readability scores, perplexity analysis, and human-likeness ratings before and after humanization."
     },
     {
-      icon: "🌍",
       title: "Multi-Language Support",
       description: "Humanize content in English, Spanish, French, German, and more. Natural writing across languages."
     },
     {
-      icon: "📱",
       title: "Works Everywhere",
       description: "Use in your browser, integrate via API, or install our Chrome extension. Humanize text wherever you write."
     },
     {
-      icon: "🔄",
       title: "Contextual Understanding",
       description: "Not just paraphrasing—we reconstruct how humans actually think and write, preserving your original meaning."
     }
@@ -140,7 +131,6 @@ export default function FeaturesPage() {
                 boxShadow: "var(--sh-sm)",
               }}
             >
-              <div style={{ fontSize: 40, marginBottom: 16 }}>{feature.icon}</div>
               <h3 style={{
                 fontSize: 20,
                 fontWeight: 600,

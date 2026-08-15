@@ -7,11 +7,12 @@ import { motion } from "framer-motion";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
-    name: "",
+    fullName: "",
     email: "",
     subject: "",
     message: ""
   });
+  const [newsletterEmail, setNewsletterEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -21,37 +22,16 @@ export default function ContactPage() {
     // Simulate sending
     setTimeout(() => {
       setStatus("success");
-      setFormData({ name: "", email: "", subject: "", message: "" });
+      setFormData({ fullName: "", email: "", subject: "", message: "" });
       setTimeout(() => setStatus("idle"), 3000);
     }, 1500);
   };
 
-  const contactMethods = [
-    {
-      icon: "📧",
-      title: "Email Us",
-      content: "support@crownwrite.com",
-      link: "mailto:support@crownwrite.com"
-    },
-    {
-      icon: "💬",
-      title: "Live Chat",
-      content: "Available 9am-6pm EST",
-      link: "#"
-    },
-    {
-      icon: "📚",
-      title: "Documentation",
-      content: "API docs & guides",
-      link: "/api-docs"
-    },
-    {
-      icon: "🐦",
-      title: "Twitter",
-      content: "@crownwrite",
-      link: "https://twitter.com/crownwrite"
-    }
-  ];
+  const handleNewsletterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Handle newsletter subscription
+    setNewsletterEmail("");
+  };
 
   return (
     <div style={{ 
@@ -70,315 +50,359 @@ export default function ContactPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          style={{ maxWidth: 700, margin: "0 auto" }}
+          style={{ maxWidth: 800, margin: "0 auto" }}
         >
           <h1 style={{
-            fontSize: "clamp(40px, 6vw, 64px)",
+            fontSize: "clamp(40px, 6vw, 56px)",
             fontFamily: "var(--font-serif)",
             fontWeight: 600,
-            marginBottom: 24,
+            marginBottom: 16,
             lineHeight: 1.2,
           }}>
-            Get in Touch
+            Contact CrownWrite Support
           </h1>
           <p style={{
-            fontSize: 20,
+            fontSize: 18,
             color: "var(--ink-muted)",
             lineHeight: 1.6,
+            maxWidth: 700,
+            margin: "0 auto",
           }}>
-            Have questions? We're here to help. Reach out and we'll get back to you within 24 hours.
+            Have questions about AI text humanization, billing, or features? We'd love to hear from you. Our team typically responds within 24 hours.
           </p>
         </motion.div>
       </section>
 
-      {/* Contact Methods */}
+      {/* Main Content */}
       <section style={{
-        padding: "60px 32px",
+        padding: "60px 32px 100px",
         maxWidth: 1200,
         margin: "0 auto",
       }}>
         <div style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-          gap: 24,
+          gridTemplateColumns: "1.5fr 1fr",
+          gap: 48,
         }}>
-          {contactMethods.map((method, i) => (
-            <motion.a
-              key={i}
-              href={method.link}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              style={{
-                background: "var(--surface)",
-                padding: 32,
-                borderRadius: 16,
-                border: "1px solid var(--border)",
-                textAlign: "center",
-                textDecoration: "none",
-                color: "inherit",
-                transition: "all 0.3s",
-                display: "block",
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.boxShadow = "var(--sh-md)";
-                e.currentTarget.style.transform = "translateY(-4px)";
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.boxShadow = "none";
-                e.currentTarget.style.transform = "translateY(0)";
-              }}
-            >
-              <div style={{ fontSize: 48, marginBottom: 16 }}>{method.icon}</div>
-              <h3 style={{ fontSize: 18, fontWeight: 600, marginBottom: 8 }}>{method.title}</h3>
-              <p style={{ color: "var(--ink-muted)", fontSize: 14 }}>{method.content}</p>
-            </motion.a>
-          ))}
-        </div>
-      </section>
 
-      {/* Contact Form */}
-      <section style={{
-        padding: "60px 32px 100px",
-        maxWidth: 800,
-        margin: "0 auto",
-      }}>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          style={{
-            background: "var(--surface)",
-            padding: 48,
-            borderRadius: 20,
-            border: "1px solid var(--border)",
-            boxShadow: "var(--sh-lg)",
-          }}
-        >
-          <h2 style={{
-            fontSize: 28,
-            fontFamily: "var(--font-serif)",
-            marginBottom: 8,
-            textAlign: "center",
-          }}>Send Us a Message</h2>
-          <p style={{
-            textAlign: "center",
-            color: "var(--ink-muted)",
-            marginBottom: 32,
-          }}>
-            Fill out the form below and we'll respond as soon as possible
-          </p>
+          {/* Left: Contact Form */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <h2 style={{
+              fontSize: 24,
+              fontWeight: 600,
+              marginBottom: 8,
+            }}>Send us a Message</h2>
+            <p style={{
+              color: "var(--ink-muted)",
+              marginBottom: 32,
+              fontSize: 15,
+            }}>
+              Fill out the form and we'll get back to you soon
+            </p>
 
-          <form onSubmit={handleSubmit}>
-            <div style={{ marginBottom: 24 }}>
-              <label style={{
-                display: "block",
-                fontSize: 14,
-                fontWeight: 600,
-                marginBottom: 8,
-              }}>
-                Name *
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            <form onSubmit={handleSubmit}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 20 }}>
+                <div>
+                  <label style={{
+                    display: "block",
+                    fontSize: 14,
+                    fontWeight: 600,
+                    marginBottom: 8,
+                  }}>
+                    Full Name <span style={{ color: "#E74C3C" }}>*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="John Doe"
+                    value={formData.fullName}
+                    onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                    style={{
+                      width: "100%",
+                      padding: "12px 16px",
+                      fontSize: 15,
+                      border: "1px solid var(--border)",
+                      borderRadius: 8,
+                      background: "var(--bg)",
+                      color: "var(--ink)",
+                      fontFamily: "inherit",
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{
+                    display: "block",
+                    fontSize: 14,
+                    fontWeight: 600,
+                    marginBottom: 8,
+                  }}>
+                    Email Address <span style={{ color: "#E74C3C" }}>*</span>
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    placeholder="john@example.com"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    style={{
+                      width: "100%",
+                      padding: "12px 16px",
+                      fontSize: 15,
+                      border: "1px solid var(--border)",
+                      borderRadius: 8,
+                      background: "var(--bg)",
+                      color: "var(--ink)",
+                      fontFamily: "inherit",
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ marginBottom: 20 }}>
+                <label style={{
+                  display: "block",
+                  fontSize: 14,
+                  fontWeight: 600,
+                  marginBottom: 8,
+                }}>
+                  Subject <span style={{ color: "#E74C3C" }}>*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="What's this about?"
+                  value={formData.subject}
+                  onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                  style={{
+                    width: "100%",
+                    padding: "12px 16px",
+                    fontSize: 15,
+                    border: "1px solid var(--border)",
+                    borderRadius: 8,
+                    background: "var(--bg)",
+                    color: "var(--ink)",
+                    fontFamily: "inherit",
+                  }}
+                />
+              </div>
+
+              <div style={{ marginBottom: 24 }}>
+                <label style={{
+                  display: "block",
+                  fontSize: 14,
+                  fontWeight: 600,
+                  marginBottom: 8,
+                }}>
+                  Message <span style={{ color: "#E74C3C" }}>*</span>
+                </label>
+                <textarea
+                  required
+                  placeholder="Tell us more about your inquiry..."
+                  value={formData.message}
+                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                  rows={6}
+                  style={{
+                    width: "100%",
+                    padding: "12px 16px",
+                    fontSize: 15,
+                    border: "1px solid var(--border)",
+                    borderRadius: 8,
+                    background: "var(--bg)",
+                    color: "var(--ink)",
+                    fontFamily: "inherit",
+                    resize: "vertical",
+                  }}
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={status === "sending"}
                 style={{
                   width: "100%",
-                  padding: "12px 16px",
-                  fontSize: 16,
-                  border: "1px solid var(--border)",
+                  padding: "14px",
+                  background: status === "success" ? "#27AE60" : "#1AAFA0",
+                  color: "white",
+                  border: "none",
                   borderRadius: 8,
-                  background: "var(--bg)",
-                  color: "var(--ink)",
-                  fontFamily: "inherit",
-                }}
-              />
-            </div>
-
-            <div style={{ marginBottom: 24 }}>
-              <label style={{
-                display: "block",
-                fontSize: 14,
-                fontWeight: 600,
-                marginBottom: 8,
-              }}>
-                Email *
-              </label>
-              <input
-                type="email"
-                required
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                style={{
-                  width: "100%",
-                  padding: "12px 16px",
                   fontSize: 16,
-                  border: "1px solid var(--border)",
-                  borderRadius: 8,
-                  background: "var(--bg)",
-                  color: "var(--ink)",
-                  fontFamily: "inherit",
-                }}
-              />
-            </div>
-
-            <div style={{ marginBottom: 24 }}>
-              <label style={{
-                display: "block",
-                fontSize: 14,
-                fontWeight: 600,
-                marginBottom: 8,
-              }}>
-                Subject *
-              </label>
-              <select
-                required
-                value={formData.subject}
-                onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                style={{
-                  width: "100%",
-                  padding: "12px 16px",
-                  fontSize: 16,
-                  border: "1px solid var(--border)",
-                  borderRadius: 8,
-                  background: "var(--bg)",
-                  color: "var(--ink)",
-                  fontFamily: "inherit",
+                  fontWeight: 600,
+                  cursor: status === "sending" ? "not-allowed" : "pointer",
+                  transition: "all 0.3s",
+                  opacity: status === "sending" ? 0.7 : 1,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 8,
                 }}
               >
-                <option value="">Select a subject</option>
-                <option value="support">Technical Support</option>
-                <option value="billing">Billing Question</option>
-                <option value="feature">Feature Request</option>
-                <option value="api">API Integration Help</option>
-                <option value="partnership">Partnership Inquiry</option>
-                <option value="other">Other</option>
-              </select>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                </svg>
+                {status === "idle" && "Send Message"}
+                {status === "sending" && "Sending..."}
+                {status === "success" && "Message Sent!"}
+                {status === "error" && "Error - Try Again"}
+              </button>
+
+              {status === "success" && (
+                <p style={{
+                  marginTop: 12,
+                  textAlign: "center",
+                  color: "#27AE60",
+                  fontSize: 14,
+                }}>
+                  Thanks! We'll get back to you within 24 hours.
+                </p>
+              )}
+            </form>
+          </motion.div>
+
+          {/* Right: Contact Information */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <div style={{
+              background: "var(--surface)",
+              border: "1px solid var(--border)",
+              borderRadius: 16,
+              padding: 32,
+              marginBottom: 32,
+            }}>
+              <h3 style={{
+                fontSize: 18,
+                fontWeight: 600,
+                marginBottom: 24,
+              }}>Contact Information</h3>
+
+              <div style={{ marginBottom: 24 }}>
+                <div style={{
+                  fontSize: 13,
+                  fontWeight: 600,
+                  color: "var(--ink-muted)",
+                  marginBottom: 8,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                }}>Email</div>
+                <a
+                  href="mailto:hello@crownwrite.com"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    color: "#1AAFA0",
+                    textDecoration: "none",
+                    fontSize: 15,
+                    fontWeight: 500,
+                  }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
+                  </svg>
+                  hello@crownwrite.com
+                </a>
+              </div>
+
+              <div>
+                <div style={{
+                  fontSize: 13,
+                  fontWeight: 600,
+                  color: "var(--ink-muted)",
+                  marginBottom: 8,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                }}>Response Time</div>
+                <div style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  fontSize: 15,
+                }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  Within 24 hours
+                </div>
+              </div>
             </div>
 
-            <div style={{ marginBottom: 32 }}>
-              <label style={{
-                display: "block",
-                fontSize: 14,
+            {/* Stay Updated */}
+            <div style={{
+              background: "var(--surface)",
+              border: "1px solid var(--border)",
+              borderRadius: 16,
+              padding: 32,
+            }}>
+              <h3 style={{
+                fontSize: 18,
                 fontWeight: 600,
                 marginBottom: 8,
-              }}>
-                Message *
-              </label>
-              <textarea
-                required
-                value={formData.message}
-                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                rows={6}
-                style={{
-                  width: "100%",
-                  padding: "12px 16px",
-                  fontSize: 16,
-                  border: "1px solid var(--border)",
-                  borderRadius: 8,
-                  background: "var(--bg)",
-                  color: "var(--ink)",
-                  fontFamily: "inherit",
-                  resize: "vertical",
-                }}
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={status === "sending"}
-              style={{
-                width: "100%",
-                padding: "16px",
-                background: status === "success" ? "#27AE60" : "var(--brand)",
-                color: "white",
-                border: "none",
-                borderRadius: 8,
-                fontSize: 16,
-                fontWeight: 600,
-                cursor: status === "sending" ? "not-allowed" : "pointer",
-                transition: "all 0.3s",
-                opacity: status === "sending" ? 0.7 : 1,
-              }}
-            >
-              {status === "idle" && "Send Message"}
-              {status === "sending" && "Sending..."}
-              {status === "success" && "✓ Message Sent!"}
-              {status === "error" && "Error - Try Again"}
-            </button>
-
-            {status === "success" && (
+              }}>Stay Updated</h3>
               <p style={{
-                marginTop: 16,
-                textAlign: "center",
-                color: "#27AE60",
                 fontSize: 14,
+                color: "var(--ink-muted)",
+                marginBottom: 20,
+                lineHeight: 1.6,
               }}>
-                Thanks! We'll get back to you within 24 hours.
+                Get the latest tips, product updates, and exclusive offers delivered to your inbox.
               </p>
-            )}
-          </form>
-        </motion.div>
-      </section>
+              
+              <form onSubmit={handleNewsletterSubmit}>
+                <input
+                  type="email"
+                  required
+                  placeholder="Enter your email"
+                  value={newsletterEmail}
+                  onChange={(e) => setNewsletterEmail(e.target.value)}
+                  style={{
+                    width: "100%",
+                    padding: "12px 16px",
+                    fontSize: 15,
+                    border: "1px solid var(--border)",
+                    borderRadius: 8,
+                    background: "var(--bg)",
+                    color: "var(--ink)",
+                    fontFamily: "inherit",
+                    marginBottom: 12,
+                  }}
+                />
+                <button
+                  type="submit"
+                  style={{
+                    width: "100%",
+                    padding: "12px",
+                    background: "#1AAFA0",
+                    color: "white",
+                    border: "none",
+                    borderRadius: 8,
+                    fontSize: 15,
+                    fontWeight: 600,
+                    cursor: "pointer",
+                  }}
+                >
+                  Subscribe
+                </button>
+                <p style={{
+                  fontSize: 12,
+                  color: "var(--ink-muted)",
+                  marginTop: 12,
+                  textAlign: "center",
+                }}>
+                  We respect your privacy. Unsubscribe anytime.
+                </p>
+              </form>
+            </div>
+          </motion.div>
 
-      {/* FAQ Quick Links */}
-      <section style={{
-        padding: "60px 32px",
-        background: "var(--bg-2)",
-      }}>
-        <div style={{ maxWidth: 1000, margin: "0 auto", textAlign: "center" }}>
-          <h2 style={{
-            fontSize: 32,
-            fontFamily: "var(--font-serif)",
-            marginBottom: 16,
-          }}>Looking for Quick Answers?</h2>
-          <p style={{
-            color: "var(--ink-muted)",
-            marginBottom: 32,
-            fontSize: 16,
-          }}>
-            Check out these resources before reaching out
-          </p>
-          <div style={{
-            display: "flex",
-            gap: 16,
-            justifyContent: "center",
-            flexWrap: "wrap",
-          }}>
-            {[
-              { label: "Help Center", href: "/#faq" },
-              { label: "API Docs", href: "/api-docs" },
-              { label: "Pricing", href: "/#pricing" },
-              { label: "Status Page", href: "#" }
-            ].map((link, i) => (
-              <a
-                key={i}
-                href={link.href}
-                style={{
-                  padding: "12px 24px",
-                  background: "var(--surface)",
-                  border: "1px solid var(--border)",
-                  borderRadius: 8,
-                  textDecoration: "none",
-                  color: "var(--ink)",
-                  fontWeight: 500,
-                  transition: "all 0.2s",
-                }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.borderColor = "var(--brand)";
-                  e.currentTarget.style.color = "var(--brand)";
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.borderColor = "var(--border)";
-                  e.currentTarget.style.color = "var(--ink)";
-                }}
-              >
-                {link.label}
-              </a>
-            ))}
-          </div>
         </div>
       </section>
 

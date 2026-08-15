@@ -6,14 +6,14 @@ import { motion } from "framer-motion";
 
 export default function CareersPage() {
   const benefits = [
-    { icon: "💰", title: "Competitive Salary", desc: "Top-tier compensation plus equity" },
-    { icon: "🏥", title: "Health Coverage", desc: "Medical, dental, vision for you and family" },
-    { icon: "🏖️", title: "Unlimited PTO", desc: "Take time off when you need it" },
-    { icon: "🏠", title: "Remote First", desc: "Work from anywhere in the world" },
-    { icon: "📚", title: "Learning Budget", desc: "$2000/year for courses and conferences" },
-    { icon: "💻", title: "Top Equipment", desc: "Latest MacBook Pro and accessories" },
-    { icon: "🚀", title: "Fast Growth", desc: "Rapid career advancement opportunities" },
-    { icon: "🤝", title: "Amazing Team", desc: "Work with world-class engineers and AI researchers" }
+    { title: "Competitive Salary", desc: "Top-tier compensation plus equity" },
+    { title: "Health Coverage", desc: "Medical, dental, vision for you and family" },
+    { title: "Unlimited PTO", desc: "Take time off when you need it" },
+    { title: "Remote First", desc: "Work from anywhere in the world" },
+    { title: "Learning Budget", desc: "$2000/year for courses and conferences" },
+    { title: "Top Equipment", desc: "Latest MacBook Pro and accessories" },
+    { title: "Fast Growth", desc: "Rapid career advancement opportunities" },
+    { title: "Amazing Team", desc: "Work with world-class engineers and AI researchers" }
   ];
 
   const openings = [
@@ -126,7 +126,6 @@ export default function CareersPage() {
                 textAlign: "center",
               }}
             >
-              <div style={{ fontSize: 48, marginBottom: 16 }}>{benefit.icon}</div>
               <h3 style={{ fontSize: 18, fontWeight: 600, marginBottom: 8 }}>{benefit.title}</h3>
               <p style={{ color: "var(--ink-muted)", fontSize: 14 }}>{benefit.desc}</p>
             </motion.div>

@@ -14,22 +14,18 @@ export default function AboutPage() {
 
   const values = [
     {
-      icon: "🎯",
       title: "Quality First",
       description: "We never compromise on output quality. Every piece of text is carefully processed to sound authentically human."
     },
     {
-      icon: "🔒",
       title: "Privacy Always",
       description: "Your content is yours. We never store, share, or use your text for training. Everything is processed and immediately deleted."
     },
     {
-      icon: "⚡",
       title: "Constant Innovation",
       description: "AI detection evolves daily. So do we. Our models are continuously updated to stay ahead of every detector."
     },
     {
-      icon: "🤝",
       title: "Ethical Use",
       description: "We believe AI should enhance human creativity, not replace it. CrownWrite is built to help writers, not deceive readers."
     }
@@ -39,26 +35,22 @@ export default function AboutPage() {
     {
       name: "Alex Rivera",
       role: "Founder & CEO",
-      bio: "Former ML researcher at OpenAI. Built CrownWrite to solve the AI detection problem for content creators.",
-      image: "👨‍💼"
+      bio: "Former ML researcher at OpenAI. Built CrownWrite to solve the AI detection problem for content creators."
     },
     {
       name: "Sarah Chen",
       role: "Head of AI",
-      bio: "PhD in NLP from Stanford. Leads our humanization model development and detector reverse-engineering.",
-      image: "👩‍💻"
+      bio: "PhD in NLP from Stanford. Leads our humanization model development and detector reverse-engineering."
     },
     {
       name: "Marcus Johnson",
       role: "Lead Engineer",
-      bio: "15 years building scalable systems. Ensures CrownWrite stays fast and reliable at any scale.",
-      image: "👨‍🔧"
+      bio: "15 years building scalable systems. Ensures CrownWrite stays fast and reliable at any scale."
     },
     {
       name: "Emily Watson",
       role: "Head of Product",
-      bio: "Former content strategist. Designs features that writers actually want and need.",
-      image: "👩‍🎨"
+      bio: "Former content strategist. Designs features that writers actually want and need."
     }
   ];
 
@@ -225,7 +217,6 @@ export default function AboutPage() {
                   border: "1px solid var(--border)",
                 }}
               >
-                <div style={{ fontSize: 48, marginBottom: 16 }}>{value.icon}</div>
                 <h3 style={{ fontSize: 22, fontWeight: 600, marginBottom: 12 }}>{value.title}</h3>
                 <p style={{ color: "var(--ink-muted)", lineHeight: 1.7 }}>{value.description}</p>
               </motion.div>
@@ -273,9 +264,18 @@ export default function AboutPage() {
               }}
             >
               <div style={{
-                fontSize: 80,
-                marginBottom: 16,
-              }}>{member.image}</div>
+                width: 80,
+                height: 80,
+                borderRadius: "50%",
+                background: "var(--brand)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: "0 auto 16px",
+                fontSize: 32,
+                fontWeight: 600,
+                color: "white",
+              }}>{member.name.split(" ").map(n => n[0]).join("")}</div>
               <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 4 }}>{member.name}</h3>
               <div style={{
                 color: "var(--brand)",

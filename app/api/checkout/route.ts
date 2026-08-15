@@ -32,11 +32,10 @@ export async function POST(req: NextRequest) {
       .single();
 
     // Create checkout session with Polar
-    const checkout = await polar.checkouts.custom.create({
-      productId,
+    const checkout = await polar.checkouts.create({
+      products: [productId],
       successUrl: `${req.nextUrl.origin}/dashboard?checkout=success`,
       customerEmail: profile?.email || user.email || "",
-      customerName: profile?.full_name || "",
       metadata: {
         userId: user.id,
         source: "crownwrite_web",

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { validateEvent } from "@polar-sh/nextjs/webhooks";
 import { createClient } from "@supabase/supabase-js";
-import { PRODUCT_CREDITS } from "@/lib/polar";
+import { getCreditsByProductId } from "@/lib/polar";
+import crypto from "crypto";
 
 // Use service role for webhook operations
 const supabaseAdmin = createClient(
@@ -23,27 +23,23 @@ export async function POST(req: NextRequest) {
 
     // Get raw body and signature
     const payload = await req.text();
-    const signature = req.headers.get("polar-signature");
-
-    if (!signature) {
-      return NextResponse.json(
-        { error: "No signature provided" },
-        { status: 400 }
-      );
-    }
+    const signature = req.headers.get("polar-signature") || "";
 
     // Validate webhook signature
-    let event;
-    try {
-      event = validateEvent(payload, signature, webhookSecret);
-    } catch (error) {
-      console.error("Webhook validation failed:", error);
+    const expectedSignature = crypto
+      .createHmac("sha256", webhookSecret)
+      .update(payload)
+      .digest("hex");
+
+    if (signature !== expectedSignature) {
+      console.error("Webhook signature validation failed");
       return NextResponse.json(
         { error: "Invalid signature" },
         { status: 401 }
       );
     }
 
+    const event = JSON.parse(payload);
     console.log(`Received Polar webhook: ${event.type}`);
 
     // Handle different event types
@@ -97,18 +93,13 @@ async function handleSuccessfulCheckout(checkout: any) {
       return;
     }
 
-    // Determine credits based on product
-    let creditsToAdd = 0;
-    const productName = checkout.product?.name?.toLowerCase() || "";
+    // Get product ID and determine credits
+    const productId = checkout.product_id;
+    const creditsToAdd = getCreditsByProductId(productId);
 
-    if (productName.includes("starter")) {
-      creditsToAdd = PRODUCT_CREDITS.STARTER;
-    } else if (productName.includes("pro")) {
-      creditsToAdd = PRODUCT_CREDITS.PRO;
-    } else if (productName.includes("enterprise")) {
-      creditsToAdd = PRODUCT_CREDITS.ENTERPRISE;
-    } else {
-      creditsToAdd = 10000; // Default
+    if (creditsToAdd === 0) {
+      console.error("Unknown product ID:", productId);
+      return;
     }
 
     // Get current credits
@@ -139,7 +130,7 @@ async function handleSuccessfulCheckout(checkout: any) {
       user_id: userId,
       amount: creditsToAdd,
       transaction_type: "add",
-      description: `Payment via Polar: ${checkout.product?.name || "Subscription"}`,
+      description: `Payment via Polar: ${checkout.product?.name || "Purchase"}`,
       created_at: new Date().toISOString(),
     });
 
@@ -152,7 +143,7 @@ async function handleSuccessfulCheckout(checkout: any) {
 
 async function handleSubscriptionCreated(subscription: any) {
   console.log("Subscription created:", subscription.id);
-  // You can store subscription details in your database here
+  // Store subscription details in your database here
 }
 
 async function handleSubscriptionUpdated(subscription: any) {

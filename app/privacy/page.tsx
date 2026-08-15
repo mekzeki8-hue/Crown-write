@@ -116,8 +116,8 @@ export default function PrivacyPage() {
           </ul>
           <p style={{ marginBottom: 24 }}>
             To exercise these rights, email{" "}
-            <a href="mailto:privacy@crownwrite.com" style={{ color: "var(--brand)" }}>
-              privacy@crownwrite.com
+            <a href="mailto:crownwrite.humanizer@gmail.com" style={{ color: "var(--brand)" }}>
+              crownwrite.humanizer@gmail.com
             </a>.
           </p>
 

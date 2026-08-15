@@ -73,14 +73,6 @@ export default function FAQ() {
             </div>
           ))}
         </div>
-
-        <p style={{ textAlign:"center", marginTop:36, fontSize:13, color:"var(--subtle)", fontWeight:400 }}>
-          Still have questions?{" "}
-          <a href="mailto:hello@crownwrite.com" style={{
-            color:"var(--brand)", fontWeight:500,
-            textDecoration:"underline", textUnderlineOffset:3,
-          }}>hello@crownwrite.com →</a>
-        </p>
       </div>
     </section>
   );

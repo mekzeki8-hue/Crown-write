@@ -128,28 +128,18 @@ export default function Hero() {
 
         {/* Description - centered and professional */}
         <div style={{
-          maxWidth: 760,
+          maxWidth: 680,
           margin: "0 auto 40px",
           textAlign: "center",
         }}>
           <p style={{
             fontSize: 17,
-            lineHeight: 1.75,
+            lineHeight: 1.7,
             color: "var(--muted)",
             fontWeight: 400,
             marginBottom: 22,
           }}>
-            Transform AI-generated text into natural, confident, human-sounding writing with CrownWrite's smart and gentle humanizer. Refine your words, improve the flow, and give your writing a more authentic voice while keeping your original ideas and meaning intact.
-          </p>
-
-          <p style={{
-            fontSize: 17,
-            lineHeight: 1.75,
-            color: "var(--muted)",
-            fontWeight: 400,
-            marginBottom: 22,
-          }}>
-            Whether you're writing essays, articles, emails, social posts, or everyday content, CrownWrite helps your writing feel smoother, clearer, and more naturally written.
+            Transform AI-generated text into natural, human-sounding writing. CrownWrite refines your words, improves flow, and gives your content an authentic voice—while keeping your original meaning intact.
           </p>
 
           <p style={{
@@ -159,7 +149,7 @@ export default function Hero() {
             fontWeight: 600,
             fontFamily: "var(--font-serif)",
             fontStyle: "italic",
-            marginTop: 32,
+            marginTop: 28,
           }}>
             Smart writing deserves the Crown.
           </p>

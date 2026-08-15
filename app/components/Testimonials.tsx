@@ -14,7 +14,7 @@ interface Testimonial {
 const testimonials: Testimonial[] = [
   {
     id: 1,
-    text: "I recommend CrownWrite to all my students. It's an excellent tool for improving academic writing quality while maintaining originality and passing detection tools",
+    text: "Recommend CrownWrite to all my students. It's an excellent tool for improving academic writing quality while maintaining originality and passing detection tools",
     highlights: ["recommend CrownWrite to all my students", "improving academic writing quality", "maintaining originality"],
     author: "Achieng Dennis",
     role: "Lecturer, CMU"
@@ -42,14 +42,14 @@ const testimonials: Testimonial[] = [
   },
   {
     id: 5,
-    text: "I was skeptical at first, but CrownWrite proved me wrong. It helped me pass all AI detectors while keeping my authentic voice. This tool is a game changer for students",
+    text: "Was skeptical at first, but CrownWrite proved me wrong. It helped me pass all AI detectors while keeping my authentic voice. This tool is a game changer for students",
     highlights: ["proved me wrong", "pass all AI detectors", "game changer for students"],
     author: "Emily Parker",
     role: "Graduate Student, MIT"
   },
   {
     id: 6,
-    text: "Using CrownWrite has saved me hours of rewriting. The quality is consistent, the output is natural, and it's incredibly fast. I can't imagine working without it now",
+    text: "Using CrownWrite has saved me hours of rewriting. The quality is consistent, the output is natural, and it's incredibly fast. Can't imagine working without it now",
     highlights: ["saved me hours", "quality is consistent", "incredibly fast"],
     author: "David Kim",
     role: "SEO Specialist"
@@ -171,7 +171,7 @@ export default function Testimonials() {
                 maxWidth: '900px',
                 margin: '0 auto 56px',
               }}>
-                I {textParts.map((part, index) => (
+                {textParts.map((part, index) => (
                   part.isHighlight ? (
                     <span key={index} style={{
                       color: 'var(--brand)',

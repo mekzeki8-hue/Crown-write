@@ -2,9 +2,9 @@
 import Logo from "./Logo";
 
 const COLS = [
-  { title:"Product", links:[{l:"Humanize",h:"#workspace"},{l:"Features",h:"#features"},{l:"Pricing",h:"#pricing"},{l:"API Docs",h:"#"}] },
-  { title:"Company", links:[{l:"About",h:"#"},{l:"Blog",h:"#"},{l:"Careers",h:"#"},{l:"Contact",h:"#"}] },
-  { title:"Legal",   links:[{l:"Terms of Service",h:"#"},{l:"Privacy Policy",h:"#"},{l:"Responsible Use",h:"#"}] },
+  { title:"Product", links:[{l:"Humanize",h:"/#workspace"},{l:"Features",h:"/features"},{l:"Pricing",h:"/#pricing"},{l:"API Docs",h:"/api-docs"}] },
+  { title:"Company", links:[{l:"About",h:"/about"},{l:"Blog",h:"/blog"},{l:"Careers",h:"/careers"},{l:"Contact",h:"/contact"}] },
+  { title:"Legal",   links:[{l:"Terms of Service",h:"/terms"},{l:"Privacy Policy",h:"/privacy"},{l:"Responsible Use",h:"/responsible-use"}] },
 ];
 
 export default function Footer() {

@@ -131,10 +131,10 @@ export default function SignupPage() {
             textAlign: 'left'
           }}>
             {[
-              { icon: '✨', title: 'Smart Humanization', desc: 'AI that thinks like a human' },
-              { icon: '🚀', title: 'Instant Processing', desc: 'Get results in seconds' },
-              { icon: '🎯', title: 'Bypass Detection', desc: 'Undetectable by AI tools' },
-              { icon: '💎', title: 'Premium Quality', desc: 'Maintains meaning & tone' },
+              { title: 'Smart Humanization', desc: 'AI that thinks like a human' },
+              { title: 'Instant Processing', desc: 'Get results in seconds' },
+              { title: 'Bypass Detection', desc: 'Undetectable by AI tools' },
+              { title: 'Premium Quality', desc: 'Maintains meaning & tone' },
             ].map((item, i) => (
               <div key={i} style={{
                 background: 'rgba(255,255,255,0.12)',
@@ -143,7 +143,6 @@ export default function SignupPage() {
                 borderRadius: 12,
                 border: '1px solid rgba(255,255,255,0.18)',
               }}>
-                <div style={{ fontSize: 28, marginBottom: 8 }}>{item.icon}</div>
                 <div style={{ fontSize: 15, fontWeight: 600, color: 'white', marginBottom: 4 }}>
                   {item.title}
                 </div>

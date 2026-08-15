@@ -120,10 +120,10 @@ export default function LoginPage() {
             textAlign: 'left'
           }}>
             {[
-              { icon: '🎯', title: 'Precision Humanization', desc: 'Fine-tuned AI model' },
-              { icon: '🛡️', title: 'Undetectable Output', desc: 'Bypass 14+ detectors' },
-              { icon: '🎨', title: 'Multiple Tones', desc: '7 writing styles' },
-              { icon: '⚡', title: 'Instant Results', desc: 'Real-time processing' },
+              { title: 'Precision Humanization', desc: 'Fine-tuned AI model' },
+              { title: 'Undetectable Output', desc: 'Bypass 14+ detectors' },
+              { title: 'Multiple Tones', desc: '7 writing styles' },
+              { title: 'Instant Results', desc: 'Real-time processing' },
             ].map((item, i) => (
               <div key={i} style={{
                 background: 'rgba(255,255,255,0.12)',
@@ -132,7 +132,6 @@ export default function LoginPage() {
                 borderRadius: 12,
                 border: '1px solid rgba(255,255,255,0.18)',
               }}>
-                <div style={{ fontSize: 28, marginBottom: 8 }}>{item.icon}</div>
                 <div style={{ fontSize: 15, fontWeight: 600, color: 'white', marginBottom: 4 }}>
                   {item.title}
                 </div>

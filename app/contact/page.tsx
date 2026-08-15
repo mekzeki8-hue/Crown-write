@@ -226,7 +226,7 @@ export default function ContactPage() {
                 style={{
                   width: "100%",
                   padding: "14px",
-                  background: status === "success" ? "#27AE60" : "#1AAFA0",
+                  background: status === "success" ? "#27AE60" : "var(--brand)",
                   color: "white",
                   border: "none",
                   borderRadius: 8,
@@ -297,7 +297,7 @@ export default function ContactPage() {
                     display: "flex",
                     alignItems: "center",
                     gap: 8,
-                    color: "#1AAFA0",
+                    color: "var(--brand)",
                     textDecoration: "none",
                     fontSize: 15,
                     fontWeight: 500,
@@ -380,7 +380,7 @@ export default function ContactPage() {
                   style={{
                     width: "100%",
                     padding: "12px",
-                    background: "#1AAFA0",
+                    background: "var(--brand)",
                     color: "white",
                     border: "none",
                     borderRadius: 8,

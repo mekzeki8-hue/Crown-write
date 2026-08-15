@@ -316,13 +316,19 @@ function TopUpCard({ plan, yearly }: { plan: { name: string; price: number; cred
     }
   };
 
+  const features = [
+    "Instant credit delivery",
+    "Works with any plan",
+    "No expiration date",
+  ];
+
   return (
     <div
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
       style={{
         borderRadius: 16,
-        padding: "24px 20px",
+        padding: "28px 24px",
         background: "var(--surface)",
         border: "1.5px solid var(--border-2)",
         boxShadow: hov ? "var(--sh-md)" : "var(--sh-xs)",
@@ -330,44 +336,82 @@ function TopUpCard({ plan, yearly }: { plan: { name: string; price: number; cred
         transition: "all .25s cubic-bezier(.4,0,.2,1)",
         display: "flex",
         flexDirection: "column",
+        minHeight: 380,
       }}
     >
-      <div style={{ marginBottom: 8 }}>
-        <span style={{ fontSize: 14, fontWeight: 600, color: "var(--ink)", letterSpacing: "-.2px" }}>
+      {/* Name */}
+      <div style={{ marginBottom: 12 }}>
+        <span style={{ fontSize: 15, fontWeight: 600, color: "var(--ink)", letterSpacing: "-.2px" }}>
           {plan.name}
         </span>
       </div>
 
+      {/* Price */}
       <div style={{ marginBottom: 4 }}>
         <span style={{
-          fontFamily: "var(--font-serif)", fontSize: 38,
-          fontWeight: 600, letterSpacing: "-1.8px", lineHeight: 1,
+          fontFamily: "var(--font-serif)", fontSize: 44,
+          fontWeight: 600, letterSpacing: "-2px", lineHeight: 1,
           color: "var(--ink)",
         }}>${plan.price}</span>
-        <span style={{ fontSize: 13, color: "var(--muted)", marginLeft: 4 }}>/one-time</span>
+        <span style={{ fontSize: 14, color: "var(--muted)", marginLeft: 4 }}>/one-time</span>
       </div>
       
-      <p style={{ fontSize: 12, color: "var(--subtle)", marginBottom: 14, fontWeight: 400 }}>
-        {plan.credits.toLocaleString()} words · Credits never expire
+      {/* Credits info */}
+      <p style={{ fontSize: 13, color: "var(--subtle)", marginBottom: 18, fontWeight: 400 }}>
+        Credits never expire
       </p>
 
+      {/* Buy Button - Green like in image */}
       <button 
         onClick={handlePurchase}
         disabled={loading}
         style={{
-          width: "100%", padding: "10px", borderRadius: 99,
-          fontSize: 13, fontWeight: 500,
+          width: "100%", padding: "12px", borderRadius: 8,
+          fontSize: 14, fontWeight: 600,
           cursor: loading ? "not-allowed" : "pointer",
-          border: "1.5px solid var(--brand)",
-          background: hov && !loading ? "var(--brand-xpale)" : "transparent",
-          color: "var(--brand)",
+          border: "none",
+          background: loading ? "#9CB88C" : (hov ? "#6FA557" : "#7CB961"),
+          color: "white",
           letterSpacing: "-.01em",
           transition: "all .2s ease",
-          opacity: loading ? 0.6 : 1,
+          opacity: loading ? 0.8 : 1,
+          marginBottom: 18,
         }}
       >
         {loading ? "Loading..." : "Buy Credits"}
       </button>
+
+      {/* Divider with text */}
+      <div style={{ 
+        textAlign: "center", 
+        fontSize: 11, 
+        color: "var(--subtle)", 
+        marginBottom: 14,
+        fontWeight: 400,
+      }}>
+        Secure checkout · Instant delivery
+      </div>
+
+      {/* Features with checkmarks */}
+      <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 10, flex: 1 }}>
+        {features.map((feature, i) => (
+          <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="#7CB961" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+              style={{ flexShrink: 0, marginTop: 2 }}>
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9 12l2 2 4-4"/>
+            </svg>
+            <span style={{
+              fontSize: 13, lineHeight: 1.5,
+              fontWeight: 400,
+              color: "var(--ink-2)",
+            }}>
+              {feature}
+            </span>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

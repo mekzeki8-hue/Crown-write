@@ -98,7 +98,10 @@ function CheckIcon({ color }: { color: string }) {
 function PlanCard({ plan, yearly }: { plan: typeof PLANS[0]; yearly: boolean }) {
   const [hov, setHov] = useState(false);
   const [loading, setLoading] = useState(false);
-  const price = yearly ? plan.yearly : plan.monthly;
+  
+  // Calculate monthly equivalent for yearly plan
+  const yearlyMonthly = plan.yearly / 12;
+  const displayPrice = yearly ? yearlyMonthly : plan.monthly;
   const productId = yearly ? plan.yearlyId : plan.monthlyId;
 
   const handleCheckout = async () => {
@@ -137,10 +140,6 @@ function PlanCard({ plan, yearly }: { plan: typeof PLANS[0]; yearly: boolean }) 
   const isLight = plan.variant === "light";
   const isMid   = plan.variant === "mid";
   const isDark  = plan.variant === "dark";
-
-  /* Light = pure surface card using CSS vars (fully dark-mode-aware) */
-  /* Mid   = warm amber gradient — prominent but soft                  */
-  /* Dark  = deep warm dark card                                       */
 
   const cardBg      = isLight ? "var(--surface)"
                     : isMid   ? "linear-gradient(155deg, var(--a600) 0%, var(--a500) 45%, var(--a400) 100%)"
@@ -219,17 +218,35 @@ function PlanCard({ plan, yearly }: { plan: typeof PLANS[0]; yearly: boolean }) 
         </span>
       </div>
 
-      {/* Price */}
+      {/* Price with strikethrough for yearly */}
       <div style={{ marginBottom: 4 }}>
+        {yearly && (
+          <div style={{ marginBottom: 6 }}>
+            <span style={{
+              fontSize: 20,
+              fontWeight: 500,
+              color: priceSubColor,
+              textDecoration: "line-through",
+              opacity: 0.6,
+            }}>${plan.monthly.toFixed(2)}</span>
+          </div>
+        )}
         <span style={{
           fontFamily: "var(--font-serif)", fontSize: 52,
           fontWeight: 600, letterSpacing: "-2.5px", lineHeight: 1,
           color: priceColor,
-        }}>${price}</span>
+        }}>${displayPrice.toFixed(2)}</span>
       </div>
-      <p style={{ fontSize: 12, color: priceSubColor, marginBottom: 4, fontWeight: 400 }}>
+      
+      <p style={{ fontSize: 12, color: priceSubColor, marginBottom: yearly ? 2 : 4, fontWeight: 400 }}>
         per month {yearly ? "(billed annually)" : "(billed monthly)"}
       </p>
+      
+      {yearly && (
+        <p style={{ fontSize: 11, color: priceSubColor, marginBottom: 4, fontWeight: 400, opacity: 0.8 }}>
+          ${plan.yearly.toFixed(2)}/year total
+        </p>
+      )}
 
       {/* Divider */}
       <div style={{ height: 1, background: dividerColor, margin: "16px 0" }} />
@@ -440,7 +457,7 @@ function TopUpCard({ plan, yearly }: { plan: { name: string; price: number; cred
 }
 
 export default function Pricing() {
-  const [yearly, setYearly] = useState(false);
+  const [yearly, setYearly] = useState(true); // Default to yearly
 
   const TOPUP_PLANS = [
     { name: "BASIC TOPUP", price: 5.99, credits: 10000, productId: process.env.NEXT_PUBLIC_POLAR_BASIC_TOPUP },

@@ -2,7 +2,7 @@
 import Logo from "./Logo";
 
 const COLS = [
-  { title:"Product", links:[{l:"Humanize",h:"/#workspace"},{l:"Features",h:"/features"},{l:"Pricing",h:"/#pricing"},{l:"API Docs",h:"/api-docs"}] },
+  { title:"Product", links:[{l:"Humanize",h:"/#workspace"},{l:"Features",h:"/features"},{l:"Pricing",h:"/#pricing"}] },
   { title:"Company", links:[{l:"About",h:"/about"},{l:"Blog",h:"/blog"},{l:"Careers",h:"/careers"},{l:"Contact",h:"/contact"}] },
   { title:"Legal",   links:[{l:"Terms of Service",h:"/terms"},{l:"Privacy Policy",h:"/privacy"},{l:"Responsible Use",h:"/responsible-use"}] },
 ];

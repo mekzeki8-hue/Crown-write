@@ -171,8 +171,8 @@ export default function ResponsibleUsePage() {
           <p style={{ marginBottom: 24 }}>
             If you encounter content you believe was created with CrownWrite for harmful or prohibited 
             purposes, report it to{" "}
-            <a href="mailto:abuse@crownwrite.com" style={{ color: "var(--brand)" }}>
-              abuse@crownwrite.com
+            <a href="mailto:crownwrite.humanizer@gmail.com" style={{ color: "var(--brand)" }}>
+              crownwrite.humanizer@gmail.com
             </a>.
           </p>
 

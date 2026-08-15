@@ -128,8 +128,8 @@ export default function TermsPage() {
           <h2 style={{ fontSize: 28, marginTop: 48, marginBottom: 16, fontWeight: 600 }}>14. Contact</h2>
           <p style={{ marginBottom: 48 }}>
             Questions about these Terms? Contact us at{" "}
-            <a href="mailto:legal@crownwrite.com" style={{ color: "var(--brand)" }}>
-              legal@crownwrite.com
+            <a href="mailto:crownwrite.humanizer@gmail.com" style={{ color: "var(--brand)" }}>
+              crownwrite.humanizer@gmail.com
             </a>
           </p>
 

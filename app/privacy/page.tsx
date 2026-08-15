@@ -167,7 +167,7 @@ export default function PrivacyPage() {
           <h2 style={{ fontSize: 28, marginTop: 48, marginBottom: 16, fontWeight: 600 }}>13. Contact Us</h2>
           <p style={{ marginBottom: 48 }}>
             Questions about privacy? Contact our Data Protection Officer:<br/>
-            Email: <a href="mailto:privacy@crownwrite.com" style={{ color: "var(--brand)" }}>privacy@crownwrite.com</a><br/>
+            Email: <a href="mailto:crownwrite.humanizer@gmail.com" style={{ color: "var(--brand)" }}>crownwrite.humanizer@gmail.com</a><br/>
             Address: CrownWrite Inc., 123 AI Street, San Francisco, CA 94103
           </p>
 

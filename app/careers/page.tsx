@@ -221,7 +221,7 @@ export default function CareersPage() {
           We're always looking for exceptional talent. Send us your resume and let's talk.
         </p>
         <a
-          href="mailto:careers@crownwrite.com"
+          href="mailto:crownwrite.humanizer@gmail.com"
           style={{
             display: "inline-block",
             padding: "14px 36px",
@@ -233,7 +233,7 @@ export default function CareersPage() {
             fontSize: 16,
           }}
         >
-          careers@crownwrite.com
+          crownwrite.humanizer@gmail.com
         </a>
       </section>
 

@@ -331,87 +331,110 @@ function TopUpCard({ plan, yearly }: { plan: { name: string; price: number; cred
         padding: "28px 24px",
         background: "var(--surface)",
         border: "1.5px solid var(--border-2)",
-        boxShadow: hov ? "var(--sh-md)" : "var(--sh-xs)",
-        transform: hov ? "translateY(-3px)" : "translateY(0)",
+        boxShadow: hov ? "var(--sh-md)" : "var(--sh-card)",
+        transform: hov ? "translateY(-4px)" : "translateY(0)",
         transition: "all .25s cubic-bezier(.4,0,.2,1)",
         display: "flex",
         flexDirection: "column",
         minHeight: 380,
+        position: "relative",
+        overflow: "hidden",
       }}
     >
-      {/* Name */}
-      <div style={{ marginBottom: 12 }}>
-        <span style={{ fontSize: 15, fontWeight: 600, color: "var(--ink)", letterSpacing: "-.2px" }}>
-          {plan.name}
-        </span>
+      {/* Subtle gradient overlay */}
+      <div aria-hidden style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        height: 80,
+        background: "linear-gradient(180deg, var(--brand-ghost) 0%, transparent 100%)",
+        pointerEvents: "none",
+        opacity: hov ? 1 : 0.6,
+        transition: "opacity .3s ease",
+      }} />
+
+      {/* Content */}
+      <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", flex: 1 }}>
+        {/* Name */}
+        <div style={{ marginBottom: 12 }}>
+          <span style={{ fontSize: 15, fontWeight: 600, color: "var(--ink)", letterSpacing: "-.2px" }}>
+            {plan.name}
+          </span>
+        </div>
+
+        {/* Price */}
+        <div style={{ marginBottom: 4 }}>
+          <span style={{
+            fontFamily: "var(--font-serif)", fontSize: 44,
+            fontWeight: 600, letterSpacing: "-2px", lineHeight: 1,
+            color: "var(--ink)",
+          }}>${plan.price}</span>
+          <span style={{ fontSize: 14, color: "var(--muted)", marginLeft: 4 }}>/one-time</span>
+        </div>
+        
+        {/* Credits info */}
+        <p style={{ fontSize: 13, color: "var(--subtle)", marginBottom: 18, fontWeight: 400 }}>
+          Credits never expire
+        </p>
+
+        {/* Buy Button - Brand gradient */}
+        <button 
+          onClick={handlePurchase}
+          disabled={loading}
+          style={{
+            width: "100%", 
+            padding: "12px", 
+            borderRadius: 8,
+            fontSize: 14, 
+            fontWeight: 600,
+            cursor: loading ? "not-allowed" : "pointer",
+            border: "none",
+            background: hov && !loading ? "var(--brand-dark)" : "var(--g-brand)",
+            backgroundSize: "200% 200%",
+            color: "white",
+            letterSpacing: "-.01em",
+            transition: "all .2s ease",
+            opacity: loading ? 0.7 : 1,
+            marginBottom: 18,
+            boxShadow: hov && !loading ? "var(--sh-brandlg)" : "var(--sh-brand)",
+          }}
+        >
+          {loading ? "Loading..." : "Buy Credits"}
+        </button>
+
+        {/* Divider with text */}
+        <div style={{ 
+          textAlign: "center", 
+          fontSize: 11, 
+          color: "var(--subtle)", 
+          marginBottom: 14,
+          fontWeight: 400,
+        }}>
+          Secure checkout · Instant delivery
+        </div>
+
+        {/* Features with checkmarks */}
+        <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 10, flex: 1 }}>
+          {features.map((feature, i) => (
+            <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="var(--brand)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                style={{ flexShrink: 0, marginTop: 2 }}>
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M9 12l2 2 4-4"/>
+              </svg>
+              <span style={{
+                fontSize: 13, lineHeight: 1.5,
+                fontWeight: 400,
+                color: "var(--ink-2)",
+              }}>
+                {feature}
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
-
-      {/* Price */}
-      <div style={{ marginBottom: 4 }}>
-        <span style={{
-          fontFamily: "var(--font-serif)", fontSize: 44,
-          fontWeight: 600, letterSpacing: "-2px", lineHeight: 1,
-          color: "var(--ink)",
-        }}>${plan.price}</span>
-        <span style={{ fontSize: 14, color: "var(--muted)", marginLeft: 4 }}>/one-time</span>
-      </div>
-      
-      {/* Credits info */}
-      <p style={{ fontSize: 13, color: "var(--subtle)", marginBottom: 18, fontWeight: 400 }}>
-        Credits never expire
-      </p>
-
-      {/* Buy Button - Green like in image */}
-      <button 
-        onClick={handlePurchase}
-        disabled={loading}
-        style={{
-          width: "100%", padding: "12px", borderRadius: 8,
-          fontSize: 14, fontWeight: 600,
-          cursor: loading ? "not-allowed" : "pointer",
-          border: "none",
-          background: loading ? "#9CB88C" : (hov ? "#6FA557" : "#7CB961"),
-          color: "white",
-          letterSpacing: "-.01em",
-          transition: "all .2s ease",
-          opacity: loading ? 0.8 : 1,
-          marginBottom: 18,
-        }}
-      >
-        {loading ? "Loading..." : "Buy Credits"}
-      </button>
-
-      {/* Divider with text */}
-      <div style={{ 
-        textAlign: "center", 
-        fontSize: 11, 
-        color: "var(--subtle)", 
-        marginBottom: 14,
-        fontWeight: 400,
-      }}>
-        Secure checkout · Instant delivery
-      </div>
-
-      {/* Features with checkmarks */}
-      <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 10, flex: 1 }}>
-        {features.map((feature, i) => (
-          <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-              stroke="#7CB961" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
-              style={{ flexShrink: 0, marginTop: 2 }}>
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M9 12l2 2 4-4"/>
-            </svg>
-            <span style={{
-              fontSize: 13, lineHeight: 1.5,
-              fontWeight: 400,
-              color: "var(--ink-2)",
-            }}>
-              {feature}
-            </span>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }
@@ -426,8 +449,26 @@ export default function Pricing() {
   ];
 
   return (
-    <section id="pricing" style={{ background: "var(--bg-2)", padding: "88px 0 108px" }}>
-      <div style={{ maxWidth: 1080, margin: "0 auto", padding: "0 28px" }}>
+    <section id="pricing" style={{ 
+      background: "var(--g-soft)", 
+      padding: "88px 0 108px",
+      position: "relative",
+      overflow: "hidden",
+    }}>
+      {/* Decorative gradient bands */}
+      <div aria-hidden style={{
+        position: "absolute",
+        top: "20%",
+        left: "-10%",
+        width: "120%",
+        height: 200,
+        background: "var(--g-warm-band)",
+        transform: "rotate(-3deg)",
+        pointerEvents: "none",
+        opacity: 0.4,
+      }} />
+
+      <div style={{ maxWidth: 1080, margin: "0 auto", padding: "0 28px", position: "relative", zIndex: 1 }}>
 
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 48 }}>
@@ -450,6 +491,7 @@ export default function Pricing() {
           <div style={{
             display: "inline-flex", background: "var(--surface)",
             border: "1px solid var(--border)", borderRadius: 99, padding: 3,
+            boxShadow: "var(--sh-xs)",
           }}>
             {[{ v: false, l: "Monthly" }, { v: true, l: "Yearly" }].map(({ v, l }) => (
               <button key={l} onClick={() => setYearly(v)} style={{
@@ -492,14 +534,29 @@ export default function Pricing() {
         </p>
 
         {/* Top-Up Credits Section */}
-        <div style={{ marginTop: 80 }}>
+        <div style={{ marginTop: 80, position: "relative" }}>
+          {/* Subtle decorative gradient */}
+          <div aria-hidden style={{
+            position: "absolute",
+            top: -40,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "80%",
+            height: 1,
+            background: "linear-gradient(90deg, transparent 0%, var(--border-2) 50%, transparent 100%)",
+            pointerEvents: "none",
+          }} />
+
           <div style={{ textAlign: "center", marginBottom: 36 }}>
             <h3 style={{
               fontFamily: "var(--font-sans)", fontSize: "clamp(22px,3vw,32px)",
               fontWeight: 600, letterSpacing: "-1.2px", lineHeight: 1.2,
               marginBottom: 8, color: "var(--ink)",
             }}>
-              Need Extra Credits?
+              Need{" "}
+              <span className="grad-text" style={{ fontFamily: "var(--font-serif)", fontStyle: "italic" }}>
+                Extra Credits?
+              </span>
             </h3>
             <p style={{ fontSize: 14, color: "var(--muted)", fontWeight: 400 }}>
               Running low? Top up your account with a one-time credit pack.

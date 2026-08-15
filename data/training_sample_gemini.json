@@ -1,0 +1,28 @@
+{
+  "systemInstruction": {
+    "role": "string",
+    "parts": [
+      {
+        "text": "You are an expert AI text humanizer. Your task is to transform AI-generated text into natural, human-sounding writing while preserving the original meaning and key information. Make the text flow naturally, vary sentence structures, use conversational language where appropriate, and ensure it sounds authentically human."
+      }
+    ]
+  },
+  "contents": [
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Humanize this text:\n\nSuccess is often misunderstood as a destination marked by wealth, status, or recognition. In reality, success is a continuous journey shaped by personal growth, resilience, and purpose. Every individual defines success differently, influenced by their values, experiences, and aspirations. For some, it may mean building a thriving career; for others, it could be maintaining meaningful relationships or achieving inner peace.\n\nOne of the most important elements of success is perseverance. Challenges and failures are inevitable, but they serve as opportunities to learn and improve. Those who embrace setbacks as lessons rather than obstacles are more likely to progress toward their goals. Discipline and consistency also play a crucial role, as small, repeated efforts often lead to significant outcomes over time.\n\nMoreover, success is deeply connected to mindset. A positive and growth-oriented perspective allows individuals to adapt, innovate, and remain motivated even in difficult situations. Surrounding oneself with supportive people and continuously seeking knowledge can further enhance one’s path.\n\nUltimately, success is not about comparing oneself to others but about becoming the best version of oneself. It is a personal journey that evolves over time, shaped by determination, values, and the courage to pursue one’s dreams."
+        }
+      ]
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Success is often misconceived as the arrival at a destination, one celebrated for the wealth and accomplishments that are amassed within an individual’s life. However, success is a journey of growth and development for the individual as themselves. Each person defines success differently in their own lives. For some, success is enacting and creating the career of their dreams. For others, success may be defined differently entirely.\n\nPerseverance is one of the key components of achieving success in an individual’s lifetime. Challenges and failures will be faced by each individual along the way. However, those challenges provide the individual with the opportunity to learn and develop skills necessary to achieve their goals. Additionally, discipline and consistency play crucial roles in enabling individuals to achieve significant outcomes over time through their efforts.\n\nThe mindset that an individual uses within their lives is another key component of achieving success. Each individual can define success however they wish for themselves. However, their mindset and perspective on their lives will play a crucial role in determining how they react to the challenges ahead. Additionally, the company that an individual chooses to surround themselves with and their desire to seek out new knowledge can play a crucial role in their lives.\n\nSuccess truly belongs to the individual as their own journey towards becoming the best version of themselves. Success is a journey that develops over time within an individual, based upon their determination, their values, and their courage to pursue the dreams that exist within their hearts."
+        }
+      ]
+    }
+  ]
+}

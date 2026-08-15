@@ -1,0 +1,31 @@
+======================================================================
+DATA CLEANING REPORT
+Generated: 2026-08-13 12:32:43
+======================================================================
+
+Original CSV: /Users/mac/Desktop/true/Crownwrite/Data/data - Sheet1.csv
+Cleaned CSV: /Users/mac/Desktop/true/Crownwrite/Data/data_cleaned.csv
+
+Original rows: 727
+Cleaned rows: 715
+Removed rows: 12
+Data retention: 98.35%
+
+CHANGES MADE:
+----------------------------------------------------------------------
+
+1. REMOVED: 2 rows
+   Reason: Missing values in ai_text or human_text
+   Affected original row indices: [412, 268]
+
+2. REMOVED: 5 rows
+   Reason: Duplicate ai_text (kept first occurrence)
+   Affected original row indices: [53, 225, 231, 321, 377]
+
+3. REMOVED: 2 rows
+   Reason: Length outside acceptable range (50-10000 chars)
+   Affected original row indices: [721, 723]
+
+4. REMOVED: 3 rows
+   Reason: Unusual length ratio (>2x or <0.5x difference)
+   Affected original row indices: [223, 635, 660]

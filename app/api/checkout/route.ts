@@ -4,11 +4,11 @@ import { createClient } from "@/lib/supabase/server";
 
 export async function POST(req: NextRequest) {
   try {
-    const { productPriceId } = await req.json();
+    const { productId } = await req.json();
     
-    if (!productPriceId) {
+    if (!productId) {
       return NextResponse.json(
-        { error: "Product price ID required" },
+        { error: "Product ID required" },
         { status: 400 }
       );
     }
@@ -33,8 +33,8 @@ export async function POST(req: NextRequest) {
 
     // Create checkout session with Polar
     const checkout = await polar.checkouts.custom.create({
-      productPriceId,
-      successUrl: `${req.nextUrl.origin}/?checkout=success`,
+      productId,
+      successUrl: `${req.nextUrl.origin}/dashboard?checkout=success`,
       customerEmail: profile?.email || user.email || "",
       customerName: profile?.full_name || "",
       metadata: {

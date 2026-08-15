@@ -4,11 +4,11 @@ import { useState } from "react";
 const PLANS = [
   {
     name: "Basic",
-    monthly: 5.99, yearly: 2.99,
+    monthly: 5.99, yearly: 35.88,
     tagline: "Perfect for occasional use.",
     variant: "light" as const,
     features: [
-      { text: "8,000 words / mo",                                          bold: false },
+      { text: "10,000 words / mo",                                         bold: false },
       { text: "Up to 600 words per request",                               bold: false, tip: true },
       { text: "1 free rehumanization per task",                            bold: false, tip: true },
       { text: "Basic Humanization Engine",                                 bold: false },
@@ -20,14 +20,16 @@ const PLANS = [
       { text: "Customer support",                                          bold: false },
     ],
     cta: "Get Started",
+    monthlyId: process.env.NEXT_PUBLIC_POLAR_BASIC_MONTHLY,
+    yearlyId: process.env.NEXT_PUBLIC_POLAR_BASIC_YEARLY,
   },
   {
     name: "Pro",
-    monthly: 19.99, yearly: 9.99,
+    monthly: 19.99, yearly: 119.88,
     tagline: "Best for regular content creators.",
     variant: "mid" as const,
     features: [
-      { text: "40,000 words / mo",                                         bold: true  },
+      { text: "50,000 words / mo",                                         bold: true  },
       { text: "Up to 2,000 words per request",                             bold: false, tip: true },
       { text: "2 free rehumanizations per task",                           bold: false, tip: true },
       { text: "Ultra Mode access",                                         bold: false, tip: true },
@@ -41,14 +43,16 @@ const PLANS = [
       { text: "Priority email support",                                    bold: false },
     ],
     cta: "Get Started",
+    monthlyId: process.env.NEXT_PUBLIC_POLAR_PRO_MONTHLY,
+    yearlyId: process.env.NEXT_PUBLIC_POLAR_PRO_YEARLY,
   },
   {
     name: "Max",
-    monthly: 39.99, yearly: 19.99,
+    monthly: 39.99, yearly: 239.88,
     tagline: "For power users and teams.",
     variant: "dark" as const,
     features: [
-      { text: "90,000 words / mo",                                         bold: true  },
+      { text: "Unlimited words / mo",                                      bold: true  },
       { text: "Up to 3,000 words per request",                             bold: false, tip: true },
       { text: "3 free rehumanizations per task",                           bold: false, tip: true },
       { text: "Ultra Mode access",                                         bold: false, tip: true },
@@ -64,6 +68,8 @@ const PLANS = [
       { text: "Dedicated support",                                         bold: false },
     ],
     cta: "Get Started",
+    monthlyId: process.env.NEXT_PUBLIC_POLAR_MAX_MONTHLY,
+    yearlyId: process.env.NEXT_PUBLIC_POLAR_MAX_YEARLY,
   },
 ];
 
@@ -91,7 +97,41 @@ function CheckIcon({ color }: { color: string }) {
 
 function PlanCard({ plan, yearly }: { plan: typeof PLANS[0]; yearly: boolean }) {
   const [hov, setHov] = useState(false);
+  const [loading, setLoading] = useState(false);
   const price = yearly ? plan.yearly : plan.monthly;
+  const productId = yearly ? plan.yearlyId : plan.monthlyId;
+
+  const handleCheckout = async () => {
+    if (!productId) {
+      alert("Product not configured yet. Please contact support.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId }),
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || "Checkout failed");
+      }
+
+      const { checkoutUrl } = await res.json();
+      
+      if (checkoutUrl) {
+        window.location.href = checkoutUrl;
+      }
+    } catch (error) {
+      console.error("Checkout error:", error);
+      alert(error instanceof Error ? error.message : "Failed to start checkout. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   /* ── Variant-specific tokens ── */
   const isLight = plan.variant === "light";
@@ -220,17 +260,21 @@ function PlanCard({ plan, yearly }: { plan: typeof PLANS[0]; yearly: boolean }) 
       <div style={{ height: 1, background: dividerColor, margin: "22px 0 18px" }} />
 
       {/* CTA */}
-      <button style={{
+      <button 
+        onClick={handleCheckout}
+        disabled={loading}
+        style={{
         width: "100%", padding: "12px", borderRadius: 99,
         fontSize: 14, fontWeight: 500,
-        cursor: "pointer", border: ctaBorder,
+        cursor: loading ? "not-allowed" : "pointer", border: ctaBorder,
         background: ctaBg, color: ctaColor,
         letterSpacing: "-.01em",
         transition: "all .2s ease",
+        opacity: loading ? 0.6 : 1,
       }}
-      onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = ctaHoverBg; el.style.transform = "translateY(-1px)"; }}
-      onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = ctaBg; el.style.transform = "none"; }}>
-        {plan.cta}
+      onMouseEnter={e => { if (!loading) { const el = e.currentTarget as HTMLElement; el.style.background = ctaHoverBg; el.style.transform = "translateY(-1px)"; }}}
+      onMouseLeave={e => { if (!loading) { const el = e.currentTarget as HTMLElement; el.style.background = ctaBg; el.style.transform = "none"; }}}>
+        {loading ? "Loading..." : plan.cta}
       </button>
     </div>
   );

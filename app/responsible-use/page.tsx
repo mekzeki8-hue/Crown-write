@@ -38,7 +38,7 @@ export default function ResponsibleUsePage() {
             marginBottom: 32,
           }}>
             <p style={{ margin: 0, fontWeight: 600, color: "#1976D2" }}>
-              💡 Core Principle: Transparency over deception. Use CrownWrite to improve your writing, 
+              Core Principle: Transparency over deception. Use CrownWrite to improve your writing, 
               not to misrepresent authorship.
             </p>
           </div>
@@ -75,7 +75,7 @@ export default function ResponsibleUsePage() {
             direction should always be yours.
           </p>
 
-          <h2 style={{ fontSize: 28, marginTop: 48, marginBottom: 16, fontWeight: 600 }}>⚠️ Use With Caution</h2>
+          <h2 style={{ fontSize: 28, marginTop: 48, marginBottom: 16, fontWeight: 600 }}>Use With Caution</h2>
 
           <h3 style={{ fontSize: 20, marginTop: 32, marginBottom: 12, fontWeight: 600 }}>Academic Assignments</h3>
           <p style={{ marginBottom: 24 }}>
@@ -119,7 +119,7 @@ export default function ResponsibleUsePage() {
             marginBottom: 32,
           }}>
             <p style={{ margin: 0, fontWeight: 600, color: "#C62828" }}>
-              ⚠️ Violation of these guidelines may result in immediate account suspension or termination.
+              Warning: Violation of these guidelines may result in immediate account suspension or termination.
             </p>
           </div>
 

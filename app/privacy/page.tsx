@@ -63,7 +63,7 @@ export default function PrivacyPage() {
             marginBottom: 24,
           }}>
             <p style={{ margin: 0, fontWeight: 600, color: "#27AE60" }}>
-              🔒 We DO NOT store, log, or retain the text content you submit for humanization.
+              Privacy First: We DO NOT store, log, or retain the text content you submit for humanization.
             </p>
           </div>
           <p style={{ marginBottom: 24 }}>
@@ -178,7 +178,7 @@ export default function PrivacyPage() {
             border: "1px solid var(--border)",
           }}>
             <p style={{ margin: 0, fontSize: 14, color: "var(--ink-muted)" }}>
-              🇪🇺 For EU users: You have additional rights under GDPR. Contact our EU representative 
+              EU Users: For EU users, you have additional rights under GDPR. Contact our EU representative 
               for data subject requests.
             </p>
           </div>

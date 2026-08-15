@@ -13,8 +13,7 @@ export default function BlogPage() {
       category: "AI Detection",
       date: "Aug 10, 2026",
       readTime: "8 min read",
-      author: "Sarah Chen",
-      image: "🔍"
+      author: "Sarah Chen"
     },
     {
       id: 2,
@@ -23,8 +22,7 @@ export default function BlogPage() {
       category: "Writing Tips",
       date: "Aug 8, 2026",
       readTime: "12 min read",
-      author: "Alex Rivera",
-      image: "✍️"
+      author: "Alex Rivera"
     },
     {
       id: 3,
@@ -33,8 +31,7 @@ export default function BlogPage() {
       category: "Education",
       date: "Aug 5, 2026",
       readTime: "6 min read",
-      author: "Emily Watson",
-      image: "🎓"
+      author: "Emily Watson"
     },
     {
       id: 4,
@@ -43,8 +40,7 @@ export default function BlogPage() {
       category: "Case Studies",
       date: "Aug 2, 2026",
       readTime: "10 min read",
-      author: "Marcus Johnson",
-      image: "📊"
+      author: "Marcus Johnson"
     },
     {
       id: 5,
@@ -53,8 +49,7 @@ export default function BlogPage() {
       category: "Technical",
       date: "Jul 30, 2026",
       readTime: "7 min read",
-      author: "Sarah Chen",
-      image: "📈"
+      author: "Sarah Chen"
     },
     {
       id: 6,
@@ -63,8 +58,7 @@ export default function BlogPage() {
       category: "Ethics",
       date: "Jul 28, 2026",
       readTime: "9 min read",
-      author: "Alex Rivera",
-      image: "⚖️"
+      author: "Alex Rivera"
     },
     {
       id: 7,
@@ -73,8 +67,7 @@ export default function BlogPage() {
       category: "Writing Tips",
       date: "Jul 25, 2026",
       readTime: "5 min read",
-      author: "Emily Watson",
-      image: "🚩"
+      author: "Emily Watson"
     },
     {
       id: 8,
@@ -83,8 +76,7 @@ export default function BlogPage() {
       category: "Technical",
       date: "Jul 22, 2026",
       readTime: "15 min read",
-      author: "Marcus Johnson",
-      image: "🔧"
+      author: "Marcus Johnson"
     },
     {
       id: 9,
@@ -93,8 +85,7 @@ export default function BlogPage() {
       category: "AI Detection",
       date: "Jul 20, 2026",
       readTime: "11 min read",
-      author: "Sarah Chen",
-      image: "🔮"
+      author: "Sarah Chen"
     }
   ];
 
@@ -216,10 +207,17 @@ export default function BlogPage() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: 120,
-              padding: 60,
+              padding: 80,
             }}>
-              {articles[0].image}
+              <div style={{
+                fontSize: 56,
+                fontWeight: 700,
+                color: "white",
+                fontFamily: "var(--font-serif)",
+                textAlign: "center",
+              }}>
+                {articles[0].category}
+              </div>
             </div>
             <div style={{ padding: 48 }}>
               <div style={{
@@ -324,10 +322,16 @@ export default function BlogPage() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 80,
                 borderBottom: "1px solid var(--border)",
               }}>
-                {article.image}
+                <div style={{
+                  fontSize: 32,
+                  fontWeight: 700,
+                  color: "var(--brand)",
+                  fontFamily: "var(--font-serif)",
+                }}>
+                  {article.category}
+                </div>
               </div>
               <div style={{ padding: 24 }}>
                 <div style={{

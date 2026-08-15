@@ -280,8 +280,106 @@ function PlanCard({ plan, yearly }: { plan: typeof PLANS[0]; yearly: boolean }) 
   );
 }
 
+function TopUpCard({ plan, yearly }: { plan: { name: string; price: number; credits: number; productId?: string }; yearly: boolean }) {
+  const [loading, setLoading] = useState(false);
+  const [hov, setHov] = useState(false);
+
+  const handlePurchase = async () => {
+    if (!plan.productId) {
+      alert("Product not configured yet. Please contact support.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId: plan.productId }),
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || "Checkout failed");
+      }
+
+      const { checkoutUrl } = await res.json();
+      
+      if (checkoutUrl) {
+        window.location.href = checkoutUrl;
+      }
+    } catch (error) {
+      console.error("Checkout error:", error);
+      alert(error instanceof Error ? error.message : "Failed to start checkout. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        borderRadius: 16,
+        padding: "24px 20px",
+        background: "var(--surface)",
+        border: "1.5px solid var(--border-2)",
+        boxShadow: hov ? "var(--sh-md)" : "var(--sh-xs)",
+        transform: hov ? "translateY(-3px)" : "translateY(0)",
+        transition: "all .25s cubic-bezier(.4,0,.2,1)",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <div style={{ marginBottom: 8 }}>
+        <span style={{ fontSize: 14, fontWeight: 600, color: "var(--ink)", letterSpacing: "-.2px" }}>
+          {plan.name}
+        </span>
+      </div>
+
+      <div style={{ marginBottom: 4 }}>
+        <span style={{
+          fontFamily: "var(--font-serif)", fontSize: 38,
+          fontWeight: 600, letterSpacing: "-1.8px", lineHeight: 1,
+          color: "var(--ink)",
+        }}>${plan.price}</span>
+        <span style={{ fontSize: 13, color: "var(--muted)", marginLeft: 4 }}>/one-time</span>
+      </div>
+      
+      <p style={{ fontSize: 12, color: "var(--subtle)", marginBottom: 14, fontWeight: 400 }}>
+        {plan.credits.toLocaleString()} words · Credits never expire
+      </p>
+
+      <button 
+        onClick={handlePurchase}
+        disabled={loading}
+        style={{
+          width: "100%", padding: "10px", borderRadius: 99,
+          fontSize: 13, fontWeight: 500,
+          cursor: loading ? "not-allowed" : "pointer",
+          border: "1.5px solid var(--brand)",
+          background: hov && !loading ? "var(--brand-xpale)" : "transparent",
+          color: "var(--brand)",
+          letterSpacing: "-.01em",
+          transition: "all .2s ease",
+          opacity: loading ? 0.6 : 1,
+        }}
+      >
+        {loading ? "Loading..." : "Buy Credits"}
+      </button>
+    </div>
+  );
+}
+
 export default function Pricing() {
   const [yearly, setYearly] = useState(false);
+
+  const TOPUP_PLANS = [
+    { name: "BASIC TOPUP", price: 5.99, credits: 10000, productId: process.env.NEXT_PUBLIC_POLAR_BASIC_TOPUP },
+    { name: "PRO TOPUP", price: 19.99, credits: 50000, productId: process.env.NEXT_PUBLIC_POLAR_PRO_TOPUP },
+    { name: "ULTRA TOPUP", price: 39.99, credits: 100000, productId: process.env.NEXT_PUBLIC_POLAR_MAX_TOPUP },
+  ];
 
   return (
     <section id="pricing" style={{ background: "var(--bg-2)", padding: "88px 0 108px" }}>
@@ -331,7 +429,7 @@ export default function Pricing() {
           </div>
         </div>
 
-        {/* Cards */}
+        {/* Subscription Cards */}
         <div style={{
           display: "grid",
           gridTemplateColumns: "1fr 1.06fr 1fr",
@@ -348,11 +446,43 @@ export default function Pricing() {
         }}>
           All plans include a 7-day free trial. No credit card required to start.
         </p>
+
+        {/* Top-Up Credits Section */}
+        <div style={{ marginTop: 80 }}>
+          <div style={{ textAlign: "center", marginBottom: 36 }}>
+            <h3 style={{
+              fontFamily: "var(--font-sans)", fontSize: "clamp(22px,3vw,32px)",
+              fontWeight: 600, letterSpacing: "-1.2px", lineHeight: 1.2,
+              marginBottom: 8, color: "var(--ink)",
+            }}>
+              Need Extra Credits?
+            </h3>
+            <p style={{ fontSize: 14, color: "var(--muted)", fontWeight: 400 }}>
+              Running low? Top up your account with a one-time credit pack.
+            </p>
+            <p style={{ fontSize: 12, color: "var(--subtle)", fontWeight: 400, marginTop: 4 }}>
+              Secure checkout · Instant delivery
+            </p>
+          </div>
+
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: 16,
+            maxWidth: 900,
+            margin: "0 auto",
+          }} className="topup-grid">
+            {TOPUP_PLANS.map(plan => (
+              <TopUpCard key={plan.name} plan={plan} yearly={yearly} />
+            ))}
+          </div>
+        </div>
       </div>
 
       <style>{`
         @media (max-width: 860px) {
           .price-grid { grid-template-columns: 1fr !important; max-width: 420px; margin: 0 auto; }
+          .topup-grid { grid-template-columns: 1fr !important; max-width: 360px; margin: 0 auto; }
         }
       `}</style>
     </section>

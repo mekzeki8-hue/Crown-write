@@ -1,15 +1,40 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { GoogleAuth } from 'google-auth-library';
-import { getDynamicExamples } from './examples';
 import { generateWithQualitySelection, scoreHumanizedText } from './quality-scorer';
 import { finalizeHumanizedText } from './post-processor';
+
+type ToneType = 'standard' | 'academic' | 'professional' | 'friendly' | 'formal' | 'casual' | 'creative';
+
+/**
+ * Get adaptive temperature based on tone
+ * Different tones need different creativity levels
+ */
+function getTemperatureForTone(tone: ToneType): number {
+  const temperatureMap: Record<ToneType, number> = {
+    academic: 0.7,      // More consistent, scholarly
+    professional: 0.75, // Balanced, clear
+    formal: 0.7,        // Structured, proper
+    standard: 0.85,     // Natural variation
+    friendly: 0.9,      // Warm, personable
+    casual: 0.9,        // Relaxed, conversational
+    creative: 1.0,      // Maximum expression
+  };
+  return temperatureMap[tone] || 0.85;
+}
+
+/**
+ * Determine how many generations to use based on text length
+ * Shorter texts = faster, longer texts = more quality passes
+ */
+function getGenerationCount(wordCount: number): number {
+  if (wordCount < 300) return 1;      // Short: fast single pass
+  if (wordCount < 800) return 2;      // Medium: balanced
+  return 3;                            // Long: best quality
+}
 
 /**
  * Initialize Google Gemini AI client (standard models)
  * Gemini is 100% FREE with generous limits (1M tokens/day)
- * 
- * NOTE: As of 2026, Gemini uses NEW AUTH KEYS (AQ.) instead of old AIza format
- * Source: https://ai.google.dev/gemini-api/docs/api-key
  */
 export function getGeminiClient() {
   const apiKey = process.env.GOOGLE_GEMINI_API_KEY;
@@ -18,8 +43,6 @@ export function getGeminiClient() {
     throw new Error('GOOGLE_GEMINI_API_KEY is not configured');
   }
 
-  // New AQ. auth keys are the standard format as of 2026
-  // Old AIza keys are being phased out by September 2026
   return new GoogleGenerativeAI(apiKey);
 }
 
@@ -44,10 +67,11 @@ async function getAccessToken(): Promise<string> {
 
 /**
  * Call the fine-tuned Vertex AI endpoint using REST API
- * Vertex AI tuned endpoints use the same generateContent API as standard models
+ * The model is already trained for humanization, just needs the text and tone
  */
 async function callTunedEndpoint(
   text: string,
+  tone: ToneType,
   systemPrompt: string
 ): Promise<string> {
   const project = process.env.GOOGLE_CLOUD_PROJECT;
@@ -57,34 +81,19 @@ async function callTunedEndpoint(
     throw new Error('GOOGLE_CLOUD_PROJECT and TUNED_MODEL_ENDPOINT must be configured');
   }
 
-  // Get dynamic examples relevant to this specific input
-  const dynamicExamples = getDynamicExamples(text);
-  
-  // Enhance prompt with relevant few-shot examples
-  const enhancedPrompt = `${systemPrompt}
-
-═══════════════════════════════════════════════════════════════════════════
-RELEVANT EXAMPLES FOR THIS TEXT:
-═══════════════════════════════════════════════════════════════════════════
-
-${dynamicExamples}
-
-═══════════════════════════════════════════════════════════════════════════
-
-Now apply what you learned to transform this text (output ONLY the humanized text):
-
-${text}`;
+  // Simple prompt: just tone instruction + text
+  const prompt = `${systemPrompt}\n\n${text}`;
 
   // Get access token using Application Default Credentials
   const accessToken = await getAccessToken();
   
   // Vertex AI endpoint URL for tuned models
-  // Region: us-central1 (Iowa)
   const endpointUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${project}/locations/us-central1/endpoints/${endpoint}:generateContent`;
   
-  console.log(`🎯 Calling tuned endpoint: ${endpoint}`);
+  console.log(`🎯 Calling fine-tuned model: ${endpoint}`);
   
-  // Call the Vertex AI endpoint using the same format as generateContent
+  const temperature = getTemperatureForTone(tone);
+  
   const response = await fetch(endpointUrl, {
     method: 'POST',
     headers: {
@@ -94,10 +103,10 @@ ${text}`;
     body: JSON.stringify({
       contents: [{
         role: 'user',
-        parts: [{ text: enhancedPrompt }]
+        parts: [{ text: prompt }]
       }],
       generationConfig: {
-        temperature: 0.9,
+        temperature,
         topP: 0.95,
         topK: 60,
         maxOutputTokens: 4096,
@@ -112,7 +121,6 @@ ${text}`;
 
   const result = await response.json();
   
-  // Extract text from Vertex AI response format
   const humanizedText = result.candidates?.[0]?.content?.parts?.[0]?.text;
 
   if (!humanizedText || humanizedText.trim().length === 0) {
@@ -123,16 +131,18 @@ ${text}`;
 }
 
 /**
- * Internal function: Single humanization attempt using STANDARD Gemini model
+ * Internal function: Single humanization attempt using STANDARD Gemini model (fallback)
  */
 async function humanizeSingleAttemptStandard(
   text: string,
+  tone: ToneType,
   systemPrompt: string,
   genAI: GoogleGenerativeAI
 ): Promise<string> {
-  // Only use models that we know work (tested earlier)
+  // Use "latest" models available for new API keys
   const modelNames = [
-    'gemini-3.6-flash',  // This one worked in our earlier tests
+    'gemini-flash-latest',
+    'gemini-pro-latest',
   ];
   
   let lastError: any = null;
@@ -141,33 +151,17 @@ async function humanizeSingleAttemptStandard(
     try {
       const model = genAI.getGenerativeModel({ model: modelName });
 
-      // Get dynamic examples relevant to this specific input
-      const dynamicExamples = getDynamicExamples(text);
+      const prompt = `${systemPrompt}\n\n${text}`;
       
-      // Enhance prompt with relevant few-shot examples
-      const enhancedPrompt = `${systemPrompt}
+      const temperature = getTemperatureForTone(tone);
 
-═══════════════════════════════════════════════════════════════════════════
-RELEVANT EXAMPLES FOR THIS TEXT:
-═══════════════════════════════════════════════════════════════════════════
-
-${dynamicExamples}
-
-═══════════════════════════════════════════════════════════════════════════
-
-Now apply what you learned to transform this text (output ONLY the humanized text):
-
-${text}`;
-
-      // Generate response with human-like variation settings
       const result = await model.generateContent({
-        contents: [{ role: 'user', parts: [{ text: enhancedPrompt }] }],
+        contents: [{ role: 'user', parts: [{ text: prompt }] }],
         generationConfig: {
-          temperature: 0.9,        // High for natural variation
-          topP: 0.95,              // Very high for diverse expression  
-          topK: 60,                // Wider vocabulary
+          temperature,
+          topP: 0.95,
+          topK: 60,
           maxOutputTokens: 4096,
-          // Note: presencePenalty and frequencyPenalty not supported by Gemini API
         },
       });
 
@@ -178,10 +172,12 @@ ${text}`;
         throw new Error('Gemini returned empty response');
       }
 
+      console.log(`✅ Successfully used model: ${modelName}`);
       return humanizedText.trim();
       
     } catch (error: any) {
       lastError = error;
+      console.warn(`❌ Model ${modelName} failed: ${error.message}`);
       continue;
     }
   }
@@ -190,64 +186,155 @@ ${text}`;
 }
 
 /**
- * Humanize text using Google Gemini with quality selection
- * Generates multiple versions and returns the best one
- * 
- * NOW USES FINE-TUNED MODEL when configured, falls back to standard model
+ * Humanize text using fine-tuned model with intelligent fallback
+ * Generates multiple versions based on text length and returns the best one
  */
 export async function humanizeWithGemini(
   text: string,
-  systemPrompt: string,
-  useQualitySelection: boolean = true
-): Promise<string> {
+  tone: ToneType,
+  systemPrompt: string
+): Promise<{ text: string; score: any; generationCount: number; modelUsed: string }> {
   try {
+    // Calculate word count for smart generation
+    const wordCount = text.trim().split(/\s+/).length;
+    const generationCount = getGenerationCount(wordCount);
+    
+    console.log(`📊 Text: ${wordCount} words → Using ${generationCount} generation(s)`);
+    console.log(`🎨 Tone: ${tone} → Temperature: ${getTemperatureForTone(tone)}`);
+    
     // Determine which model to use (fine-tuned or standard)
     const useTunedModel = !!(
       process.env.GOOGLE_CLOUD_PROJECT && 
       process.env.TUNED_MODEL_ENDPOINT
     );
     
+    let modelUsed = 'unknown';
+    
     if (useTunedModel) {
-      console.log('🎯 Using FINE-TUNED CrownWrite model (Crownwrite-humanizer-v1)');
+      console.log('🎯 Using FINE-TUNED CrownWrite model');
+      modelUsed = 'fine-tuned';
     } else {
       console.log('⚡ Using standard Gemini model (fallback)');
+      modelUsed = 'gemini-standard';
     }
     
-    // If quality selection enabled, generate 3 versions and pick best
-    if (useQualitySelection) {
-      console.log('🎯 Using quality selection mode (3 generations)');
+    // Smart quality selection: multiple generations only for longer texts
+    if (generationCount > 1) {
+      console.log(`🎯 Quality selection mode: ${generationCount} generations (parallel)`);
       
-      const result = await generateWithQualitySelection(
-        () => useTunedModel 
-          ? callTunedEndpoint(text, systemPrompt)
-          : humanizeSingleAttemptStandard(text, systemPrompt, getGeminiClient()),
-        3 // Generate 3 versions
-      );
-      
-      console.log(`✅ Quality score: ${result.score.total}/100`);
-      console.log(`📊 Details: ${result.score.details.contractionsCount} contractions, ${result.score.details.roboticPhrasesFound.length} robotic phrases, variety: ${result.score.details.sentenceLengthVariety}`);
-      
-      // Apply post-processing cleanup
-      const finalized = finalizeHumanizedText(result.text);
-      console.log(`🧹 Post-processing: ${finalized.changesApplied.length} changes applied`);
-      if (finalized.warnings.length > 0) {
-        console.log(`⚠️  Warnings: ${finalized.warnings.join(', ')}`);
+      try {
+        // Generate multiple versions in parallel for speed
+        const generatePromises = Array(generationCount).fill(null).map(() =>
+          useTunedModel 
+            ? callTunedEndpoint(text, tone, systemPrompt)
+            : humanizeSingleAttemptStandard(text, tone, systemPrompt, getGeminiClient())
+        );
+        
+        const generations = await Promise.all(generatePromises);
+        
+        // Score each and pick best
+        let bestText = generations[0];
+        let bestScore = scoreHumanizedText(bestText, tone);
+        
+        for (let i = 1; i < generations.length; i++) {
+          const currentScore = scoreHumanizedText(generations[i], tone);
+          if (currentScore.total > bestScore.total) {
+            bestText = generations[i];
+            bestScore = currentScore;
+          }
+        }
+        
+        console.log(`✅ Best quality score: ${bestScore.total}/100`);
+        console.log(`📊 Details: ${bestScore.details.contractionsCount} contractions, ${bestScore.details.roboticPhrasesFound.length} robotic phrases`);
+        
+        // Apply post-processing cleanup
+        const finalized = finalizeHumanizedText(bestText, tone);
+        console.log(`🧹 Post-processing: ${finalized.changesApplied.length} changes applied`);
+        if (finalized.warnings.length > 0) {
+          console.log(`⚠️  Warnings: ${finalized.warnings.join(', ')}`);
+        }
+        
+        return {
+          text: finalized.finalText,
+          score: bestScore,
+          generationCount,
+          modelUsed,
+        };
+      } catch (error: any) {
+        // If fine-tuned model fails, fall back to standard Gemini
+        if (useTunedModel && (error.message?.includes('credentials') || error.message?.includes('403') || error.message?.includes('BILLING'))) {
+          console.log('⚠️  Fine-tuned model failed (credentials/billing issue), falling back to standard Gemini...');
+          modelUsed = 'gemini-standard-fallback';
+          
+          const generatePromises = Array(generationCount).fill(null).map(() =>
+            humanizeSingleAttemptStandard(text, tone, systemPrompt, getGeminiClient())
+          );
+          
+          const generations = await Promise.all(generatePromises);
+          
+          let bestText = generations[0];
+          let bestScore = scoreHumanizedText(bestText, tone);
+          
+          for (let i = 1; i < generations.length; i++) {
+            const currentScore = scoreHumanizedText(generations[i], tone);
+            if (currentScore.total > bestScore.total) {
+              bestText = generations[i];
+              bestScore = currentScore;
+            }
+          }
+          
+          const finalized = finalizeHumanizedText(bestText, tone);
+          
+          return {
+            text: finalized.finalText,
+            score: bestScore,
+            generationCount,
+            modelUsed,
+          };
+        }
+        throw error;
       }
-      
-      return finalized.finalText;
     }
     
-    // Otherwise, single attempt (faster but lower quality)
-    console.log('⚡ Using single generation mode (fast)');
-    const singleResult = useTunedModel
-      ? await callTunedEndpoint(text, systemPrompt)
-      : await humanizeSingleAttemptStandard(text, systemPrompt, getGeminiClient());
+    // Single generation (fast mode for short texts)
+    console.log('⚡ Fast mode: single generation');
     
-    // Still apply post-processing
-    const finalized = finalizeHumanizedText(singleResult);
-    console.log(`🧹 Post-processing: ${finalized.changesApplied.length} changes applied`);
-    
-    return finalized.finalText;
+    try {
+      const singleResult = useTunedModel
+        ? await callTunedEndpoint(text, tone, systemPrompt)
+        : await humanizeSingleAttemptStandard(text, tone, systemPrompt, getGeminiClient());
+      
+      const score = scoreHumanizedText(singleResult, tone);
+      
+      // Still apply post-processing
+      const finalized = finalizeHumanizedText(singleResult, tone);
+      console.log(`🧹 Post-processing: ${finalized.changesApplied.length} changes applied`);
+      
+      return {
+        text: finalized.finalText,
+        score,
+        generationCount: 1,
+        modelUsed,
+      };
+    } catch (error: any) {
+      // If fine-tuned model fails, fall back to standard Gemini
+      if (useTunedModel && (error.message?.includes('credentials') || error.message?.includes('403') || error.message?.includes('BILLING'))) {
+        console.log('⚠️  Fine-tuned model failed (credentials/billing issue), falling back to standard Gemini...');
+        modelUsed = 'gemini-standard-fallback';
+        
+        const singleResult = await humanizeSingleAttemptStandard(text, tone, systemPrompt, getGeminiClient());
+        const score = scoreHumanizedText(singleResult, tone);
+        const finalized = finalizeHumanizedText(singleResult, tone);
+        
+        return {
+          text: finalized.finalText,
+          score,
+          generationCount: 1,
+          modelUsed,
+        };
+      }
+      throw error;
+    }
     
   } catch (error: any) {
     console.error('❌ Gemini API Error:', error);

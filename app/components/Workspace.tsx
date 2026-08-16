@@ -30,18 +30,15 @@ const BRAND_DARK = "#A87D54";
 /* ── API Call to Humanize Endpoint ── */
 async function callHumanizeAPI(
   text: string, 
-  tone: ToneId, 
-  ultraMode: boolean
-): Promise<string> {
+  tone: ToneId
+): Promise<{ humanizedText: string; stats: any }> {
   const response = await fetch('/api/humanize', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       text,
       tone: tone === 'auto' ? 'standard' : tone,
-      mode: ultraMode ? 'ultra' : 'standard',
       provider: 'auto',
-      qualityMode: 'high',
     }),
   });
 
@@ -51,7 +48,10 @@ async function callHumanizeAPI(
   }
 
   const data = await response.json();
-  return data.humanizedText;
+  return { 
+    humanizedText: data.humanizedText,
+    stats: data.stats 
+  };
 }
 
 const wc = (t: string) => t.trim() ? t.trim().split(/\s+/).length : 0;
@@ -61,12 +61,13 @@ export default function Workspace() {
   const [input,     setInput]     = useState("");
   const [output,    setOutput]    = useState("");
   const [loading,   setLoading]   = useState(false);
+  const [loadingStage, setLoadingStage] = useState("");
   const [copied,    setCopied]    = useState(false);
   const [toast,     setToast]     = useState("");
-  const [ultraMode, setUltraMode] = useState(false);
   const [error,     setError]     = useState("");
   const [credits,   setCredits]   = useState(0);
   const [user,      setUser]      = useState<any>(null);
+  const [qualityScore, setQualityScore] = useState<any>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const supabase = createClient();
@@ -123,10 +124,26 @@ export default function Workspace() {
     setLoading(true); 
     setOutput("");
     setError("");
+    setQualityScore(null);
     
     try {
-      const result = await callHumanizeAPI(input, tone, ultraMode);
-      setOutput(result);
+      // Progressive loading stages
+      setLoadingStage("Analyzing your text...");
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      setLoadingStage("Generating humanized version...");
+      const startTime = Date.now();
+      const result = await callHumanizeAPI(input, tone);
+      const elapsed = Date.now() - startTime;
+      
+      // Show refining stage if taking longer
+      if (elapsed > 5000) {
+        setLoadingStage("Refining for quality...");
+        await new Promise(resolve => setTimeout(resolve, 300));
+      }
+      
+      setOutput(result.humanizedText);
+      setQualityScore(result.stats?.qualityScore || null);
       showToast("Humanized successfully");
       
       // Dispatch event to update credits display
@@ -140,6 +157,7 @@ export default function Workspace() {
       console.error('Humanization error:', err);
     } finally {
       setLoading(false);
+      setLoadingStage("");
     }
   };
 
@@ -176,6 +194,17 @@ export default function Workspace() {
   const toneLabel = TONES.find(t => t.id === tone)?.label ?? "Auto";
   const inputWords = wc(input);
   const outputWords = wc(output);
+  
+  // Smart word count feedback
+  const getWordCountMessage = (wordCount: number) => {
+    if (wordCount === 0) return null;
+    if (wordCount < 100) return { icon: "⚠️", text: "Short text may have limited improvement", color: "#F59E0B" };
+    if (wordCount < 250) return { icon: "💡", text: "Good length for humanization", color: "#3B82F6" };
+    if (wordCount <= 1000) return { icon: "✅", text: "Optimal length for best results", color: "#10B981" };
+    return { icon: "⏱️", text: "Large text, will take 30-45 seconds", color: "#8B5CF6" };
+  };
+  
+  const wordCountFeedback = getWordCountMessage(inputWords);
 
   return (
     <section id="workspace" style={{
@@ -306,54 +335,8 @@ export default function Workspace() {
                 fontSize: 12, 
                 color: "var(--muted)",
               }}>
-                <span style={{ fontWeight: 600, color: "var(--brand)" }}>CrownV4</span>
-                <span style={{
-                  padding: "2px 6px", 
-                  borderRadius: 4,
-                  fontSize: 9, 
-                  fontWeight: 700,
-                  background: "var(--brand)", 
-                  color: "white",
-                  letterSpacing: "0.05em",
-                }}>BETA</span>
+                <span style={{ fontWeight: 600, color: "var(--brand)" }}>CrownWrite</span>
               </div>
-
-              {/* Ultra Mode toggle */}
-              <button 
-                onClick={() => setUltraMode(!ultraMode)}
-                style={{
-                  padding: "6px 14px", 
-                  fontSize: 12,
-                  display: "flex", 
-                  alignItems: "center", 
-                  gap: 6,
-                  borderRadius: "var(--r-sm)",
-                  border: `1px solid ${ultraMode ? "var(--brand)" : "var(--border)"}`,
-                  background: ultraMode ? "var(--brand)" : "var(--surface)",
-                  color: ultraMode ? "white" : "var(--muted)",
-                  cursor: "pointer",
-                  fontWeight: ultraMode ? 600 : 500,
-                  transition: "all 0.2s",
-                }}
-                onMouseEnter={(e) => {
-                  if (!ultraMode) {
-                    const el = e.currentTarget as HTMLElement;
-                    el.style.borderColor = "var(--brand)";
-                    el.style.color = "var(--brand)";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!ultraMode) {
-                    const el = e.currentTarget as HTMLElement;
-                    el.style.borderColor = "var(--border)";
-                    el.style.color = "var(--muted)";
-                  }
-                }}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-                </svg>
-                Ultra Mode
-              </button>
             </div>
           </div>
 
@@ -478,6 +461,27 @@ export default function Workspace() {
                   </span>
                 </div>
               </div>
+
+              {/* Smart word count feedback */}
+              {wordCountFeedback && (
+                <div style={{
+                  padding: "10px 20px",
+                  background: "var(--bg-3)",
+                  borderBottom: "1px solid var(--border)",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                }}>
+                  <span style={{ fontSize: 14 }}>{wordCountFeedback.icon}</span>
+                  <span style={{
+                    fontSize: 12,
+                    color: wordCountFeedback.color,
+                    fontWeight: 500,
+                  }}>
+                    {wordCountFeedback.text}
+                  </span>
+                </div>
+              )}
 
               {/* Textarea */}
               <textarea
@@ -693,7 +697,7 @@ export default function Workspace() {
                       fontFamily: "var(--font-serif)",
                       fontStyle: "italic",
                     }}>
-                      Rewriting with {toneLabel} tone…
+                      {loadingStage || `Rewriting with ${toneLabel} tone…`}
                     </p>
                   </div>
                 ) : output ? (
@@ -710,6 +714,45 @@ export default function Workspace() {
                     }}>
                       {output}
                     </p>
+                    
+                    {/* Quality Badge */}
+                    {qualityScore && (
+                      <div style={{
+                        marginTop: 16,
+                        marginBottom: 16,
+                        padding: "14px 18px",
+                        background: "linear-gradient(135deg, #F0FDF4 0%, #ECFDF5 100%)",
+                        border: "1px solid #86EFAC",
+                        borderRadius: "var(--r-md)",
+                        display: "flex",
+                        alignItems: "flex-start",
+                        gap: 12,
+                      }}>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2.5" strokeLinecap="round" style={{ marginTop: 2, flexShrink: 0 }}>
+                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <div style={{ flex: 1 }}>
+                          <div style={{
+                            fontSize: 13,
+                            fontWeight: 600,
+                            color: "#065F46",
+                            marginBottom: 6,
+                          }}>
+                            Quality Score: {qualityScore.total || 'N/A'}/100
+                          </div>
+                          <div style={{
+                            fontSize: 11,
+                            color: "#047857",
+                            lineHeight: 1.5,
+                          }}>
+                            {qualityScore.total >= 85 ? '✨ Excellent quality - sounds naturally human!' : 
+                             qualityScore.total >= 70 ? '✓ Good quality - natural and readable' :
+                             '○ Acceptable - review recommended'}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    
                     <div style={{
                       marginTop: 18, 
                       paddingTop: 14,

@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
 
     // Parse request body
     const body = await request.json();
-    const { text, tone = 'standard', mode = 'standard', provider = 'auto', qualityMode = 'high' } = body;
+    const { text, tone = 'standard', provider = 'auto' } = body;
 
     // Validation
     if (!text || typeof text !== 'string') {
@@ -95,35 +95,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Load the humanization system prompt
-    const systemPrompt = getHumanizationPrompt();
-
-    // Add tone-specific instructions
-    let toneInstruction = '';
-    switch (tone.toLowerCase()) {
-      case 'academic':
-        toneInstruction = '\n\nTONE: Academic but still natural. Use scholarly vocabulary but maintain human flow. Appropriate for essays, research, and academic writing.';
-        break;
-      case 'professional':
-        toneInstruction = '\n\nTONE: Professional and clear. Business-appropriate language while staying natural and approachable. Suitable for work emails, reports, and business content.';
-        break;
-      case 'standard':
-      default:
-        toneInstruction = '\n\nTONE: Standard conversational. Natural everyday language. Appropriate for general content, blogs, and casual writing.';
-    }
-
-    // Add mode-specific instructions
-    let modeInstruction = '';
-    if (mode === 'ultra') {
-      modeInstruction = '\n\nMODE: ULTRA - Apply maximum humanization. Be more aggressive with natural language patterns, contractions, and casual phrasing. Push boundaries of natural human writing.';
-    }
-
-    // Construct the full system prompt
-    const fullSystemPrompt = systemPrompt + toneInstruction + modeInstruction;
+    // Load the humanization system prompt (minimal for fine-tuned model)
+    const systemPrompt = getHumanizationPrompt(tone as any);
 
     // Determine which AI provider to use
     let selectedProvider = provider;
     let humanizedText = '';
+    let qualityScore: any = undefined;
     
     // Auto-select provider: Gemini (free) first, then OpenAI if available
     if (selectedProvider === 'auto') {
@@ -150,13 +128,14 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      console.log('🤖 Calling Google Gemini (FREE) with humanization prompt...');
+      console.log('🤖 Calling Google Gemini (fine-tuned) with humanization...');
       
-      // Use quality selection for better results (3 generations, pick best)
-      const useQualitySelection = qualityMode === 'high';
-      humanizedText = await humanizeWithGemini(text, fullSystemPrompt, useQualitySelection);
+      const result = await humanizeWithGemini(text, tone as any, systemPrompt);
+      humanizedText = result.text;
+      qualityScore = result.score;
       
       console.log('✅ Gemini humanization successful');
+      console.log(`📊 Quality: ${result.score.total}/100 | Generations: ${result.generationCount} | Model: ${result.modelUsed}`);
       
     } else if (selectedProvider === 'openai') {
       if (!openai) {
@@ -166,14 +145,13 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      console.log('🤖 Calling OpenAI with humanization prompt...');
       
       const userMessage = `Humanize the following text. Output ONLY the humanized version with no explanations, notes, or meta-commentary:\n\n${text}`;
       
       const completion = await openai.chat.completions.create({
         model: 'gpt-4o-mini',
         messages: [
-          { role: 'system', content: fullSystemPrompt },
+          { role: 'system', content: systemPrompt },
           { role: 'user', content: userMessage },
         ],
         temperature: 0.7,
@@ -196,7 +174,7 @@ export async function POST(request: NextRequest) {
     const deductResult = await deductCredits(
       user.id,
       wordCount,
-      `Humanized ${wordCount} words (${tone} tone, ${mode} mode)`
+      `Humanized ${wordCount} words (${tone} tone)`
     );
 
     if (!deductResult.success) {
@@ -212,7 +190,7 @@ export async function POST(request: NextRequest) {
       originalText: text,
       humanizedText: humanizedText,
       tone,
-      ultraMode: mode === 'ultra',
+      ultraMode: false,
       wordCount,
       creditsUsed: wordCount,
     });
@@ -231,11 +209,11 @@ export async function POST(request: NextRequest) {
         inputLength: text.length,
         outputLength: humanizedText.length,
         tone,
-        mode,
         provider: selectedProvider,
         wordCount,
         creditsUsed: wordCount,
         remainingCredits: deductResult.remainingCredits,
+        qualityScore: selectedProvider === 'gemini' && typeof qualityScore !== 'undefined' ? qualityScore : null,
       },
     });
 
@@ -275,22 +253,23 @@ export async function POST(request: NextRequest) {
 // Health check endpoint
 export async function GET() {
   try {
+    const hasTunedModel = !!(process.env.GOOGLE_CLOUD_PROJECT && process.env.TUNED_MODEL_ENDPOINT);
     const hasGemini = !!process.env.GOOGLE_GEMINI_API_KEY;
     const hasOpenAI = !!process.env.OPENAI_API_KEY;
-    const hasPrompt = !!process.env.HUMANIZATION_PROMPT_PATH;
 
     // Determine default provider
     let defaultProvider = 'none';
-    if (hasGemini) defaultProvider = 'gemini';
+    if (hasTunedModel) defaultProvider = 'fine-tuned';
+    else if (hasGemini) defaultProvider = 'gemini';
     else if (hasOpenAI) defaultProvider = 'openai';
 
     return NextResponse.json({
       status: 'ok',
       defaultProvider,
       config: {
+        fineTuned: hasTunedModel ? 'configured' : 'missing',
         gemini: hasGemini ? 'configured (FREE)' : 'missing',
         openai: hasOpenAI ? 'configured (paid)' : 'missing',
-        prompt: hasPrompt ? 'configured' : 'missing',
       },
       timestamp: new Date().toISOString(),
     });

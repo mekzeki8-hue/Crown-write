@@ -1,19 +1,23 @@
 /**
  * Quality scoring system for humanized text
  * Evaluates how natural and human-like the output is
+ * Now with tone-aware scoring!
  */
+
+type ToneType = 'standard' | 'academic' | 'professional' | 'friendly' | 'formal' | 'casual' | 'creative';
 
 export interface QualityScore {
   total: number;           // 0-100 overall score
-  naturalness: number;     // How natural it sounds
-  variety: number;         // Sentence structure variety
-  casualness: number;      // Appropriate casual tone
-  roboticMarkers: number;  // Penalty for AI markers
+  naturalness: number;     // How natural it sounds (30pts)
+  variety: number;         // Sentence structure variety (25pts)
+  toneMatch: number;       // How well it matches requested tone (25pts)
+  roboticMarkers: number;  // Penalty for AI markers (20pts)
   details: {
     roboticPhrasesFound: string[];
     contractionsCount: number;
     sentenceLengthVariety: number;
     casualMarkersCount: number;
+    toneScore: string;
   };
 }
 
@@ -50,10 +54,89 @@ const CASUAL_MARKERS = [
 ];
 
 /**
- * Score the quality of humanized text
+ * Score how well the text matches the requested tone
+ */
+function scoreToneMatch(text: string, tone: ToneType): { score: number; description: string } {
+  const lowerText = text.toLowerCase();
+  const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+  const avgLength = sentences.reduce((sum, s) => sum + s.trim().split(/\s+/).length, 0) / sentences.length;
+  
+  let score = 15; // Base score
+  let description = '';
+  
+  // Count contractions
+  const contractionCount = (text.match(/\b\w+'\w+\b/g) || []).length;
+  const contractionRatio = contractionCount / sentences.length;
+  
+  // Count casual markers
+  const casualCount = CASUAL_MARKERS.filter(m => lowerText.includes(m.toLowerCase())).length;
+  
+  // Count formal markers
+  const formalMarkers = ['furthermore', 'moreover', 'hence', 'thus', 'therefore'];
+  const formalCount = formalMarkers.filter(m => lowerText.includes(m)).length;
+  
+  switch (tone) {
+    case 'academic':
+      // Scholarly but natural - moderate contractions OK, longer sentences
+      if (avgLength > 15 && avgLength < 25) score += 5;
+      if (contractionRatio < 0.3 && contractionRatio > 0.1) score += 3;
+      if (formalCount > 0 && formalCount < 3) score += 2;
+      description = 'Scholarly tone';
+      break;
+      
+    case 'professional':
+      // Clear business language - some contractions, balanced sentences
+      if (avgLength > 12 && avgLength < 20) score += 5;
+      if (contractionRatio > 0.2 && contractionRatio < 0.5) score += 5;
+      description = 'Professional tone';
+      break;
+      
+    case 'formal':
+      // Polished and proper - minimal contractions, structured
+      if (avgLength > 15) score += 5;
+      if (contractionRatio < 0.2) score += 5;
+      description = 'Formal tone';
+      break;
+      
+    case 'casual':
+    case 'friendly':
+      // Relaxed and conversational - lots of contractions and casual markers
+      if (contractionRatio > 0.4) score += 5;
+      if (casualCount > 2) score += 3;
+      if (avgLength < 18) score += 2;
+      description = 'Conversational tone';
+      break;
+      
+    case 'creative':
+      // Expressive and vivid - varied sentences, creative language
+      const lengths = sentences.map(s => s.trim().split(/\s+/).length);
+      const variance = lengths.reduce((sum, len, _, arr) => {
+        const mean = arr.reduce((a, b) => a + b) / arr.length;
+        return sum + Math.pow(len - mean, 2);
+      }, 0) / lengths.length;
+      if (variance > 30) score += 5;
+      if (contractionRatio > 0.3) score += 5;
+      description = 'Creative tone';
+      break;
+      
+    case 'standard':
+    default:
+      // Natural everyday language - good contractions, varied sentences
+      if (contractionRatio > 0.3) score += 3;
+      if (casualCount > 1) score += 2;
+      if (avgLength > 10 && avgLength < 20) score += 5;
+      description = 'Natural tone';
+      break;
+  }
+  
+  return { score: Math.min(score, 25), description };
+}
+
+/**
+ * Score the quality of humanized text (ENHANCED with tone matching)
  * Higher score = more human-like
  */
-export function scoreHumanizedText(text: string): QualityScore {
+export function scoreHumanizedText(text: string, tone: ToneType = 'standard'): QualityScore {
   const lowerText = text.toLowerCase();
   const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
   
@@ -103,27 +186,29 @@ export function scoreHumanizedText(text: string): QualityScore {
   const repetitionPenalty = startsWithThe > 3 ? (startsWithThe - 3) * 3 : 0;
   
   // CALCULATE COMPONENT SCORES
-  const naturalness = Math.max(0, 40 - roboticPenalty + contractionsCount * 2);
-  const variety = Math.max(0, Math.min(varietyScore - repetitionPenalty, 25));
-  const casualness = Math.max(0, casualScore - longSentencePenalty);
-  const roboticMarkers = Math.max(0, 10 - roboticPhrasesFound.length * 5);
+  const naturalness = Math.max(0, Math.min(30, 30 - (roboticPenalty / 2) + (contractionsCount * 1.5)));
+  const variety = Math.max(0, Math.min(25, varietyScore - repetitionPenalty));
+  const toneMatchResult = scoreToneMatch(text, tone);
+  const toneMatch = toneMatchResult.score;
+  const roboticMarkers = Math.max(0, 20 - roboticPhrasesFound.length * 4);
   
   // TOTAL SCORE (0-100)
   const total = Math.max(0, Math.min(100,
-    naturalness + variety + casualness + roboticMarkers
+    naturalness + variety + toneMatch + roboticMarkers
   ));
   
   return {
     total,
     naturalness: Math.round(naturalness),
     variety: Math.round(variety),
-    casualness: Math.round(casualness),
+    toneMatch: Math.round(toneMatch),
     roboticMarkers: Math.round(roboticMarkers),
     details: {
       roboticPhrasesFound,
       contractionsCount,
       sentenceLengthVariety: Math.round(stdDev * 10) / 10,
-      casualMarkersCount
+      casualMarkersCount,
+      toneScore: toneMatchResult.description
     }
   };
 }

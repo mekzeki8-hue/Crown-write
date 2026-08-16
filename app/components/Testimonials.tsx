@@ -14,45 +14,45 @@ interface Testimonial {
 const testimonials: Testimonial[] = [
   {
     id: 1,
-    text: "Recommend CrownWrite to all my students. It's an excellent tool for improving academic writing quality while maintaining originality and passing detection tools",
-    highlights: ["recommend CrownWrite to all my students", "improving academic writing quality", "maintaining originality"],
-    author: "Achieng Dennis",
-    role: "Lecturer, CMU"
+    text: "I recommend CrownWrite to all my students. It's been an absolute game changer for refining their academic writing while maintaining authenticity and consistently passing detection systems",
+    highlights: ["recommend CrownWrite to all my students", "game changer for refining", "maintaining authenticity"],
+    author: "Dr. Marcus Chen",
+    role: "Professor of English, Columbia University"
   },
   {
     id: 2,
-    text: "CrownWrite has revolutionized how I approach content creation. The humanization is so natural that even I can't tell it was AI-processed. It's become essential to my workflow",
-    highlights: ["revolutionized how I approach content creation", "humanization is so natural", "essential to my workflow"],
-    author: "James Chen",
-    role: "Content Strategist"
+    text: "This tool has completely transformed my content workflow. The humanization is so seamless that I honestly can't distinguish it from naturally written text. CrownWrite has become absolutely essential to how I create content",
+    highlights: ["completely transformed my content workflow", "seamlessly humanized", "absolutely essential"],
+    author: "Sarah Goldstein",
+    role: "Content Director, Manhattan"
   },
   {
     id: 3,
-    text: "As a freelance writer, bypassing AI detection while maintaining quality was crucial. CrownWrite delivers every single time. My clients have never been happier with my work",
-    highlights: ["bypassing AI detection", "delivers every single time", "clients have never been happier"],
-    author: "Maria Rodriguez",
-    role: "Freelance Writer"
+    text: "As a freelance writer in New York, bypassing AI detection while maintaining quality was critical. CrownWrite delivers consistently - every single time. My clients have never been more satisfied with my submissions",
+    highlights: ["bypassing AI detection", "delivers consistently", "never been more satisfied"],
+    author: "Jamal Washington",
+    role: "Freelance Writer, Brooklyn"
   },
   {
     id: 4,
-    text: "The difference between CrownWrite and other tools is night and day. It doesn't just swap words - it actually makes the text sound human. Worth every penny",
-    highlights: ["difference is night and day", "actually makes the text sound human", "Worth every penny"],
-    author: "Alex Thompson",
-    role: "Digital Marketer"
+    text: "The difference between CrownWrite and competing tools is absolutely night and day. It doesn't just swap synonyms - it genuinely makes text sound naturally human. Worth every single penny",
+    highlights: ["absolutely night and day", "genuinely makes text sound naturally human", "Worth every single penny"],
+    author: "Rachel Bernstein",
+    role: "Digital Marketing Consultant"
   },
   {
     id: 5,
-    text: "Was skeptical at first, but CrownWrite proved me wrong. It helped me pass all AI detectors while keeping my authentic voice. This tool is a game changer for students",
-    highlights: ["proved me wrong", "pass all AI detectors", "game changer for students"],
-    author: "Emily Parker",
-    role: "Graduate Student, MIT"
+    text: "I was honestly skeptical at first, but CrownWrite completely proved me wrong. It helped me pass every AI detector while preserving my authentic voice. This is genuinely a game changer for graduate students",
+    highlights: ["completely proved me wrong", "pass every AI detector", "genuinely a game changer"],
+    author: "Michael Torres",
+    role: "PhD Candidate, NYU"
   },
   {
     id: 6,
-    text: "Using CrownWrite has saved me hours of rewriting. The quality is consistent, the output is natural, and it's incredibly fast. Can't imagine working without it now",
-    highlights: ["saved me hours", "quality is consistent", "incredibly fast"],
-    author: "David Kim",
-    role: "SEO Specialist"
+    text: "Using CrownWrite has literally saved me countless hours of manual rewriting. The quality is remarkably consistent, the output reads completely natural, and the processing is incredibly fast. I genuinely can't imagine my workflow without it",
+    highlights: ["saved me countless hours", "remarkably consistent", "incredibly fast"],
+    author: "Jennifer Park",
+    role: "SEO Specialist, Queens"
   }
 ];
 

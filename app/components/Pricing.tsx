@@ -228,14 +228,14 @@ function PlanCard({ plan, yearly }: { plan: typeof PLANS[0]; yearly: boolean }) 
               color: priceSubColor,
               textDecoration: "line-through",
               opacity: 0.6,
-            }}>${plan.monthly.toFixed(2)}</span>
+            }}>$​{plan.monthly.toFixed(2)}</span>
           </div>
         )}
         <span style={{
-          fontFamily: "var(--font-serif)", fontSize: 52,
-          fontWeight: 600, letterSpacing: "-2.5px", lineHeight: 1,
+          fontFamily: "var(--font-sans)", fontSize: 52,
+          fontWeight: 600, letterSpacing: "-1px", lineHeight: 1,
           color: priceColor,
-        }}>${displayPrice.toFixed(2)}</span>
+        }}>$​{displayPrice.toFixed(2)}</span>
       </div>
       
       <p style={{ fontSize: 12, color: priceSubColor, marginBottom: yearly ? 2 : 4, fontWeight: 400 }}>
@@ -383,10 +383,10 @@ function TopUpCard({ plan, yearly }: { plan: { name: string; price: number; cred
         {/* Price */}
         <div style={{ marginBottom: 4 }}>
           <span style={{
-            fontFamily: "var(--font-serif)", fontSize: 44,
-            fontWeight: 600, letterSpacing: "-2px", lineHeight: 1,
+            fontFamily: "var(--font-sans)", fontSize: 44,
+            fontWeight: 600, letterSpacing: "-1px", lineHeight: 1,
             color: "var(--ink)",
-          }}>${plan.price}</span>
+          }}>$​{plan.price}</span>
           <span style={{ fontSize: 14, color: "var(--muted)", marginLeft: 4 }}>/one-time</span>
         </div>
         

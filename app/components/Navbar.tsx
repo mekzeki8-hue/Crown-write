@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import Logo from "./Logo";
 import ThemeToggle from "./ThemeToggle";
+import { createClient } from "@/lib/supabase/client";
+import { User } from "@supabase/supabase-js";
 
 const NAV = [
   { l:"About",    h:"#"          },
@@ -13,12 +15,36 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open,     setOpen]     = useState(false);
   const [banner,   setBanner]   = useState(true);
+  const [user,     setUser]     = useState<User | null>(null);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", fn, { passive: true });
     return () => window.removeEventListener("scroll", fn);
   }, []);
+
+  useEffect(() => {
+    const supabase = createClient();
+    
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleSignOut = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    window.location.href = '/';
+  };
 
   const bannerH = 40;
 
@@ -147,38 +173,220 @@ export default function Navbar() {
               <ThemeToggle />
             </div>
 
-            {/* Get Started Button */}
-            <a href="/login" style={{
-              padding: "10px 24px",
-              borderRadius: 999,
-              fontSize: 14,
-              fontWeight: 500,
-              background: "var(--g-brand)",
-              color: "white",
-              boxShadow: "0 4px 12px rgba(168, 125, 84, 0.25)",
-              transition: "all .25s cubic-bezier(0.4, 0, 0.2, 1)",
-              border: "none",
-              display: "flex",
-              alignItems: "center",
-              gap: 7,
-              textDecoration: "none",
-              flexShrink: 0,
-            }}
-            onMouseEnter={e => { 
-              const el = e.currentTarget as HTMLElement;
-              el.style.transform = "translateY(-1px)";
-              el.style.boxShadow = "0 6px 20px rgba(168, 125, 84, 0.35)";
-            }}
-            onMouseLeave={e => { 
-              const el = e.currentTarget as HTMLElement;
-              el.style.transform = "translateY(0)";
-              el.style.boxShadow = "0 4px 12px rgba(168, 125, 84, 0.25)";
-            }}>
-              Get started
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </a>
+            {/* User Profile or Get Started Button */}
+            {user ? (
+              <div style={{ position: "relative" }}>
+                <button
+                  onClick={() => setShowProfileMenu(!showProfileMenu)}
+                  style={{
+                    padding: "10px 18px",
+                    borderRadius: 999,
+                    fontSize: 14,
+                    fontWeight: 500,
+                    background: "var(--surface)",
+                    color: "var(--ink)",
+                    border: "1px solid var(--border)",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+                    transition: "all .25s cubic-bezier(0.4, 0, 0.2, 1)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    textDecoration: "none",
+                    flexShrink: 0,
+                    cursor: "pointer",
+                  }}
+                  onMouseEnter={e => {
+                    const el = e.currentTarget as HTMLElement;
+                    el.style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)";
+                    el.style.borderColor = "var(--brand)";
+                  }}
+                  onMouseLeave={e => {
+                    const el = e.currentTarget as HTMLElement;
+                    el.style.boxShadow = "0 2px 8px rgba(0,0,0,0.04)";
+                    el.style.borderColor = "var(--border)";
+                  }}
+                >
+                  <div style={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: "50%",
+                    background: "var(--g-brand)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "white",
+                    fontSize: 12,
+                    fontWeight: 600,
+                  }}>
+                    {user.email?.charAt(0).toUpperCase()}
+                  </div>
+                  <div style={{ textAlign: "left", maxWidth: 150 }}>
+                    <div style={{
+                      fontSize: 13,
+                      fontWeight: 600,
+                      color: "var(--ink)",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}>
+                      {user.user_metadata?.full_name || user.email?.split('@')[0]}
+                    </div>
+                    <div style={{
+                      fontSize: 11,
+                      color: "var(--muted)",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}>
+                      {user.email}
+                    </div>
+                  </div>
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{
+                      transition: "transform .2s",
+                      transform: showProfileMenu ? "rotate(180deg)" : "rotate(0deg)",
+                    }}
+                  >
+                    <path d="M6 9l6 6 6-6"/>
+                  </svg>
+                </button>
+
+                {/* Profile Dropdown Menu */}
+                {showProfileMenu && (
+                  <>
+                    <div
+                      onClick={() => setShowProfileMenu(false)}
+                      style={{
+                        position: "fixed",
+                        inset: 0,
+                        zIndex: 199,
+                      }}
+                    />
+                    <div style={{
+                      position: "absolute",
+                      top: "calc(100% + 8px)",
+                      right: 0,
+                      minWidth: 220,
+                      background: "var(--surface)",
+                      border: "1px solid var(--border)",
+                      borderRadius: 12,
+                      boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
+                      padding: "8px",
+                      zIndex: 200,
+                      backdropFilter: "blur(20px)",
+                      WebkitBackdropFilter: "blur(20px)",
+                    }}>
+                      <a
+                        href="/dashboard"
+                        onClick={() => setShowProfileMenu(false)}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 10,
+                          padding: "10px 12px",
+                          borderRadius: 8,
+                          fontSize: 14,
+                          fontWeight: 500,
+                          color: "var(--ink)",
+                          textDecoration: "none",
+                          transition: "background .15s",
+                        }}
+                        onMouseEnter={e => {
+                          e.currentTarget.style.background = "var(--bg-2)";
+                        }}
+                        onMouseLeave={e => {
+                          e.currentTarget.style.background = "transparent";
+                        }}
+                      >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                          <line x1="9" y1="3" x2="9" y2="21"/>
+                        </svg>
+                        Dashboard
+                      </a>
+                      <div style={{
+                        height: 1,
+                        background: "var(--border)",
+                        margin: "4px 0",
+                      }} />
+                      <button
+                        onClick={handleSignOut}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 10,
+                          padding: "10px 12px",
+                          borderRadius: 8,
+                          fontSize: 14,
+                          fontWeight: 500,
+                          color: "#e53e3e",
+                          textDecoration: "none",
+                          transition: "background .15s",
+                          width: "100%",
+                          background: "transparent",
+                          border: "none",
+                          cursor: "pointer",
+                          textAlign: "left",
+                        }}
+                        onMouseEnter={e => {
+                          e.currentTarget.style.background = "rgba(229, 62, 62, 0.08)";
+                        }}
+                        onMouseLeave={e => {
+                          e.currentTarget.style.background = "transparent";
+                        }}
+                      >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                          <polyline points="16 17 21 12 16 7"/>
+                          <line x1="21" y1="12" x2="9" y2="12"/>
+                        </svg>
+                        Sign Out
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            ) : (
+              <a href="/login" style={{
+                padding: "10px 24px",
+                borderRadius: 999,
+                fontSize: 14,
+                fontWeight: 500,
+                background: "var(--g-brand)",
+                color: "white",
+                boxShadow: "0 4px 12px rgba(168, 125, 84, 0.25)",
+                transition: "all .25s cubic-bezier(0.4, 0, 0.2, 1)",
+                border: "none",
+                display: "flex",
+                alignItems: "center",
+                gap: 7,
+                textDecoration: "none",
+                flexShrink: 0,
+              }}
+              onMouseEnter={e => { 
+                const el = e.currentTarget as HTMLElement;
+                el.style.transform = "translateY(-1px)";
+                el.style.boxShadow = "0 6px 20px rgba(168, 125, 84, 0.35)";
+              }}
+              onMouseLeave={e => { 
+                const el = e.currentTarget as HTMLElement;
+                el.style.transform = "translateY(0)";
+                el.style.boxShadow = "0 4px 12px rgba(168, 125, 84, 0.25)";
+              }}>
+                Get started
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+              </a>
+            )}
 
             {/* Hamburger Menu (Mobile) */}
             <button onClick={() => setOpen(v=>!v)} className="show-md" aria-label="Menu" style={{
@@ -230,13 +438,58 @@ export default function Navbar() {
               <a key={l.l} href={l.h} onClick={() => setOpen(false)} style={{
                 display:"block", padding:"12px 4px", fontSize:15, fontWeight:500,
                 color:"var(--muted)", borderBottom:"1px solid var(--border)",
+                textDecoration: "none",
               }}>{l.l}</a>
             ))}
-            <div style={{ display:"flex", gap:10, marginTop:14 }}>
-              <a href="/login" onClick={() => setOpen(false)} className="btn btn-primary"
-                style={{ flex:1, padding:"12px", fontSize:14, borderRadius:99, textAlign:"center" }}>
-                Get started →
-              </a>
+            <div style={{ display:"flex", flexDirection: "column", gap:10, marginTop:14 }}>
+              {user ? (
+                <>
+                  <div style={{
+                    padding: "12px",
+                    background: "var(--bg-2)",
+                    borderRadius: 12,
+                    border: "1px solid var(--border)",
+                  }}>
+                    <div style={{
+                      fontSize: 14,
+                      fontWeight: 600,
+                      color: "var(--ink)",
+                      marginBottom: 4,
+                    }}>
+                      {user.user_metadata?.full_name || user.email?.split('@')[0]}
+                    </div>
+                    <div style={{
+                      fontSize: 12,
+                      color: "var(--muted)",
+                    }}>
+                      {user.email}
+                    </div>
+                  </div>
+                  <a href="/dashboard" onClick={() => setOpen(false)} className="btn btn-primary"
+                    style={{ flex:1, padding:"12px", fontSize:14, borderRadius:99, textAlign:"center", textDecoration: "none" }}>
+                    Dashboard →
+                  </a>
+                  <button onClick={() => { handleSignOut(); setOpen(false); }}
+                    style={{
+                      padding:"12px",
+                      fontSize:14,
+                      borderRadius:99,
+                      textAlign:"center",
+                      background: "transparent",
+                      border: "1px solid #e53e3e",
+                      color: "#e53e3e",
+                      fontWeight: 500,
+                      cursor: "pointer",
+                    }}>
+                    Sign Out
+                  </button>
+                </>
+              ) : (
+                <a href="/login" onClick={() => setOpen(false)} className="btn btn-primary"
+                  style={{ flex:1, padding:"12px", fontSize:14, borderRadius:99, textAlign:"center", textDecoration: "none" }}>
+                  Get started →
+                </a>
+              )}
             </div>
           </div>
         </>

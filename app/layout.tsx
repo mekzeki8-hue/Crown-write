@@ -15,6 +15,9 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: "CrownWrite — AI Writing, Undeniably Human",
   description: "Transform AI-generated text into natural, human-like prose that bypasses every detector.",
+  verification: {
+    google: "xn3uzP9Je3MF8ZrKDTU5pc4DAI99w7Rqehu2doRESPs",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

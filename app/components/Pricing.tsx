@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import DiscountBanner from "./DiscountBanner";
 
 const PLANS = [
   {
@@ -503,8 +504,15 @@ export default function Pricing() {
           <p style={{ fontSize: 15, color: "var(--muted)", fontWeight: 400, marginBottom: 28 }}>
             No hidden fees. Cancel anytime.
           </p>
+        </div>
 
-          {/* Toggle */}
+        {/* Discount Banner */}
+        <div style={{ marginBottom: 36 }}>
+          <DiscountBanner />
+        </div>
+
+        {/* Toggle */}
+        <div style={{ textAlign: "center", marginBottom: 40 }}>
           <div style={{
             display: "inline-flex", background: "var(--surface)",
             border: "1px solid var(--border)", borderRadius: 99, padding: 3,
@@ -530,6 +538,16 @@ export default function Pricing() {
               </button>
             ))}
           </div>
+          
+          <p style={{
+            fontSize: 13,
+            color: "var(--success)",
+            fontWeight: 600,
+            marginTop: 12,
+            letterSpacing: "-0.01em",
+          }}>
+            Save 50% per month with yearly billing
+          </p>
         </div>
 
         {/* Subscription Cards */}

@@ -164,9 +164,9 @@ export default function Hero() {
           marginTop: 56,
         }}>
           {[
-            { icon: "✓", label: "99%+ humanization effectiveness" },
+            { icon: "✓", label: "99%+ Rewriting effectiveness" },
             { icon: "🌐", label: "Supports over 100 languages" },
-            { icon: "⚡", label: "Blazing fast humanization" }
+            { icon: "⚡", label: "Blazing fast Rewriting" }
           ].map((stat, i) => (
             <div key={i} style={{
               padding: "16px 28px",

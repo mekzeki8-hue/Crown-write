@@ -147,10 +147,10 @@ export async function deductCredits(
 /**
  * Save humanization to history
  */
-export async function saveHumanizationHistory(data: {
+export async function saveRewritingHistory(data: {
   userId: string;
   originalText: string;
-  humanizedText: string;
+  rewrittenText: string;
   tone: string;
   ultraMode: boolean;
   wordCount: number;
@@ -162,7 +162,7 @@ export async function saveHumanizationHistory(data: {
       .insert({
         user_id: data.userId,
         original_text: data.originalText,
-        humanized_text: data.humanizedText,
+        humanized_text: data.rewrittenText,
         tone: data.tone,
         ultra_mode: data.ultraMode,
         word_count: data.wordCount,
@@ -177,7 +177,7 @@ export async function saveHumanizationHistory(data: {
 
     return { success: true };
   } catch (error) {
-    console.error('Unexpected error in saveHumanizationHistory:', error);
+    console.error('Unexpected error in saveRewritingHistory:', error);
     return { success: false, error };
   }
 }

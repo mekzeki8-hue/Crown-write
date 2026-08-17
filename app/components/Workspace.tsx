@@ -27,12 +27,12 @@ const BRAND_COLOR = "#C09A72";
 const BRAND_LIGHT = "#D4B896";
 const BRAND_DARK = "#A87D54";
 
-/* ── API Call to Humanize Endpoint ── */
-async function callHumanizeAPI(
+/* ── API Call to Rewrite Endpoint ── */
+async function callRewriteAPI(
   text: string, 
   tone: ToneId
-): Promise<{ humanizedText: string; stats: any }> {
-  const response = await fetch('/api/humanize', {
+): Promise<{ RewritedText: string; stats: any }> {
+  const response = await fetch('/api/Rewrite', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -44,12 +44,12 @@ async function callHumanizeAPI(
 
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error.error || 'Humanization failed');
+    throw new Error(error.error || 'Rewriting failed');
   }
 
   const data = await response.json();
   return { 
-    humanizedText: data.humanizedText,
+    RewritedText: data.RewritedText,
     stats: data.stats 
   };
 }
@@ -116,7 +116,7 @@ export default function Workspace() {
     
     // Check if user is logged in
     if (!user) {
-      setError("Please sign in to use the humanizer");
+      setError("Please sign in to use the Rewriter");
       showToast("Sign in required");
       return;
     }
@@ -131,9 +131,9 @@ export default function Workspace() {
       setLoadingStage("Analyzing your text...");
       await new Promise(resolve => setTimeout(resolve, 500));
       
-      setLoadingStage("Generating humanized version...");
+      setLoadingStage("Generating Rewrited version...");
       const startTime = Date.now();
-      const result = await callHumanizeAPI(input, tone);
+      const result = await callRewriteAPI(input, tone);
       const elapsed = Date.now() - startTime;
       
       // Show refining stage if taking longer
@@ -142,19 +142,19 @@ export default function Workspace() {
         await new Promise(resolve => setTimeout(resolve, 300));
       }
       
-      setOutput(result.humanizedText);
+      setOutput(result.RewritedText);
       setQualityScore(result.stats?.qualityScore || null);
-      showToast("Humanized successfully");
+      showToast("Rewrited successfully");
       
       // Dispatch event to update credits display
       window.dispatchEvent(new CustomEvent('creditsUpdated', { 
         detail: { refresh: true } 
       }));
     } catch (err: any) {
-      const errorMsg = err.message || "Humanization failed. Please try again.";
+      const errorMsg = err.message || "Rewriting failed. Please try again.";
       setError(errorMsg);
       showToast("Error: " + errorMsg);
-      console.error('Humanization error:', err);
+      console.error('Rewriting error:', err);
     } finally {
       setLoading(false);
       setLoadingStage("");
@@ -199,7 +199,7 @@ export default function Workspace() {
   const getWordCountMessage = (wordCount: number) => {
     if (wordCount === 0) return null;
     if (wordCount < 100) return { icon: "⚠️", text: "Short text may have limited improvement", color: "#F59E0B" };
-    if (wordCount < 250) return { icon: "💡", text: "Good length for humanization", color: "#3B82F6" };
+    if (wordCount < 250) return { icon: "💡", text: "Good length for Rewriting", color: "#3B82F6" };
     if (wordCount <= 1000) return { icon: "✅", text: "Optimal length for best results", color: "#10B981" };
     return { icon: "⏱️", text: "Large text, will take 30-45 seconds", color: "#8B5CF6" };
   };
@@ -543,7 +543,7 @@ export default function Workspace() {
                 <button
                   onClick={run}
                   disabled={!input.trim() || loading}
-                  className="btn-humanize"
+                  className="btn-Rewrite"
                   style={{
                     minWidth: 120, 
                     padding: "10px 24px", 
@@ -553,8 +553,8 @@ export default function Workspace() {
                   }}
                 >
                   {loading
-                    ? <><span style={{ animation: "spin .8s linear infinite", display: "inline-block" }}>↻</span>&nbsp;Humanizing…</>
-                    : "Humanize"
+                    ? <><span style={{ animation: "spin .8s linear infinite", display: "inline-block" }}>↻</span>&nbsp;Rewriting…</>
+                    : "Rewrite"
                   }
                 </button>
               </div>
@@ -584,7 +584,7 @@ export default function Workspace() {
                   letterSpacing: "0.05em",
                   transition: "color 0.3s",
                 }}>
-                  Humanized Output
+                  Rewrited Output
                 </span>
 
                 {output && (
@@ -775,7 +775,7 @@ export default function Workspace() {
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                           <polyline points="20 6 9 17 4 12"/>
                         </svg>
-                        Humanized · ready to use
+                        Rewrited · ready to use
                       </span>
                     </div>
                   </>
@@ -803,10 +803,10 @@ export default function Workspace() {
                         marginBottom: 6, 
                         lineHeight: 1.5,
                       }}>
-                        Your humanized text will appear here
+                        Your Rewrited text will appear here
                       </p>
                       <p style={{ fontSize: 12, color: "var(--placeholder)", fontWeight: 400 }}>
-                        Paste text on the left and click Humanize
+                        Paste text on the left and click Rewrite
                       </p>
                     </div>
                   </div>

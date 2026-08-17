@@ -66,7 +66,7 @@ export default function Navbar() {
           letterSpacing:"0.07em", opacity:.9,
         }}>NEW</span>
         <span style={{ fontSize:13, color:"var(--muted)", fontWeight:400 }}>
-          CrownWrite V4 is here — our most refined humanizer yet.
+          CrownWrite V4 is here — our most refined Rewriter yet.
         </span>
         <a href="#workspace" style={{
           fontSize:13, color:"var(--brand-dark)", fontWeight:500,

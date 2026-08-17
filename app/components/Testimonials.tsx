@@ -21,15 +21,15 @@ const testimonials: Testimonial[] = [
   },
   {
     id: 2,
-    text: "This tool has completely transformed my content workflow. The humanization is so seamless that I honestly can't distinguish it from naturally written text. CrownWrite has become absolutely essential to how I create content",
-    highlights: ["completely transformed my content workflow", "seamlessly humanized", "absolutely essential"],
+    text: "This tool has completely transformed my content workflow. The Rewriting is so seamless that I honestly can't distinguish it from naturally written text. CrownWrite has become absolutely essential to how I create content",
+    highlights: ["completely transformed my content workflow", "seamlessly Rewrited", "absolutely essential"],
     author: "Sarah Goldstein",
     role: "Content Director, Manhattan"
   },
   {
     id: 3,
-    text: "As a freelance writer in New York, bypassing AI detection while maintaining quality was critical. CrownWrite delivers consistently - every single time. My clients have never been more satisfied with my submissions",
-    highlights: ["bypassing AI detection", "delivers consistently", "never been more satisfied"],
+    text: "As a freelance writer in New York, Achieving good results with AI detection while maintaining quality was critical. CrownWrite delivers consistently - every single time. My clients have never been more satisfied with my submissions",
+    highlights: ["Achieving good results with AI detection", "delivers consistently", "never been more satisfied"],
     author: "Jamal Washington",
     role: "Freelance Writer, Brooklyn"
   },

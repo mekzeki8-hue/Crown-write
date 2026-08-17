@@ -120,7 +120,7 @@ export default function SignupPage() {
             marginBottom: 48,
             fontWeight: 400,
           }}>
-            Join professionals who trust CrownWrite to humanize AI-generated content with precision and authenticity.
+            Join professionals who trust CrownWrite to Rewrite AI-generated content with precision and authenticity.
           </p>
 
           {/* Features */}
@@ -131,9 +131,9 @@ export default function SignupPage() {
             textAlign: 'left'
           }}>
             {[
-              { title: 'Smart Humanization', desc: 'AI that thinks like a human' },
+              { title: 'Smart Rewriting', desc: 'AI that thinks like a human' },
               { title: 'Instant Processing', desc: 'Get results in seconds' },
-              { title: 'Bypass Detection', desc: 'Undetectable by AI tools' },
+              { title: 'Achieve Good Results with Detection', desc: 'Undetectable by AI tools' },
               { title: 'Premium Quality', desc: 'Maintains meaning & tone' },
             ].map((item, i) => (
               <div key={i} style={{
@@ -179,7 +179,7 @@ export default function SignupPage() {
               Create your account
             </h2>
             <p style={{ fontSize: 15, color: '#6B7280' }}>
-              Start humanizing AI content today
+              Start Rewriting AI content today
             </p>
           </div>
 

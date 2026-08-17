@@ -26,7 +26,7 @@ export default function ResponsibleUsePage() {
             be a tool that amplifies your voice and productivity—not a way to deceive or mislead readers.
           </p>
           <p style={{ marginBottom: 24 }}>
-            This guide outlines how to use our humanization technology responsibly and in line with 
+            This guide outlines how to use our Rewriting technology responsibly and in line with 
             ethical standards.
           </p>
 
@@ -143,8 +143,8 @@ export default function ResponsibleUsePage() {
 
           <h3 style={{ fontSize: 20, marginTop: 32, marginBottom: 12, fontWeight: 600 }}>4. Respect Copyright</h3>
           <p style={{ marginBottom: 24 }}>
-            Don't humanize copyrighted content to pass it off as your own. That's plagiarism, 
-            regardless of humanization.
+            Don't Rewrite copyrighted content to pass it off as your own. That's plagiarism, 
+            regardless of Rewriting.
           </p>
 
           <h3 style={{ fontSize: 20, marginTop: 32, marginBottom: 12, fontWeight: 600 }}>5. Consider Your Audience</h3>
@@ -171,8 +171,8 @@ export default function ResponsibleUsePage() {
           <p style={{ marginBottom: 24 }}>
             If you encounter content you believe was created with CrownWrite for harmful or prohibited 
             purposes, report it to{" "}
-            <a href="mailto:crownwrite.humanizer@gmail.com" style={{ color: "var(--brand)" }}>
-              crownwrite.humanizer@gmail.com
+            <a href="mailto:crownwrite.Rewriter@gmail.com" style={{ color: "var(--brand)" }}>
+              crownwrite.Rewriter@gmail.com
             </a>.
           </p>
 

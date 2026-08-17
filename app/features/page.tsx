@@ -6,7 +6,7 @@ import Footer from "../components/Footer";
 import { motion } from "framer-motion";
 
 export default function FeaturesPage() {
-  const [activeTab, setActiveTab] = useState<"humanization" | "detection" | "quality">("humanization");
+  const [activeTab, setActiveTab] = useState<"Rewriting" | "detection" | "quality">("Rewriting");
 
   const features = [
     {
@@ -31,15 +31,15 @@ export default function FeaturesPage() {
     },
     {
       title: "Quality Metrics",
-      description: "See readability scores, perplexity analysis, and human-likeness ratings before and after humanization."
+      description: "See readability scores, perplexity analysis, and human-likeness ratings before and after Rewriting."
     },
     {
       title: "Multi-Language Support",
-      description: "Humanize content in English, Spanish, French, German, and more. Natural writing across languages."
+      description: "Rewrite content in English, Spanish, French, German, and more. Natural writing across languages."
     },
     {
       title: "Works Everywhere",
-      description: "Use in your browser, integrate via API, or install our Chrome extension. Humanize text wherever you write."
+      description: "Use in your browser, integrate via API, or install our Chrome extension. Rewrite text wherever you write."
     },
     {
       title: "Contextual Understanding",
@@ -93,7 +93,7 @@ export default function FeaturesPage() {
             lineHeight: 1.6,
           }}>
             Unlike simple rewriters, CrownWrite reconstructs how humans actually think and write. 
-            Every detail engineered to bypass detection while preserving your authentic voice.
+            Every detail engineered to achieve good results with detection while preserving your authentic voice.
           </p>
         </motion.div>
       </section>
@@ -156,7 +156,7 @@ export default function FeaturesPage() {
             fontFamily: "var(--font-serif)",
             textAlign: "center",
             marginBottom: 16,
-          }}>Bypasses Every Major Detector</h2>
+          }}>Achieves Good Results With Every Major Detector</h2>
           <p style={{
             textAlign: "center",
             color: "var(--ink-muted)",
@@ -223,7 +223,7 @@ export default function FeaturesPage() {
           {[
             { step: "1", title: "Paste Your Text", desc: "Copy AI-generated or your own draft into the editor" },
             { step: "2", title: "Choose Your Tone", desc: "Select the writing style that fits your needs" },
-            { step: "3", title: "Humanize Instantly", desc: "Our AI reconstructs natural, human-like prose" },
+            { step: "3", title: "Rewrite Instantly", desc: "Our AI reconstructs natural, human-like prose" },
             { step: "4", title: "Copy & Use", desc: "Get undetectable, high-quality content in seconds" }
           ].map((item, i) => (
             <div key={i} style={{ textAlign: "center" }}>
@@ -278,7 +278,7 @@ export default function FeaturesPage() {
           onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
           onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
-          Start Humanizing Free
+          Start Rewriting Free
         </a>
       </section>
 

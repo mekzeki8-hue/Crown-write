@@ -136,7 +136,7 @@ function scoreToneMatch(text: string, tone: ToneType): { score: number; descript
  * Score the quality of rewritten text (ENHANCED with tone matching)
  * Higher score = more human-like
  */
-export function scoreRewrittenText(text: string, tone: ToneType = 'standard'): QualityScore {
+export function scoreHumanizedText(text: string, tone: ToneType = 'standard'): QualityScore {
   const lowerText = text.toLowerCase();
   const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
   
@@ -221,8 +221,8 @@ export function selectBetterVersion(version1: string, version2: string): {
   score1: QualityScore;
   score2: QualityScore;
 } {
-  const score1 = scoreRewrittenText(version1);
-  const score2 = scoreRewrittenText(version2);
+  const score1 = scoreHumanizedText(version1);
+  const score2 = scoreHumanizedText(version2);
   
   return {
     winner: score1.total >= score2.total ? version1 : version2,
@@ -233,7 +233,7 @@ export function selectBetterVersion(version1: string, version2: string): {
 
 /**
  * Generate and select best from multiple attempts
- * This is the main function for quality-focused rewriting
+ * This is the main function for quality-focused humanization
  */
 export async function generateWithQualitySelection<T>(
   generateFn: () => Promise<string>,
@@ -246,7 +246,7 @@ export async function generateWithQualitySelection<T>(
   for (let i = 0; i < attempts; i++) {
     try {
       const text = await generateFn();
-      const score = scoreRewrittenText(text);
+      const score = scoreHumanizedText(text);
       versions.push({ text, score });
       console.log(`  Version ${i + 1}: Score ${score.total}/100 (robotic: ${score.details.roboticPhrasesFound.length}, contractions: ${score.details.contractionsCount})`);
     } catch (error: any) {

@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { GoogleAuth } from 'google-auth-library';
-import { generateWithQualitySelection, scoreRewrittenText } from './quality-scorer';
-import { finalizeRewrittenText } from './post-processor';
+import { generateWithQualitySelection, scoreHumanizedText } from './quality-scorer';
+import { finalizeHumanizedText } from './post-processor';
 
 type ToneType = 'standard' | 'academic' | 'professional' | 'friendly' | 'formal' | 'casual' | 'creative';
 
@@ -133,7 +133,7 @@ async function callTunedEndpoint(
 /**
  * Internal function: Single humanization attempt using STANDARD Gemini model (fallback)
  */
-async function rewriteSingleAttemptStandard(
+async function humanizeSingleAttemptStandard(
   text: string,
   tone: ToneType,
   systemPrompt: string,
@@ -186,10 +186,10 @@ async function rewriteSingleAttemptStandard(
 }
 
 /**
- * Rewrite text using fine-tuned model with intelligent fallback
+ * Humanize text using fine-tuned model with intelligent fallback
  * Generates multiple versions based on text length and returns the best one
  */
-export async function rewriteWithGemini(
+export async function humanizeWithGemini(
   text: string,
   tone: ToneType,
   systemPrompt: string
@@ -227,17 +227,17 @@ export async function rewriteWithGemini(
         const generatePromises = Array(generationCount).fill(null).map(() =>
           useTunedModel 
             ? callTunedEndpoint(text, tone, systemPrompt)
-            : rewriteSingleAttemptStandard(text, tone, systemPrompt, getGeminiClient())
+            : humanizeSingleAttemptStandard(text, tone, systemPrompt, getGeminiClient())
         );
         
         const generations = await Promise.all(generatePromises);
         
         // Score each and pick best
         let bestText = generations[0];
-        let bestScore = scoreRewrittenText(bestText, tone);
+        let bestScore = scoreHumanizedText(bestText, tone);
         
         for (let i = 1; i < generations.length; i++) {
-          const currentScore = scoreRewrittenText(generations[i], tone);
+          const currentScore = scoreHumanizedText(generations[i], tone);
           if (currentScore.total > bestScore.total) {
             bestText = generations[i];
             bestScore = currentScore;
@@ -248,7 +248,7 @@ export async function rewriteWithGemini(
         console.log(`📊 Details: ${bestScore.details.contractionsCount} contractions, ${bestScore.details.roboticPhrasesFound.length} robotic phrases`);
         
         // Apply post-processing cleanup
-        const finalized = finalizeRewrittenText(bestText, tone);
+        const finalized = finalizeHumanizedText(bestText, tone);
         console.log(`🧹 Post-processing: ${finalized.changesApplied.length} changes applied`);
         if (finalized.warnings.length > 0) {
           console.log(`⚠️  Warnings: ${finalized.warnings.join(', ')}`);
@@ -267,23 +267,23 @@ export async function rewriteWithGemini(
           modelUsed = 'gemini-standard-fallback';
           
           const generatePromises = Array(generationCount).fill(null).map(() =>
-            rewriteSingleAttemptStandard(text, tone, systemPrompt, getGeminiClient())
+            humanizeSingleAttemptStandard(text, tone, systemPrompt, getGeminiClient())
           );
           
           const generations = await Promise.all(generatePromises);
           
           let bestText = generations[0];
-          let bestScore = scoreRewrittenText(bestText, tone);
+          let bestScore = scoreHumanizedText(bestText, tone);
           
           for (let i = 1; i < generations.length; i++) {
-            const currentScore = scoreRewrittenText(generations[i], tone);
+            const currentScore = scoreHumanizedText(generations[i], tone);
             if (currentScore.total > bestScore.total) {
               bestText = generations[i];
               bestScore = currentScore;
             }
           }
           
-          const finalized = finalizeRewrittenText(bestText, tone);
+          const finalized = finalizeHumanizedText(bestText, tone);
           
           return {
             text: finalized.finalText,
@@ -302,12 +302,12 @@ export async function rewriteWithGemini(
     try {
       const singleResult = useTunedModel
         ? await callTunedEndpoint(text, tone, systemPrompt)
-        : await rewriteSingleAttemptStandard(text, tone, systemPrompt, getGeminiClient());
+        : await humanizeSingleAttemptStandard(text, tone, systemPrompt, getGeminiClient());
       
-      const score = scoreRewrittenText(singleResult, tone);
+      const score = scoreHumanizedText(singleResult, tone);
       
       // Still apply post-processing
-      const finalized = finalizeRewrittenText(singleResult, tone);
+      const finalized = finalizeHumanizedText(singleResult, tone);
       console.log(`🧹 Post-processing: ${finalized.changesApplied.length} changes applied`);
       
       return {
@@ -322,9 +322,9 @@ export async function rewriteWithGemini(
         console.log('⚠️  Fine-tuned model failed (credentials/billing issue), falling back to standard Gemini...');
         modelUsed = 'gemini-standard-fallback';
         
-        const singleResult = await rewriteSingleAttemptStandard(text, tone, systemPrompt, getGeminiClient());
-        const score = scoreRewrittenText(singleResult, tone);
-        const finalized = finalizeRewrittenText(singleResult, tone);
+        const singleResult = await humanizeSingleAttemptStandard(text, tone, systemPrompt, getGeminiClient());
+        const score = scoreHumanizedText(singleResult, tone);
+        const finalized = finalizeHumanizedText(singleResult, tone);
         
         return {
           text: finalized.finalText,
@@ -356,6 +356,6 @@ export async function rewriteWithGemini(
       throw new Error('Fine-tuned model configuration missing. Please set GOOGLE_CLOUD_PROJECT and TUNED_MODEL_ENDPOINT.');
     }
     
-    throw new Error(`Gemini rewriting failed: ${error.message}`);
+    throw new Error(`Gemini humanization failed: ${error.message}`);
   }
 }

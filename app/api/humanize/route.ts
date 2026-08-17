@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
-import { getRewritingPrompt } from '@/lib/prompts';
-import { rewriteWithGemini } from '@/lib/gemini';
+import { getHumanizationPrompt } from '@/lib/prompts';
+import { humanizeWithGemini } from '@/lib/gemini';
 import { createClient } from '@/lib/supabase/server';
-import { getUserCredits, deductCredits, saveRewritingHistory } from '@/lib/supabase/setup-database';
+import { getUserCredits, deductCredits, saveHumanizationHistory } from '@/lib/supabase/setup-database';
 
 // Initialize OpenAI client (optional, for paid users)
 const openai = process.env.OPENAI_API_KEY ? new OpenAI({
@@ -95,12 +95,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Load the rewriting system prompt (minimal for fine-tuned model)
-    const systemPrompt = getRewritingPrompt(tone as any);
+    // Load the humanization system prompt (minimal for fine-tuned model)
+    const systemPrompt = getHumanizationPrompt(tone as any);
 
     // Determine which AI provider to use
     let selectedProvider = provider;
-    let rewrittenText = '';
+    let humanizedText = '';
     let qualityScore: any = undefined;
     
     // Auto-select provider: Gemini (free) first, then OpenAI if available
@@ -128,13 +128,13 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      console.log('🤖 Calling Google Gemini (fine-tuned) with rewriting...');
+      console.log('🤖 Calling Google Gemini (fine-tuned) with humanization...');
       
-      const result = await rewriteWithGemini(text, tone as any, systemPrompt);
-      rewrittenText = result.text;
+      const result = await humanizeWithGemini(text, tone as any, systemPrompt);
+      humanizedText = result.text;
       qualityScore = result.score;
       
-      console.log('✅ Gemini rewriting successful');
+      console.log('✅ Gemini humanization successful');
       console.log(`📊 Quality: ${result.score.total}/100 | Generations: ${result.generationCount} | Model: ${result.modelUsed}`);
       
     } else if (selectedProvider === 'openai') {
@@ -161,12 +161,12 @@ export async function POST(request: NextRequest) {
         presence_penalty: 0.1,
       });
 
-      rewrittenText = completion.choices[0]?.message?.content?.trim() || '';
-      console.log('✅ OpenAI rewriting successful');
+      humanizedText = completion.choices[0]?.message?.content?.trim() || '';
+      console.log('✅ OpenAI humanization successful');
       console.log(`📊 Tokens used: ${completion.usage?.total_tokens || 'unknown'}`);
     }
 
-    if (!rewrittenText) {
+    if (!humanizedText) {
       throw new Error('No response from AI provider');
     }
 
@@ -174,7 +174,7 @@ export async function POST(request: NextRequest) {
     const deductResult = await deductCredits(
       user.id,
       wordCount,
-      `Rewritten ${wordCount} words (${tone} tone)`
+      `Humanized ${wordCount} words (${tone} tone)`
     );
 
     if (!deductResult.success) {
@@ -185,10 +185,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Save to history
-    await saveRewritingHistory({
+    await saveHumanizationHistory({
       userId: user.id,
       originalText: text,
-      rewrittenText: rewrittenText,
+      humanizedText: humanizedText,
       tone,
       ultraMode: false,
       wordCount,
@@ -197,17 +197,17 @@ export async function POST(request: NextRequest) {
 
     // Log success
     console.log(`📊 Input length: ${text.length} chars`);
-    console.log(`📊 Output length: ${rewrittenText.length} chars`);
+    console.log(`📊 Output length: ${humanizedText.length} chars`);
     console.log(`💳 Credits deducted: ${wordCount}`);
     console.log(`💰 Remaining credits: ${deductResult.remainingCredits}`);
 
     // Return humanized text with credit info
     return NextResponse.json({
       success: true,
-      rewrittenText,
+      humanizedText,
       stats: {
         inputLength: text.length,
-        outputLength: rewrittenText.length,
+        outputLength: humanizedText.length,
         tone,
         provider: selectedProvider,
         wordCount,
@@ -218,7 +218,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error: any) {
-    console.error('❌ Rewriting error:', error);
+    console.error('❌ Humanization error:', error);
 
     // Handle specific errors
     if (error?.message?.includes('API key') || error?.status === 401) {
@@ -237,14 +237,14 @@ export async function POST(request: NextRequest) {
 
     if (error?.code === 'ENOENT') {
       return NextResponse.json(
-        { error: 'Rewriting prompt file not found. Please check configuration.' },
+        { error: 'Humanization prompt file not found. Please check configuration.' },
         { status: 500 }
       );
     }
 
     // Generic error
     return NextResponse.json(
-      { error: 'Rewriting failed. Please try again.' },
+      { error: 'Humanization failed. Please try again.' },
       { status: 500 }
     );
   }

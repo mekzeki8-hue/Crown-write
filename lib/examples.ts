@@ -1,9 +1,9 @@
 /**
- * Few-shot learning examples for teaching AI to rewrite text
+ * Few-shot learning examples for teaching AI to humanize text
  * Each example shows a clear before/after transformation
  */
 
-export interface RewritingExample {
+export interface HumanizationExample {
   category: string;
   aiVersion: string;
   humanVersion: string;
@@ -13,7 +13,7 @@ export interface RewritingExample {
 /**
  * Curated examples showing AI → Human transformations
  */
-export const rewritingExamples: RewritingExample[] = [
+export const humanizationExamples: HumanizationExample[] = [
   {
     category: 'success',
     aiVersion: 'Success is often misunderstood as a destination marked by wealth and status. In reality, it represents a continuous journey characterized by personal growth and resilience. Moreover, success requires dedication and perseverance.',
@@ -92,9 +92,9 @@ export const rewritingExamples: RewritingExample[] = [
  * Select most relevant examples based on input text characteristics
  * Returns 2-3 examples that match the input style/topic
  */
-export function selectRelevantExamples(inputText: string, count: number = 2): RewritingExample[] {
+export function selectRelevantExamples(inputText: string, count: number = 2): HumanizationExample[] {
   const input = inputText.toLowerCase();
-  const scored = rewritingExamples.map(example => {
+  const scored = humanizationExamples.map(example => {
     let score = 0;
     
     // Score by keyword matching
@@ -123,7 +123,7 @@ export function selectRelevantExamples(inputText: string, count: number = 2): Re
 /**
  * Format examples for inclusion in prompt
  */
-export function formatExamplesForPrompt(examples: RewritingExample[]): string {
+export function formatExamplesForPrompt(examples: HumanizationExample[]): string {
   return examples.map((ex, i) => `
 EXAMPLE ${i + 1}:
 

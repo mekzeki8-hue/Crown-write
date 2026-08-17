@@ -88,7 +88,7 @@ export default function CTA() {
               }}
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform="translateY(-1px)"; (e.currentTarget as HTMLElement).style.boxShadow="0 10px 32px rgba(0,0,0,.18)"; }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform="none"; (e.currentTarget as HTMLElement).style.boxShadow="0 6px 24px rgba(0,0,0,.14)"; }}>
-                Start Rewriting Free
+                Start Humanizing Free
               </a>
               <a href="#pricing" style={{
                 display:"inline-flex", alignItems:"center", gap:7,

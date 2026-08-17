@@ -174,7 +174,7 @@ const CLEANUP_RULES: ReplacementRule[] = [
  * Apply post-processing cleanup to rewritten text
  * Now tone-aware: applies different rules based on tone
  */
-export function postProcessRewrittenText(text: string, tone: ToneType = 'standard'): {
+export function postProcessHumanizedText(text: string, tone: ToneType = 'standard'): {
   cleanedText: string;
   changesApplied: string[];
 } {
@@ -290,14 +290,14 @@ export function detectRemainingRoboticPatterns(text: string): {
  * Full post-processing pipeline with validation
  * Now includes tone parameter for smart processing
  */
-export function finalizeRewrittenText(text: string, tone: ToneType = 'standard'): {
+export function finalizeHumanizedText(text: string, tone: ToneType = 'standard'): {
   finalText: string;
   changesApplied: string[];
   warnings: string[];
   quality: 'excellent' | 'good' | 'needs-review';
 } {
   // Step 1: Apply cleanup rules (tone-aware)
-  const { cleanedText, changesApplied } = postProcessRewrittenText(text, tone);
+  const { cleanedText, changesApplied } = postProcessHumanizedText(text, tone);
   
   // Step 2: Detect remaining issues
   const { hasRoboticPatterns, patterns } = detectRemainingRoboticPatterns(cleanedText);

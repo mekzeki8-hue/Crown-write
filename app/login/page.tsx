@@ -109,7 +109,7 @@ export default function LoginPage() {
             marginBottom: 48,
             fontWeight: 400,
           }}>
-            Advanced AI Rewriting that bypasses all major detection tools while maintaining your message's clarity and authenticity.
+            Advanced AI Humanization that bypasses all major detection tools while maintaining your message's clarity and authenticity.
           </p>
 
           {/* Features */}
@@ -120,8 +120,8 @@ export default function LoginPage() {
             textAlign: 'left'
           }}>
             {[
-              { title: 'Precision Rewriting', desc: 'Fine-tuned AI model' },
-              { title: 'Undetectable Output', desc: 'Achieve good results with 14+ detectors' },
+              { title: 'Precision Humanization', desc: 'Fine-tuned AI model' },
+              { title: 'Undetectable Output', desc: 'Bypass 14+ detectors' },
               { title: 'Multiple Tones', desc: '7 writing styles' },
               { title: 'Instant Results', desc: 'Real-time processing' },
             ].map((item, i) => (

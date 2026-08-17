@@ -6,11 +6,11 @@
 type ToneType = 'standard' | 'academic' | 'professional' | 'friendly' | 'formal' | 'casual' | 'creative';
 
 /**
- * ULTIMATE REWRITING PROMPT - Proven AI Detection Strategy
+ * ULTIMATE HUMANIZATION PROMPT - Proven AI Detection Bypass
  * Based on tested methods that achieve 98%+ human detection scores
  */
-export function getRewritingPrompt(tone: ToneType = 'standard'): string {
-  const baseInstruction = `Rewrite this text to sound NATURALLY HUMAN-WRITTEN and ACHIEVE GOOD RESULTS WITH ALL AI DETECTORS.
+export function getHumanizationPrompt(tone: ToneType = 'standard'): string {
+  const baseInstruction = `Humanize this text to sound NATURALLY HUMAN-WRITTEN and BYPASS ALL AI DETECTORS.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🎯 CORE MISSION: 150+ WORDS MINIMUM, NO DETECTABLE PATTERNS
@@ -47,7 +47,7 @@ NEVER USE these words (they scream "AI WROTE THIS"):
 REPLACE with FIRST-GRADE simple words that real people actually use.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-✅ PROVEN REWRITING TECHNIQUES
+✅ PROVEN HUMANIZATION TECHNIQUES
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 1. SPLIT UP TEXT FOR READABILITY

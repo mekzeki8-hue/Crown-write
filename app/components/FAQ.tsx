@@ -2,7 +2,7 @@
 import { useState } from "react";
 
 const FAQS = [
-  { q:"How does CrownWrite work?", a:"It analyzes your text's structure, vocabulary, and phrasing, then rewrites it to match natural human patterns — preserving every idea and argument you intended." },
+  { q:"How does CrownWrite work?", a:"It analyzes your text's structure, vocabulary, and phrasing, then humanizes it to match natural human patterns — preserving every idea and argument you intended." },
   { q:"Which AI detectors does it bypass?", a:"Turnitin, GPTZero, Copyleaks, ZeroGPT, Originality.ai, Winston AI and all other major detectors. Models update regularly as detectors evolve." },
   { q:"Will it change the meaning of my content?", a:"No. CrownWrite only changes how your ideas are expressed — never what they mean. Your arguments, facts, and structure stay intact." },
   { q:"Is my content private and secure?", a:"Yes. Text is processed in-memory and discarded immediately. Nothing is stored, logged, or used for model training." },

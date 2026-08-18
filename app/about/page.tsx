@@ -81,8 +81,7 @@ export default function AboutPage() {
             marginBottom: 24,
             lineHeight: 1.2,
           }}>
-            AI Writing That Feels <br/>
-            <span style={{ color: "var(--brand)" }}>Undeniably Human</span>
+            AI Writing, <span style={{ color: "var(--brand)" }}>Undeniably Human.</span>
           </h1>
           <p style={{
             fontSize: 20,
@@ -91,8 +90,7 @@ export default function AboutPage() {
             margin: "0 auto",
             lineHeight: 1.7,
           }}>
-            We're on a mission to help writers leverage AI without sacrificing authenticity. 
-            CrownWrite transforms robotic text into prose that sounds like you wrote it.
+            CrownWrite refines your words, improves flow, and gives your content an authentic voice—while keeping your original meaning intact.
           </p>
         </motion.div>
       </section>

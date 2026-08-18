@@ -63,9 +63,9 @@ export default function Hero() {
 
         {/* Main headline */}
         <h1 style={{ 
-          marginBottom:28, 
+          marginBottom:36, 
           maxWidth: 920, 
-          margin: "0 auto 28px",
+          margin: "0 auto 36px",
         }}>
           <span style={{
             display:"block",
@@ -76,55 +76,9 @@ export default function Hero() {
             lineHeight:1.12, 
             color:"var(--ink)",
           }}>
-            Get the{" "}
-            <span style={{
-              position: "relative",
-              display: "inline-block",
-              fontFamily:"var(--font-serif)", 
-              fontStyle:"italic",
-            }} className="grad-text">
-              Crown
-              <svg 
-                style={{
-                  position: "absolute",
-                  bottom: -6,
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  width: "110%",
-                  height: "auto",
-                }}
-                viewBox="0 0 300 20" 
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path 
-                  d="M5 15 Q 75 5, 150 10 T 295 12" 
-                  stroke="var(--brand)" 
-                  strokeWidth="3" 
-                  fill="none" 
-                  strokeLinecap="round"
-                  opacity="0.4"
-                />
-              </svg>
-            </span>
-            {" "}of Natural,{" "}
-            <br />
-            Human-Sounding Writing
+            AI Writing, Undeniably Human.
           </span>
         </h1>
-
-        {/* Subheading */}
-        <h2 style={{
-          fontSize: "clamp(19px, 2.2vw, 24px)",
-          lineHeight: 1.5,
-          color: "var(--brand-dark)",
-          fontWeight: 600,
-          fontFamily: "var(--font-sans)",
-          maxWidth: 680,
-          margin: "0 auto 36px",
-          letterSpacing: "-0.5px",
-        }}>
-          Get the Crown of Natural Writing
-        </h2>
 
         {/* Description - centered and professional */}
         <div style={{
@@ -133,25 +87,12 @@ export default function Hero() {
           textAlign: "center",
         }}>
           <p style={{
-            fontSize: 17,
+            fontSize: 18,
             lineHeight: 1.7,
             color: "var(--muted)",
             fontWeight: 400,
-            marginBottom: 22,
           }}>
-            Transform AI-generated text into natural, human-sounding writing. CrownWrite refines your words, improves flow, and gives your content an authentic voice—while keeping your original meaning intact.
-          </p>
-
-          <p style={{
-            fontSize: 18,
-            lineHeight: 1.7,
-            color: "var(--brand-dark)",
-            fontWeight: 600,
-            fontFamily: "var(--font-serif)",
-            fontStyle: "italic",
-            marginTop: 28,
-          }}>
-            Smart writing deserves the Crown.
+            CrownWrite refines your words, improves flow, and gives your content an authentic voice while keeping your original meaning intact.
           </p>
         </div>
 

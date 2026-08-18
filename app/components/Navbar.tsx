@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
 
 const NAV = [
-  { l:"About",    h:"#"          },
+  { l:"About",    h:"/about"     },
   { l:"Pricing",  h:"#pricing"   },
   { l:"Blog",     h:"#"          },
 ];

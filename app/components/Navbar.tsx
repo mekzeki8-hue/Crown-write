@@ -51,33 +51,97 @@ export default function Navbar() {
   return (
     <div style={{ position:"fixed", inset:"0 0 auto 0", zIndex:200 }}>
 
-      {/* ── Soft announcement bar ── */}
+      {/* ── Black Discount Banner ── */}
       <div style={{
         height: banner ? bannerH : 0, overflow:"hidden",
         transition:"height .3s ease",
-        background:"var(--bg-3)",
-        borderBottom:"1px solid var(--border)",
+        background:"linear-gradient(135deg, #000000 0%, #1a1a1a 100%)",
+        borderBottom:"1px solid rgba(255, 255, 255, 0.1)",
         display:"flex", alignItems:"center", justifyContent:"center",
-        gap:10, position:"relative", padding: banner ? "0 56px" : 0,
+        gap:16, position:"relative", padding: banner ? "0 56px" : 0,
       }}>
-        <span style={{
-          fontSize:11, fontWeight:600, padding:"2px 8px", borderRadius:99,
-          background:"var(--brand)", color:"white",
-          letterSpacing:"0.07em", opacity:.9,
-        }}>NEW</span>
-        <span style={{ fontSize:13, color:"var(--muted)", fontWeight:400 }}>
-          CrownWrite V4 is here — our most refined Rewriter yet.
-        </span>
-        <a href="#workspace" style={{
-          fontSize:13, color:"var(--brand-dark)", fontWeight:500,
-          borderBottom:"1px solid var(--a400)",
-          paddingBottom:1, transition:"opacity .18s",
-        }}>Try it now →</a>
+        {/* Gold glow effect */}
+        <div aria-hidden style={{
+          position:"absolute",
+          inset:0,
+          background:"radial-gradient(ellipse at center, rgba(255, 215, 0, 0.08) 0%, transparent 70%)",
+          pointerEvents:"none",
+        }} />
+
+        {/* Content */}
+        <div style={{ 
+          position:"relative", 
+          zIndex:1,
+          display:"flex", 
+          alignItems:"center", 
+          gap:12,
+          flexWrap:"wrap",
+          justifyContent:"center",
+        }}>
+          {/* Discount Badge */}
+          <span style={{
+            fontSize:11, 
+            fontWeight:800, 
+            padding:"4px 10px", 
+            borderRadius:6,
+            background:"linear-gradient(135deg, #FFD700 0%, #FFC107 100%)",
+            color:"#000",
+            letterSpacing:"0.5px",
+            textTransform:"uppercase",
+            boxShadow:"0 2px 8px rgba(255, 215, 0, 0.3)",
+          }}>50% OFF</span>
+
+          <span style={{ 
+            fontSize:13, 
+            color:"#FFFFFF", 
+            fontWeight:500,
+            letterSpacing:"-0.01em",
+          }}>
+            Limited time offer — Half price on all plans
+          </span>
+
+          {/* CTA Button */}
+          <a href="#pricing" style={{
+            display:"inline-flex",
+            alignItems:"center",
+            gap:6,
+            fontSize:12,
+            fontWeight:700,
+            padding:"6px 16px",
+            borderRadius:6,
+            background:"#FFFFFF",
+            color:"#000000",
+            textDecoration:"none",
+            transition:"all .2s ease",
+            letterSpacing:"0.3px",
+            textTransform:"uppercase",
+            boxShadow:"0 2px 8px rgba(255, 255, 255, 0.2)",
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.transform = "translateY(-1px)";
+            e.currentTarget.style.boxShadow = "0 4px 12px rgba(255, 255, 255, 0.3)";
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.transform = "translateY(0)";
+            e.currentTarget.style.boxShadow = "0 2px 8px rgba(255, 255, 255, 0.2)";
+          }}>
+            Claim Offer
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+
+        {/* Close button */}
         <button onClick={() => setBanner(false)} aria-label="Close" style={{
           position:"absolute", right:14,
           background:"none", border:"none", cursor:"pointer",
-          color:"var(--subtle)", fontSize:16, lineHeight:1, padding:4,
-        }}>×</button>
+          color:"rgba(255, 255, 255, 0.6)", fontSize:20, lineHeight:1, padding:4,
+          transition:"color .2s ease",
+        }}
+        onMouseEnter={e => e.currentTarget.style.color = "#FFFFFF"}
+        onMouseLeave={e => e.currentTarget.style.color = "rgba(255, 255, 255, 0.6)"}
+        >×</button>
       </div>
 
       {/* ── Modern Pill-Shaped Navbar ── */}

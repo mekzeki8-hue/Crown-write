@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 
 const CARDS = [
   {
@@ -30,68 +31,329 @@ const CARDS = [
 ];
 
 export default function Features() {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
   return (
-    <section id="features" style={{ background:"var(--bg)", padding:"88px 0 100px" }}>
-      <div style={{ maxWidth:1200, margin:"0 auto", padding:"0 28px" }}>
-        <div style={{ textAlign:"center", marginBottom:52 }}>
-          <p className="section-label">Why CrownWrite</p>
+    <section id="features" style={{ 
+      background: "linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%)", 
+      padding: "100px 0 120px",
+      position: "relative",
+      overflow: "hidden",
+    }}>
+      {/* Decorative background elements */}
+      <div aria-hidden style={{
+        position: "absolute",
+        top: "10%",
+        left: "-10%",
+        width: 500,
+        height: 500,
+        background: "radial-gradient(circle, rgba(192, 154, 114, 0.03) 0%, transparent 70%)",
+        pointerEvents: "none",
+        filter: "blur(60px)",
+      }} />
+      <div aria-hidden style={{
+        position: "absolute",
+        bottom: "10%",
+        right: "-10%",
+        width: 600,
+        height: 600,
+        background: "radial-gradient(circle, rgba(192, 154, 114, 0.04) 0%, transparent 70%)",
+        pointerEvents: "none",
+        filter: "blur(80px)",
+      }} />
+
+      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 28px", position: "relative", zIndex: 1 }}>
+        {/* Beautiful Header Section */}
+        <div style={{ 
+          textAlign: "center", 
+          marginBottom: 64,
+          position: "relative",
+        }}>
+          {/* Animated label */}
+          <div style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
+            background: "linear-gradient(135deg, var(--brand-xpale) 0%, rgba(192, 154, 114, 0.08) 100%)",
+            border: "1.5px solid var(--a300)",
+            padding: "8px 20px",
+            borderRadius: 999,
+            marginBottom: 24,
+            boxShadow: "0 4px 16px rgba(192, 154, 114, 0.08)",
+            transition: "all 0.3s ease",
+            cursor: "default",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = "scale(1.05)";
+            e.currentTarget.style.boxShadow = "0 6px 24px rgba(192, 154, 114, 0.15)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = "scale(1)";
+            e.currentTarget.style.boxShadow = "0 4px 16px rgba(192, 154, 114, 0.08)";
+          }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ color: "var(--brand)" }}>
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <span style={{
+              fontSize: 12,
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              background: "linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}>
+              Why CrownWrite
+            </span>
+          </div>
+
+          {/* Main Heading with gradient animation */}
           <h2 style={{
-            fontFamily:"var(--font-sans)", fontSize:"clamp(26px,3.5vw,44px)",
-            fontWeight:600, letterSpacing:"-1.8px", lineHeight:1.1,
-            marginBottom:14, color:"var(--ink)",
+            fontFamily: "var(--font-sans)", 
+            fontSize: "clamp(32px, 5vw, 56px)",
+            fontWeight: 700, 
+            letterSpacing: "-2px", 
+            lineHeight: 1.1,
+            marginBottom: 20, 
+            color: "var(--ink)",
+            position: "relative",
           }}>
             Less robotic.{" "}
-            <span className="grad-text" style={{ fontFamily:"var(--font-serif)", fontStyle:"italic", fontWeight:500 }}>More you.</span>
+            <span style={{ 
+              fontFamily: "var(--font-serif)", 
+              fontStyle: "italic", 
+              fontWeight: 600,
+              background: "linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 50%, var(--brand) 100%)",
+              backgroundSize: "200% 200%",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+              animation: "gradientShift 3s ease infinite",
+            }}>
+              More you.
+            </span>
           </h2>
-          <p style={{ fontSize:15, color:"var(--muted)", maxWidth:420, margin:"0 auto", lineHeight:1.75, fontWeight:400 }}>
-            Everything you need to turn AI output into writing that feels genuinely human.
+
+          {/* Description with better spacing */}
+          <p style={{ 
+            fontSize: 18, 
+            color: "var(--muted)", 
+            maxWidth: 540, 
+            margin: "0 auto", 
+            lineHeight: 1.8, 
+            fontWeight: 400,
+          }}>
+            Everything you need to turn AI output into writing that feels{" "}
+            <span style={{ 
+              color: "var(--brand)",
+              fontWeight: 600,
+            }}>
+              genuinely human
+            </span>.
           </p>
+
+          {/* Call-to-action buttons */}
+          <div style={{
+            display: "flex",
+            gap: 16,
+            justifyContent: "center",
+            marginTop: 32,
+            flexWrap: "wrap",
+          }}>
+            <a
+              href="#workspace"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "14px 32px",
+                background: "var(--g-brand)",
+                color: "white",
+                borderRadius: 999,
+                fontSize: 15,
+                fontWeight: 600,
+                textDecoration: "none",
+                boxShadow: "0 4px 16px rgba(192, 154, 114, 0.25)",
+                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                border: "none",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow = "0 8px 24px rgba(192, 154, 114, 0.35)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "0 4px 16px rgba(192, 154, 114, 0.25)";
+              }}
+            >
+              Try it now
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+            <a
+              href="#pricing"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "14px 32px",
+                background: "var(--surface)",
+                color: "var(--ink)",
+                borderRadius: 999,
+                fontSize: 15,
+                fontWeight: 600,
+                textDecoration: "none",
+                border: "2px solid var(--border)",
+                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = "var(--brand)";
+                e.currentTarget.style.color = "var(--brand)";
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.08)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = "var(--border)";
+                e.currentTarget.style.color = "var(--ink)";
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "none";
+              }}
+            >
+              View pricing
+            </a>
+          </div>
         </div>
 
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:12 }} className="feat-grid">
-          {CARDS.map(c => (
-            <div key={c.title} style={{
-              gridColumn:`span ${c.span}`,
-              background:"var(--surface)", border:"1px solid var(--border)",
-              borderRadius:"var(--r-lg)", padding:"26px 28px",
-              position:"relative", overflow:"hidden",
-              transition:"box-shadow .22s, transform .22s, border-color .22s",
-            }}
-            onMouseEnter={e => { const el=e.currentTarget as HTMLElement; el.style.boxShadow="var(--sh-md)"; el.style.transform="translateY(-2px)"; el.style.borderColor="var(--border-2)"; }}
-            onMouseLeave={e => { const el=e.currentTarget as HTMLElement; el.style.boxShadow="none"; el.style.transform="none"; el.style.borderColor="var(--border)"; }}>
-
-              {/* Whisper blob */}
+        {/* Enhanced Cards Grid */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16 }} className="feat-grid">
+          {CARDS.map((c, index) => (
+            <div 
+              key={c.title} 
+              style={{
+                gridColumn: `span ${c.span}`,
+                background: hoveredIndex === index 
+                  ? "linear-gradient(135deg, var(--surface) 0%, rgba(255, 255, 255, 0.5) 100%)" 
+                  : "var(--surface)",
+                border: hoveredIndex === index 
+                  ? "1.5px solid var(--brand)" 
+                  : "1px solid var(--border)",
+                borderRadius: "var(--r-lg)",
+                padding: "32px",
+                position: "relative",
+                overflow: "hidden",
+                transition: "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
+                cursor: "default",
+              }}
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
+            >
+              {/* Animated background gradient on hover */}
               <div aria-hidden style={{
-                position:"absolute", top:-30, right:-30, width:130, height:130, borderRadius:"50%",
-                background:"radial-gradient(circle, var(--a100), transparent 70%)",
-                pointerEvents:"none",
+                position: "absolute",
+                top: -100,
+                right: -100,
+                width: 300,
+                height: 300,
+                borderRadius: "50%",
+                background: "radial-gradient(circle, var(--a200), transparent 70%)",
+                pointerEvents: "none",
+                opacity: hoveredIndex === index ? 0.6 : 0,
+                transition: "opacity 0.5s ease",
+                transform: hoveredIndex === index ? "scale(1.2)" : "scale(1)",
               }} />
 
-              {/* Icon */}
+              {/* Icon with enhanced styling */}
               <div style={{
-                width:40, height:40, borderRadius:"var(--r-sm)",
-                background:"var(--brand-xpale)", border:"1px solid var(--a300)",
-                display:"flex", alignItems:"center", justifyContent:"center",
-                color:"var(--brand)", marginBottom:16, opacity:.9,
-              }}>{c.icon}</div>
+                width: 52,
+                height: 52,
+                borderRadius: "var(--r-md)",
+                background: hoveredIndex === index 
+                  ? "linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%)" 
+                  : "var(--brand-xpale)",
+                border: hoveredIndex === index 
+                  ? "1.5px solid var(--brand-dark)" 
+                  : "1px solid var(--a300)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: hoveredIndex === index ? "white" : "var(--brand)",
+                marginBottom: 20,
+                transition: "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
+                transform: hoveredIndex === index ? "scale(1.1) rotate(5deg)" : "scale(1) rotate(0deg)",
+                boxShadow: hoveredIndex === index 
+                  ? "0 8px 24px rgba(192, 154, 114, 0.3)" 
+                  : "0 2px 8px rgba(0, 0, 0, 0.04)",
+              }}>
+                {c.icon}
+              </div>
 
-              <div style={{ fontSize:10, fontWeight:600, letterSpacing:"0.11em", textTransform:"uppercase", color:"var(--brand)", marginBottom:6, opacity:.8 }}>
+              <div style={{ 
+                fontSize: 11, 
+                fontWeight: 700, 
+                letterSpacing: "0.1em", 
+                textTransform: "uppercase", 
+                color: hoveredIndex === index ? "var(--brand-dark)" : "var(--brand)", 
+                marginBottom: 8,
+                transition: "color 0.3s ease",
+              }}>
                 {c.label}
               </div>
+              
               <h3 style={{
-                fontFamily:"var(--font-sans)", fontSize:17, fontWeight:600,
-                marginBottom:7, color:"var(--ink)", letterSpacing:"-.3px",
-              }}>{c.title}</h3>
-              <p style={{ fontSize:13.5, lineHeight:1.75, color:"var(--muted)", fontWeight:400 }}>{c.desc}</p>
+                fontFamily: "var(--font-sans)",
+                fontSize: 20,
+                fontWeight: 700,
+                marginBottom: 10,
+                color: "var(--ink)",
+                letterSpacing: "-0.5px",
+                transition: "color 0.3s ease",
+              }}>
+                {c.title}
+              </h3>
+              
+              <p style={{ 
+                fontSize: 14.5, 
+                lineHeight: 1.8, 
+                color: "var(--muted)", 
+                fontWeight: 400,
+                transition: "color 0.3s ease",
+              }}>
+                {c.desc}
+              </p>
 
               {c.badge && (
                 <div style={{
-                  marginTop:16, display:"inline-flex", alignItems:"center", gap:5,
-                  padding:"4px 11px", borderRadius:99,
-                  background:"var(--brand-xpale)", border:"1px solid var(--a300)",
-                  fontSize:11, fontWeight:500, color:"var(--brand-dark)", opacity:.85,
+                  marginTop: 20,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  padding: "6px 14px",
+                  borderRadius: 999,
+                  background: hoveredIndex === index 
+                    ? "linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%)" 
+                    : "var(--brand-xpale)",
+                  border: hoveredIndex === index 
+                    ? "1.5px solid var(--brand-dark)" 
+                    : "1px solid var(--a300)",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: hoveredIndex === index ? "white" : "var(--brand-dark)",
+                  transition: "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
+                  transform: hoveredIndex === index ? "scale(1.05)" : "scale(1)",
+                  boxShadow: hoveredIndex === index 
+                    ? "0 4px 12px rgba(192, 154, 114, 0.3)" 
+                    : "none",
                 }}>
-                  <span style={{ width:4, height:4, borderRadius:"50%", background:"var(--brand)", display:"inline-block" }} />
+                  <span style={{ 
+                    width: 6, 
+                    height: 6, 
+                    borderRadius: "50%", 
+                    background: hoveredIndex === index ? "white" : "var(--brand)",
+                    display: "inline-block",
+                    transition: "background 0.3s ease",
+                  }} />
                   {c.badge}
                 </div>
               )}
@@ -99,9 +361,20 @@ export default function Features() {
           ))}
         </div>
       </div>
+
       <style>{`
-        @media(max-width:860px){.feat-grid{grid-template-columns:1fr 1fr !important;}.feat-grid>div{grid-column:span 1 !important;}}
-        @media(max-width:540px){.feat-grid{grid-template-columns:1fr !important;}}
+        @keyframes gradientShift {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+        
+        @media(max-width:860px){
+          .feat-grid{grid-template-columns:1fr 1fr !important;}
+          .feat-grid>div{grid-column:span 1 !important;}
+        }
+        @media(max-width:540px){
+          .feat-grid{grid-template-columns:1fr !important;}
+        }
       `}</style>
     </section>
   );

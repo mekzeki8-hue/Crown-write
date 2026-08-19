@@ -11,42 +11,43 @@ interface TimeLeft {
 
 export default function DiscountBanner() {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({
-    days: 2,
-    hours: 17,
-    minutes: 18,
-    seconds: 54,
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
   });
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(prev => {
-        let { days, hours, minutes, seconds } = prev;
-        
-        seconds--;
-        
-        if (seconds < 0) {
-          seconds = 59;
-          minutes--;
-        }
-        
-        if (minutes < 0) {
-          minutes = 59;
-          hours--;
-        }
-        
-        if (hours < 0) {
-          hours = 23;
-          days--;
-        }
-        
-        // Reset when countdown reaches zero
-        if (days < 0) {
-          return { days: 2, hours: 17, minutes: 18, seconds: 54 };
-        }
-        
-        return { days, hours, minutes, seconds };
-      });
-    }, 1000);
+    // Calculate end time: 3 days from now (auto-rotating)
+    const getEndTime = () => {
+      const now = new Date();
+      const end = new Date(now.getTime() + (3 * 24 * 60 * 60 * 1000)); // 3 days from now
+      return end;
+    };
+
+    const updateCountdown = () => {
+      const now = new Date().getTime();
+      const endTime = getEndTime().getTime();
+      const distance = endTime - now;
+
+      if (distance > 0) {
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        setTimeLeft({ days, hours, minutes, seconds });
+      } else {
+        // Auto-reset: When countdown ends, it automatically restarts with 3 days
+        setTimeLeft({ days: 2, hours: 23, minutes: 59, seconds: 59 });
+      }
+    };
+
+    // Initial update
+    updateCountdown();
+
+    // Update every second
+    const timer = setInterval(updateCountdown, 1000);
 
     return () => clearInterval(timer);
   }, []);

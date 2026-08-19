@@ -89,57 +89,47 @@ export default function DiscountBanner() {
 
   return (
     <div style={{
-      background: 'var(--bg)',
-      padding: '40px 28px',
+      background: 'transparent',
+      padding: '48px 28px',
       display: 'flex',
       justifyContent: 'center',
       position: 'relative',
-      overflow: 'hidden',
+      overflow: 'visible',
     }}>
-      {/* Main Card */}
+      {/* Main Card - Redesigned with proper edges */}
       <div style={{
-        background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%)',
-        borderRadius: 20,
-        padding: '36px 48px',
-        maxWidth: 900,
+        background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1f1f1f 100%)',
+        borderRadius: 24,
+        padding: '42px 52px',
+        maxWidth: 950,
         width: '100%',
         position: 'relative',
         overflow: 'hidden',
-        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.6), 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-        border: '1px solid rgba(255, 255, 255, 0.08)',
+        boxShadow: '0 24px 64px rgba(0, 0, 0, 0.4), 0 12px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.06)',
+        border: '1px solid rgba(255, 255, 255, 0.06)',
       }}>
-        {/* Decorative gradient overlay - Gold accent */}
+        {/* Premium gold accent glow - larger and more visible */}
         <div aria-hidden style={{
           position: 'absolute',
-          top: -150,
-          right: -150,
+          top: -180,
+          right: -180,
+          width: 500,
+          height: 500,
+          background: 'radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, rgba(192, 154, 114, 0.08) 40%, transparent 70%)',
+          pointerEvents: 'none',
+          filter: 'blur(40px)',
+        }} />
+
+        {/* Left side accent glow - warmer */}
+        <div aria-hidden style={{
+          position: 'absolute',
+          bottom: -120,
+          left: -120,
           width: 400,
           height: 400,
           background: 'radial-gradient(circle, rgba(192, 154, 114, 0.12) 0%, transparent 70%)',
           pointerEvents: 'none',
-        }} />
-
-        {/* Left side accent glow */}
-        <div aria-hidden style={{
-          position: 'absolute',
-          bottom: -100,
-          left: -100,
-          width: 300,
-          height: 300,
-          background: 'radial-gradient(circle, rgba(255, 215, 0, 0.08) 0%, transparent 70%)',
-          pointerEvents: 'none',
-        }} />
-
-        {/* Subtle grid pattern overlay */}
-        <div aria-hidden style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage: `
-            linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px)
-          `,
-          backgroundSize: '30px 30px',
-          pointerEvents: 'none',
+          filter: 'blur(50px)',
         }} />
 
         <div style={{
@@ -148,64 +138,94 @@ export default function DiscountBanner() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: 32,
+          gap: 40,
           flexWrap: 'wrap',
         }}>
           {/* Left Content */}
-          <div style={{ flex: 1, minWidth: 300 }}>
-            {/* Discount Badge */}
-            <div style={{ marginBottom: 18 }}>
-              <span style={{
+          <div style={{ flex: 1, minWidth: 320 }}>
+            {/* Redesigned Discount Badge - NO CROPPING */}
+            <div style={{ marginBottom: 22 }}>
+              <div style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: 6,
-                background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(192, 154, 114, 0.15) 100%)',
-                border: '1.5px solid rgba(255, 215, 0, 0.3)',
-                padding: '6px 14px',
+                gap: 8,
+                background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 193, 7, 0.15) 100%)',
+                border: '2px solid rgba(255, 215, 0, 0.4)',
+                padding: '8px 18px',
                 borderRadius: 999,
-                fontSize: 13,
-                fontWeight: 700,
-                color: '#ffd700',
-                letterSpacing: '0.5px',
-                boxShadow: '0 2px 12px rgba(255, 215, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+                fontSize: 14,
+                fontWeight: 800,
+                color: '#FFD700',
+                letterSpacing: '0.8px',
+                textTransform: 'uppercase',
+                boxShadow: '0 4px 16px rgba(255, 215, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+                position: 'relative',
               }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                {/* Glow effect around badge */}
+                <div aria-hidden style={{
+                  position: 'absolute',
+                  inset: -4,
+                  background: 'rgba(255, 215, 0, 0.15)',
+                  borderRadius: 999,
+                  filter: 'blur(8px)',
+                  zIndex: -1,
+                }} />
+                
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none">
                   <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
                 </svg>
-                50% OFF
-              </span>
+                <span style={{ textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)' }}>
+                  50% OFF
+                </span>
+              </div>
             </div>
 
-            {/* Title */}
+            {/* Title - Improved typography */}
             <h2 style={{
-              fontSize: 'clamp(24px, 4vw, 32px)',
-              fontWeight: 700,
-              color: 'white',
-              marginBottom: 10,
+              fontSize: 'clamp(26px, 4.5vw, 38px)',
+              fontWeight: 800,
+              color: '#FFFFFF',
+              marginBottom: 12,
               lineHeight: 1.2,
-              letterSpacing: '-0.5px',
+              letterSpacing: '-1px',
               fontFamily: 'var(--font-sans)',
-              textShadow: '0 2px 12px rgba(0, 0, 0, 0.4)',
+              textShadow: '0 2px 16px rgba(0, 0, 0, 0.4)',
             }}>
-              Limited-time launch offer
+              Limited-Time Launch Offer
             </h2>
 
-            {/* Description */}
+            {/* Description - Better contrast */}
             <p style={{
-              fontSize: 15,
-              color: 'rgba(255, 255, 255, 0.75)',
-              lineHeight: 1.5,
+              fontSize: 16,
+              color: 'rgba(255, 255, 255, 0.85)',
+              lineHeight: 1.6,
               fontWeight: 400,
-              maxWidth: 420,
+              maxWidth: 440,
+              marginBottom: 8,
             }}>
               Half price on every plan — ends when the timer hits zero.
             </p>
+            
+            <p style={{
+              fontSize: 14,
+              color: 'rgba(255, 215, 0, 0.9)',
+              fontWeight: 600,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+            }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              Automatically renews every 3 days
+            </p>
           </div>
 
-          {/* Countdown Timer */}
+          {/* Countdown Timer - Enhanced */}
           <div style={{
             display: 'flex',
-            gap: 12,
+            gap: 14,
             alignItems: 'center',
           }}>
             <TimeBox value={timeLeft.days} label="DAYS" />
@@ -224,16 +244,16 @@ export default function DiscountBanner() {
             align-items: flex-start !important;
             text-align: left;
           }
-          div[style*="display: flex; gap: 12px"] {
+          div[style*="display: flex; gap: 14px"] {
             width: 100%;
             justify-content: space-between;
           }
           div[style*="minWidth: 85"] {
-            min-width: 70px !important;
-            padding: 12px 14px !important;
+            min-width: 65px !important;
+            padding: 10px 12px !important;
           }
           div[style*="fontSize: 36"] {
-            font-size: 28px !important;
+            font-size: 26px !important;
           }
         }
       `}</style>

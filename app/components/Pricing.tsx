@@ -550,11 +550,14 @@ export default function Pricing() {
           </p>
         </div>
 
-        {/* Subscription Cards */}
+        {/* Subscription Cards - Increased spacing */}
         <div style={{
           display: "grid",
-          gridTemplateColumns: "1fr 1.06fr 1fr",
-          gap: 18, alignItems: "start",
+          gridTemplateColumns: "1fr 1.08fr 1fr",
+          gap: 28,
+          alignItems: "start",
+          maxWidth: 1120,
+          margin: "0 auto",
         }} className="price-grid">
           {PLANS.map(p => (
             <PlanCard key={p.name} plan={p} yearly={yearly} />
@@ -604,8 +607,8 @@ export default function Pricing() {
           <div style={{
             display: "grid",
             gridTemplateColumns: "repeat(3, 1fr)",
-            gap: 16,
-            maxWidth: 900,
+            gap: 24,
+            maxWidth: 960,
             margin: "0 auto",
           }} className="topup-grid">
             {TOPUP_PLANS.map(plan => (

@@ -2,122 +2,288 @@
 
 export default function CTA() {
   return (
-    <section style={{ background:"var(--bg-2)", padding:"64px 24px 88px" }}>
-      <div style={{ maxWidth:800, margin:"0 auto", position:"relative" }}>
+    <section style={{ 
+      background: "var(--bg)", 
+      padding: "80px 24px 100px",
+      position: "relative",
+      overflow: "hidden",
+    }}>
+      {/* Subtle gradient background */}
+      <div aria-hidden style={{
+        position: "absolute",
+        inset: 0,
+        background: "radial-gradient(ellipse at center, rgba(192, 154, 114, 0.04) 0%, transparent 70%)",
+        pointerEvents: "none",
+      }} />
 
-        {/* Soft stacked layers */}
+      <div style={{ 
+        maxWidth: 1000, 
+        margin: "0 auto", 
+        position: "relative",
+        zIndex: 1,
+      }}>
+        {/* Main CTA Card - Modern & Clean */}
         <div style={{
-          position:"absolute", inset:0, borderRadius:"var(--r-2xl)",
-          background:"var(--brand-xpale)", border:"1px solid var(--border)",
-          transform:"rotate(1.5deg) translateY(6px)", zIndex:0,
-        }} />
-        <div aria-hidden style={{
-          position:"absolute", inset:0, borderRadius:"var(--r-2xl)",
-          background:"var(--a100)", border:"1px solid var(--border)",
-          transform:"rotate(-.8deg) translateY(3px)", zIndex:1,
-        }} />
-
-        {/* Main card */}
-        <div style={{
-          position:"relative", zIndex:2,
-          borderRadius:"var(--r-2xl)", overflow:"hidden",
-          boxShadow:"var(--sh-float)",
+          background: "#FFFFFF",
+          borderRadius: 32,
+          padding: "64px 48px",
+          textAlign: "center",
+          boxShadow: "0 20px 60px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.04)",
+          border: "1px solid rgba(192, 154, 114, 0.1)",
+          position: "relative",
+          overflow: "hidden",
         }}>
-          {/* Soft warm bg */}
-          <div style={{
-            position:"absolute", inset:0,
-            background:"var(--g-cta)",
+          {/* Decorative gradient orbs */}
+          <div aria-hidden style={{
+            position: "absolute",
+            top: -100,
+            right: -100,
+            width: 300,
+            height: 300,
+            background: "radial-gradient(circle, rgba(192, 154, 114, 0.12) 0%, transparent 70%)",
+            borderRadius: "50%",
+            filter: "blur(60px)",
+            pointerEvents: "none",
           }} />
-          {/* Whisper light bands */}
-          <div aria-hidden style={{ position:"absolute", inset:0, overflow:"hidden", pointerEvents:"none" }}>
-            <div style={{
-              position:"absolute", left:"-5%", right:"-5%",
-              height:"30%", top:"10%",
-              background:"linear-gradient(90deg, transparent 10%, rgba(255,255,255,.2) 35%, rgba(255,255,255,.28) 55%, rgba(255,255,255,.16) 80%, transparent 90%)",
-              filter:"blur(20px)", borderRadius:"50%",
-              animation:"bandDrift 10s ease-in-out infinite",
-            }} />
-            <div style={{
-              position:"absolute", left:"-5%", right:"-5%",
-              height:"20%", top:"55%",
-              background:"linear-gradient(90deg, transparent 10%, rgba(255,255,255,.14) 35%, rgba(255,255,255,.2) 55%, rgba(255,255,255,.1) 80%, transparent 90%)",
-              filter:"blur(24px)", borderRadius:"50%",
-              animation:"bandDrift 14s ease-in-out infinite", animationDelay:"-6s",
-            }} />
-          </div>
+          <div aria-hidden style={{
+            position: "absolute",
+            bottom: -100,
+            left: -100,
+            width: 300,
+            height: 300,
+            background: "radial-gradient(circle, rgba(192, 154, 114, 0.08) 0%, transparent 70%)",
+            borderRadius: "50%",
+            filter: "blur(60px)",
+            pointerEvents: "none",
+          }} />
 
-          <div style={{ position:"relative", zIndex:1, padding:"56px 40px", textAlign:"center" }}>
+          {/* Content */}
+          <div style={{ position: "relative", zIndex: 1 }}>
+            {/* Badge */}
             <div style={{
-              display:"inline-flex", alignItems:"center", gap:6,
-              padding:"4px 13px", borderRadius:99,
-              background:"rgba(255,255,255,.22)", border:"1px solid rgba(255,255,255,.32)",
-              fontSize:11, fontWeight:500, letterSpacing:"0.09em",
-              color:"rgba(255,255,255,.9)", textTransform:"uppercase",
-              marginBottom:22,
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "10px 20px",
+              borderRadius: 999,
+              background: "linear-gradient(135deg, #F5F5F5 0%, #FAFAFA 100%)",
+              border: "2px solid #E8E8E8",
+              fontSize: 13,
+              fontWeight: 700,
+              letterSpacing: "0.5px",
+              textTransform: "uppercase",
+              color: "#666",
+              marginBottom: 32,
+              boxShadow: "0 2px 8px rgba(0, 0, 0, 0.04)",
             }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
               Free to start — no credit card
             </div>
 
+            {/* Headline */}
             <h2 style={{
-              fontFamily:"var(--font-sans)", fontSize:"clamp(26px,4vw,48px)",
-              fontWeight:600, letterSpacing:"-2px", lineHeight:1.1,
-              marginBottom:16, color:"white",
+              fontFamily: "var(--font-sans)",
+              fontSize: "clamp(32px, 5vw, 58px)",
+              fontWeight: 800,
+              letterSpacing: "-2.5px",
+              lineHeight: 1.1,
+              marginBottom: 24,
+              color: "#000000",
             }}>
               Make your writing
               <br />
               sound like{" "}
-              <span style={{ fontFamily:"var(--font-serif)", fontStyle:"italic", fontWeight:500 }}>
-                you.
+              <span style={{
+                background: "linear-gradient(135deg, #C09A72 0%, #8C6440 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                fontFamily: "var(--font-serif)",
+                fontStyle: "italic",
+                fontWeight: 700,
+              }}>
+                you
               </span>
+              .
             </h2>
 
+            {/* Description */}
             <p style={{
-              maxWidth:460, margin:"0 auto 32px",
-              fontSize:15, lineHeight:1.8,
-              color:"rgba(255,255,255,.7)", fontWeight:400,
+              maxWidth: 580,
+              margin: "0 auto 40px",
+              fontSize: 18,
+              lineHeight: 1.7,
+              color: "#666",
+              fontWeight: 400,
             }}>
-              Join 50,000+ writers, academics, and professionals who trust CrownWrite to make their content sound genuinely human.
+              Join <strong style={{ color: "#000", fontWeight: 700 }}>50,000+ writers</strong>, academics, and professionals who trust CrownWrite to make their content sound genuinely human.
             </p>
 
-            <div style={{ display:"flex", gap:10, justifyContent:"center", flexWrap:"wrap" }}>
-              <a href="#workspace" style={{
-                display:"inline-flex", alignItems:"center", gap:7,
-                padding:"12px 28px", borderRadius:99, fontSize:14, fontWeight:500,
-                background:"white", color:"var(--brand-deeper)",
-                boxShadow:"0 6px 24px rgba(0,0,0,.14)", transition:"all .22s",
-              }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform="translateY(-1px)"; (e.currentTarget as HTMLElement).style.boxShadow="0 10px 32px rgba(0,0,0,.18)"; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform="none"; (e.currentTarget as HTMLElement).style.boxShadow="0 6px 24px rgba(0,0,0,.14)"; }}>
+            {/* CTA Buttons - Gen Z Style */}
+            <div style={{ 
+              display: "flex", 
+              gap: 16, 
+              justifyContent: "center", 
+              flexWrap: "wrap",
+              marginBottom: 48,
+            }}>
+              <a 
+                href="#workspace" 
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 10,
+                  padding: "18px 40px",
+                  borderRadius: 16,
+                  fontSize: 16,
+                  fontWeight: 700,
+                  background: "#000000",
+                  color: "#FFFFFF",
+                  textDecoration: "none",
+                  boxShadow: "0 8px 24px rgba(0, 0, 0, 0.2)",
+                  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                  border: "none",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-3px)";
+                  e.currentTarget.style.boxShadow = "0 12px 32px rgba(0, 0, 0, 0.25)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "0 8px 24px rgba(0, 0, 0, 0.2)";
+                }}
+              >
                 Start Humanizing Free
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
               </a>
-              <a href="#pricing" style={{
-                display:"inline-flex", alignItems:"center", gap:7,
-                padding:"12px 28px", borderRadius:99, fontSize:14, fontWeight:500,
-                background:"rgba(255,255,255,.14)", border:"1px solid rgba(255,255,255,.35)",
-                color:"white", transition:"all .22s",
-              }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background="rgba(255,255,255,.22)"; (e.currentTarget as HTMLElement).style.transform="translateY(-1px)"; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background="rgba(255,255,255,.14)"; (e.currentTarget as HTMLElement).style.transform="none"; }}>
+
+              <a 
+                href="#pricing" 
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 10,
+                  padding: "18px 40px",
+                  borderRadius: 16,
+                  fontSize: 16,
+                  fontWeight: 700,
+                  background: "#FFFFFF",
+                  color: "#000000",
+                  textDecoration: "none",
+                  border: "2px solid #E0E0E0",
+                  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-3px)";
+                  e.currentTarget.style.borderColor = "#C09A72";
+                  e.currentTarget.style.color = "#C09A72";
+                  e.currentTarget.style.boxShadow = "0 8px 24px rgba(192, 154, 114, 0.15)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.borderColor = "#E0E0E0";
+                  e.currentTarget.style.color = "#000000";
+                  e.currentTarget.style.boxShadow = "none";
+                }}
+              >
                 View Pricing
               </a>
             </div>
 
-            {/* Soft stats */}
-            <div style={{ display:"flex", gap:32, justifyContent:"center", marginTop:36, flexWrap:"wrap" }}>
-              {[{v:"50K+",l:"Active Users"},{v:"99.9%",l:"Success Rate"},{v:"< 2s",l:"Processing"}].map(s => (
-                <div key={s.l} style={{ textAlign:"center" }}>
+            {/* Stats - Clean & Modern */}
+            <div style={{ 
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
+              gap: 32,
+              maxWidth: 700,
+              margin: "0 auto",
+              paddingTop: 40,
+              borderTop: "1px solid #E8E8E8",
+            }}>
+              {[
+                { icon: "👥", value: "50K+", label: "Active Users" },
+                { icon: "✨", value: "99.9%", label: "Success Rate" },
+                { icon: "⚡", value: "< 2s", label: "Processing" }
+              ].map((stat) => (
+                <div key={stat.label} style={{ textAlign: "center" }}>
                   <div style={{
-                    fontSize:22, fontWeight:500, color:"white",
-                    letterSpacing:"-.5px", fontFamily:"var(--font-serif)",
-                    opacity:.9,
-                  }}>{s.v}</div>
-                  <div style={{ fontSize:11, color:"rgba(255,255,255,.55)", marginTop:2, fontWeight:400 }}>{s.l}</div>
+                    fontSize: 28,
+                    marginBottom: 8,
+                  }}>
+                    {stat.icon}
+                  </div>
+                  <div style={{
+                    fontSize: 32,
+                    fontWeight: 800,
+                    color: "#000000",
+                    letterSpacing: "-1px",
+                    marginBottom: 6,
+                    fontFamily: "var(--font-sans)",
+                  }}>
+                    {stat.value}
+                  </div>
+                  <div style={{
+                    fontSize: 14,
+                    color: "#999",
+                    fontWeight: 600,
+                    letterSpacing: "0.5px",
+                    textTransform: "uppercase",
+                  }}>
+                    {stat.label}
+                  </div>
                 </div>
               ))}
             </div>
           </div>
         </div>
+
+        {/* Trust indicators */}
+        <div style={{
+          marginTop: 32,
+          textAlign: "center",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 24,
+          flexWrap: "wrap",
+          color: "#999",
+          fontSize: 13,
+          fontWeight: 500,
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            No credit card required
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            7-day free trial
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            Cancel anytime
+          </div>
+        </div>
       </div>
+
+      {/* Responsive styles */}
+      <style>{`
+        @media (max-width: 768px) {
+          section > div > div {
+            padding: 48px 32px !important;
+            border-radius: 24px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

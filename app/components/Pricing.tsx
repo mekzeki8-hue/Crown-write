@@ -486,7 +486,7 @@ export default function Pricing() {
         opacity: 0.4,
       }} />
 
-      <div style={{ maxWidth: 1080, margin: "0 auto", padding: "0 28px", position: "relative", zIndex: 1 }}>
+      <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 80px", position: "relative", zIndex: 1 }}>
 
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 48 }}>
@@ -554,9 +554,9 @@ export default function Pricing() {
         <div style={{
           display: "grid",
           gridTemplateColumns: "1fr 1.08fr 1fr",
-          gap: 28,
+          gap: 32, // Increased from 28px
           alignItems: "start",
-          maxWidth: 1120,
+          maxWidth: 1300, // Increased from 1120px
           margin: "0 auto",
         }} className="price-grid">
           {PLANS.map(p => (
@@ -607,8 +607,8 @@ export default function Pricing() {
           <div style={{
             display: "grid",
             gridTemplateColumns: "repeat(3, 1fr)",
-            gap: 24,
-            maxWidth: 960,
+            gap: 28, // Increased from 24px
+            maxWidth: 1100, // Increased from 960px
             margin: "0 auto",
           }} className="topup-grid">
             {TOPUP_PLANS.map(plan => (

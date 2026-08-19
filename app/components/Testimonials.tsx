@@ -107,9 +107,9 @@ export default function Testimonials() {
       position: 'relative',
     }}>
       <div style={{
-        maxWidth: '1100px',
+        maxWidth: '1300px', // Increased from 1100px
         margin: '0 auto',
-        padding: '0 40px',
+        padding: '0 80px', // Increased from 40px
       }}>
         {/* Header */}
         <div style={{
@@ -168,7 +168,7 @@ export default function Testimonials() {
                 color: 'var(--ink)',
                 marginBottom: '56px',
                 letterSpacing: '-0.5px',
-                maxWidth: '900px',
+                maxWidth: '1000px', // Increased from 900px
                 margin: '0 auto 56px',
               }}>
                 {textParts.map((part, index) => (

@@ -17,10 +17,11 @@ export default function CTA() {
       }} />
 
       <div style={{ 
-        maxWidth: 1000, 
+        maxWidth: 1200, // Increased from 1000px
         margin: "0 auto", 
         position: "relative",
         zIndex: 1,
+        padding: "0 80px", // Added padding
       }}>
         {/* Main CTA Card - Modern & Clean */}
         <div style={{

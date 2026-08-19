@@ -51,7 +51,7 @@ export default function Navbar() {
   return (
     <div style={{ position:"fixed", inset:"0 0 auto 0", zIndex:200 }}>
 
-      {/* ── Ultra-Attractive Black Discount Banner ── */}
+      {/* ── Ultra-Attractive Black Discount Banner - STRETCHED ── */}
       <div style={{
         height: banner ? bannerH : 0, overflow:"hidden",
         transition:"height .3s ease",
@@ -60,7 +60,8 @@ export default function Navbar() {
         animation: "gradientShift 8s ease infinite",
         borderBottom:"1px solid rgba(255, 215, 0, 0.3)",
         display:"flex", alignItems:"center", justifyContent:"center",
-        gap:16, position:"relative", padding: banner ? "0 56px" : 0,
+        gap:16, position:"relative", 
+        padding: banner ? "0 80px" : 0, // Increased from 56px to 80px
         boxShadow: "0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 215, 0, 0.1)",
       }}>
         {/* Animated gold shimmer effect */}
@@ -88,15 +89,17 @@ export default function Navbar() {
           pointerEvents:"none",
         }} />
 
-        {/* Content */}
+        {/* Content - WIDER SPREAD */}
         <div style={{ 
           position:"relative", 
           zIndex:1,
           display:"flex", 
           alignItems:"center", 
-          gap:14,
+          gap:24, // Increased from 14px
           flexWrap:"wrap",
           justifyContent:"center",
+          width: "100%",
+          maxWidth: 1400, // Added max width constraint
         }}>
           {/* Pulsing Discount Badge */}
           <span style={{

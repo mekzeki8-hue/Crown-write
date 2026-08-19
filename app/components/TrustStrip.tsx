@@ -26,9 +26,9 @@ export default function TrustStrip() {
       padding: "48px 0",
     }}>
       <div style={{
-        maxWidth: 1200,
+        maxWidth: 1400, // Increased from 1200px
         margin: "0 auto",
-        padding: "0 32px",
+        padding: "0 80px", // Increased from 32px
         textAlign: "center",
       }}>
         {/* Heading */}

@@ -227,7 +227,7 @@ export default function Workspace() {
         }}>{toast}</div>
       )}
 
-      <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 32px" }}>
+      <div style={{ maxWidth: 1500, margin: "0 auto", padding: "0 80px" }}> {/* Increased width and padding */}
 
         {/* Credit Display - At top of workspace */}
         {user && (

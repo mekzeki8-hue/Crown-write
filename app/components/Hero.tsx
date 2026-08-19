@@ -35,7 +35,7 @@ export default function Hero() {
 
       <div style={{
         position:"relative", zIndex:1,
-        maxWidth:1200, margin:"0 auto", padding:"0 32px",
+        maxWidth:1400, margin:"0 auto", padding:"0 80px", // Increased from 1200px and 32px
         textAlign: "center",
       }}>
         {/* Trust badge */}
@@ -63,9 +63,9 @@ export default function Hero() {
 
         {/* Main headline */}
         <h1 style={{ 
-          marginBottom:36, 
-          maxWidth: 920, 
-          margin: "0 auto 36px",
+          marginBottom:28, 
+          maxWidth: 1100, // Increased from 920px
+          margin: "0 auto 28px",
         }}>
           <span style={{
             display:"block",
@@ -76,33 +76,94 @@ export default function Hero() {
             lineHeight:1.12, 
             color:"var(--ink)",
           }}>
-            AI Writing, Undeniably Human.
+            Get the{" "}
+            <span style={{
+              position: "relative",
+              display: "inline-block",
+              fontFamily:"var(--font-serif)", 
+              fontStyle:"italic",
+            }} className="grad-text">
+              Crown
+              <svg 
+                style={{
+                  position: "absolute",
+                  bottom: -6,
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  width: "110%",
+                  height: "auto",
+                }}
+                viewBox="0 0 300 20" 
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path 
+                  d="M5 15 Q 75 5, 150 10 T 295 12" 
+                  stroke="var(--brand)" 
+                  strokeWidth="3" 
+                  fill="none" 
+                  strokeLinecap="round"
+                  opacity="0.4"
+                />
+              </svg>
+            </span>
+            {" "}of Natural,{" "}
+            <br />
+            Human-Sounding Writing
           </span>
         </h1>
 
+        {/* Subheading */}
+        <h2 style={{
+          fontSize: "clamp(19px, 2.2vw, 24px)",
+          lineHeight: 1.5,
+          color: "var(--brand-dark)",
+          fontWeight: 600,
+          fontFamily: "var(--font-sans)",
+          maxWidth: 680,
+          margin: "0 auto 36px",
+          letterSpacing: "-0.5px",
+        }}>
+          Get the Crown of Natural Writing
+        </h2>
+
         {/* Description - centered and professional */}
         <div style={{
-          maxWidth: 680,
+          maxWidth: 800, // Increased from 680px
           margin: "0 auto 40px",
           textAlign: "center",
         }}>
           <p style={{
-            fontSize: 18,
+            fontSize: 17,
             lineHeight: 1.7,
             color: "var(--muted)",
             fontWeight: 400,
+            marginBottom: 22,
           }}>
-            CrownWrite refines your words, improves flow, and gives your content an authentic voice while keeping your original meaning intact.
+            Transform AI-generated text into natural, human-sounding writing. CrownWrite refines your words, improves flow, and gives your content an authentic voice—while keeping your original meaning intact.
+          </p>
+
+          <p style={{
+            fontSize: 18,
+            lineHeight: 1.7,
+            color: "var(--brand-dark)",
+            fontWeight: 600,
+            fontFamily: "var(--font-serif)",
+            fontStyle: "italic",
+            marginTop: 28,
+          }}>
+            Smart writing deserves the Crown.
           </p>
         </div>
 
         {/* Stat cards row */}
         <div style={{
           display: "flex",
-          gap: 16,
+          gap: 24, // Increased from 16px
           justifyContent: "center",
           flexWrap: "wrap",
           marginTop: 56,
+          maxWidth: 1100, // Added constraint
+          margin: "56px auto 0",
         }}>
           {[
             { icon: "✓", label: "99%+ Rewriting effectiveness" },

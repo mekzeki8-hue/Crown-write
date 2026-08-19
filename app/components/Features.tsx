@@ -62,7 +62,7 @@ export default function Features() {
         filter: "blur(80px)",
       }} />
 
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 28px", position: "relative", zIndex: 1 }}>
+      <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 80px", position: "relative", zIndex: 1 }}>
         {/* Beautiful Header Section */}
         <div style={{ 
           textAlign: "center", 
@@ -226,8 +226,8 @@ export default function Features() {
           </div>
         </div>
 
-        {/* Enhanced Cards Grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16 }} className="feat-grid">
+        {/* Enhanced Cards Grid - WIDER */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20 }} className="feat-grid">
           {CARDS.map((c, index) => (
             <div 
               key={c.title} 

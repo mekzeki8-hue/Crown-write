@@ -96,7 +96,7 @@ export default function FAQ() {
         pointerEvents: "none",
       }} />
 
-      <div style={{ maxWidth: 900, margin: "0 auto", padding: "0 28px", position: "relative", zIndex: 1 }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 80px", position: "relative", zIndex: 1 }}>
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 64 }}>
           {/* Badge */}
@@ -171,7 +171,7 @@ export default function FAQ() {
         </div>
 
         {/* FAQ Items - Large & Spacious */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}> {/* Increased from 12px */}
           {FAQS.map((f, i) => (
             <div key={i} style={{
               background: "var(--surface)",

@@ -9,48 +9,76 @@ export default function AboutPage() {
     { value: "50K+", label: "Active Users" },
     { value: "10M+", label: "Words Humanized" },
     { value: "99.8%", label: "Satisfaction Rate" },
-    { value: "150+", label: "Countries" }
+    { value: "<2s", label: "Processing Time" }
   ];
 
-  const values = [
+  const features = [
     {
-      title: "Quality First",
-      description: "We never compromise on output quality. Every piece of text is carefully processed to sound authentically human."
+      title: "🎯 Undetectable Output",
+      description: "Bypasses GPTZero, Turnitin, Originality.ai, and all major AI detectors with 99.9% success rate."
     },
     {
-      title: "Privacy Always",
-      description: "Your content is yours. We never store, share, or use your text for training. Everything is processed and immediately deleted."
+      title: "🔒 Complete Privacy",
+      description: "Your content is never stored, shared, or used for training. Process and delete immediately."
     },
     {
-      title: "Constant Innovation",
-      description: "AI detection evolves daily. So do we. Our models are continuously updated to stay ahead of every detector."
+      title: "⚡ Lightning Fast",
+      description: "Average processing time under 2 seconds. Get results instantly, no waiting."
     },
     {
-      title: "Ethical Use",
-      description: "We believe AI should enhance human creativity, not replace it. CrownWrite is built to help writers, not deceive readers."
+      title: "🎨 Preserves Meaning",
+      description: "Maintains your original message, tone, and intent while making text sound human."
+    },
+    {
+      title: "📊 Quality Scoring",
+      description: "Real-time quality metrics show exactly how human your text sounds."
+    },
+    {
+      title: "🌍 Works Everywhere",
+      description: "Essays, articles, emails, reports—any text in any context gets humanized perfectly."
     }
   ];
 
-  const team = [
+  const useCases = [
     {
-      name: "Alex Rivera",
-      role: "Founder & CEO",
-      bio: "Former ML researcher at OpenAI. Built CrownWrite to solve the AI detection problem for content creators."
+      icon: "🎓",
+      title: "Students & Academics",
+      points: [
+        "Humanize research papers and essays",
+        "Pass university AI detection checks",
+        "Maintain academic integrity",
+        "Save hours of manual rewriting"
+      ]
     },
     {
-      name: "Sarah Chen",
-      role: "Head of AI",
-      bio: "PhD in NLP from Stanford. Leads our humanization model development and detector reverse-engineering."
+      icon: "✍️",
+      title: "Content Writers",
+      points: [
+        "Scale content production 10x",
+        "Maintain authentic brand voice",
+        "Beat Google's AI content penalties",
+        "Keep clients satisfied"
+      ]
     },
     {
-      name: "Marcus Johnson",
-      role: "Lead Engineer",
-      bio: "15 years building scalable systems. Ensures CrownWrite stays fast and reliable at any scale."
+      icon: "💼",
+      title: "Professionals",
+      points: [
+        "Polish reports and presentations",
+        "Humanize email communications",
+        "Speed up document creation",
+        "Look professional always"
+      ]
     },
     {
-      name: "Emily Watson",
-      role: "Head of Product",
-      bio: "Former content strategist. Designs features that writers actually want and need."
+      icon: "📈",
+      title: "Marketing Teams",
+      points: [
+        "Generate human-like ad copy",
+        "Create authentic social content",
+        "Produce blog posts at scale",
+        "Maintain consistent quality"
+      ]
     }
   ];
 
@@ -64,7 +92,7 @@ export default function AboutPage() {
 
       {/* Hero Section */}
       <section style={{
-        padding: "160px 32px 80px", // Increased from 120px to 160px for spacing
+        padding: "160px 32px 80px",
         textAlign: "center",
         background: "linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%)",
       }}>
@@ -81,8 +109,7 @@ export default function AboutPage() {
             marginBottom: 24,
             lineHeight: 1.2,
           }}>
-            AI Writing That Feels <br/>
-            <span style={{ color: "var(--brand)" }}>Undeniably Human</span>
+            About <span style={{ color: "var(--brand)" }}>CrownWrite</span>
           </h1>
           <p style={{
             fontSize: 20,
@@ -91,8 +118,7 @@ export default function AboutPage() {
             margin: "0 auto",
             lineHeight: 1.7,
           }}>
-            We're on a mission to help writers leverage AI without sacrificing authenticity. 
-            CrownWrite transforms robotic text into prose that sounds like you wrote it.
+            Transform AI-generated text into naturally human-sounding content that bypasses all detectors.
           </p>
         </motion.div>
       </section>
@@ -136,74 +162,80 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Story Section */}
+      {/* Features Section */}
       <section style={{
         padding: "100px 32px",
-        maxWidth: 900,
+        maxWidth: 1200,
         margin: "0 auto",
       }}>
         <h2 style={{
           fontSize: 40,
           fontFamily: "var(--font-serif)",
-          marginBottom: 32,
+          marginBottom: 16,
           textAlign: "center",
-        }}>Our Story</h2>
-        
-        <div style={{ fontSize: 18, lineHeight: 1.8, color: "var(--ink)" }}>
-          <p style={{ marginBottom: 24 }}>
-            In early 2024, AI writing tools exploded in popularity. ChatGPT, Claude, and Gemini made it 
-            easier than ever to generate content—but there was a problem. The writing was obviously artificial.
-          </p>
-          
-          <p style={{ marginBottom: 24 }}>
-            Universities deployed AI detectors. Google started penalizing AI content. Clients could spot 
-            machine-written text from a mile away. Writers who used AI as a tool suddenly found themselves 
-            under suspicion.
-          </p>
-          
-          <p style={{ marginBottom: 24 }}>
-            We saw talented writers spending hours manually rewriting AI drafts just to make them sound human. 
-            There had to be a better way.
-          </p>
-          
-          <p style={{ marginBottom: 24 }}>
-            So we built CrownWrite. Not as a replacement for human creativity, but as a bridge. A tool that 
-            lets you harness AI's efficiency while preserving your authentic voice. Something that makes your 
-            AI-assisted drafts sound exactly like you wrote them from scratch.
-          </p>
-          
-          <p style={{ marginBottom: 24 }}>
-            Today, over 50,000 writers, students, marketers, and professionals trust CrownWrite to enhance 
-            their workflow. Our humanization technology has been tested against every major AI detector and 
-            consistently delivers natural, undetectable prose.
-          </p>
-          
-          <p>
-            We're not here to trick anyone. We're here to help good writers work smarter—because AI should 
-            amplify human creativity, not replace it.
-          </p>
+        }}>Key Features</h2>
+        <p style={{
+          textAlign: "center",
+          color: "var(--ink-muted)",
+          fontSize: 18,
+          marginBottom: 64,
+        }}>
+          Everything you need to make AI writing sound human
+        </p>
+
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+          gap: 32,
+        }}>
+          {features.map((feature, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+              style={{
+                background: "var(--surface)",
+                padding: 32,
+                borderRadius: 16,
+                border: "1px solid var(--border)",
+              }}
+            >
+              <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 12 }}>{feature.title}</h3>
+              <p style={{ color: "var(--ink-muted)", lineHeight: 1.7, fontSize: 15 }}>{feature.description}</p>
+            </motion.div>
+          ))}
         </div>
       </section>
 
-      {/* Values Section */}
+      {/* Use Cases Section */}
       <section style={{
-        padding: "80px 32px",
+        padding: "100px 32px",
         background: "var(--bg-2)",
       }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <h2 style={{
             fontSize: 40,
             fontFamily: "var(--font-serif)",
-            marginBottom: 64,
+            marginBottom: 16,
             textAlign: "center",
-          }}>What We Stand For</h2>
+          }}>Who Uses CrownWrite</h2>
+          <p style={{
+            textAlign: "center",
+            color: "var(--ink-muted)",
+            fontSize: 18,
+            marginBottom: 64,
+          }}>
+            Trusted by professionals across industries
+          </p>
 
           <div style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
             gap: 40,
           }}>
-            {values.map((value, i) => (
+            {useCases.map((useCase, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
@@ -217,109 +249,34 @@ export default function AboutPage() {
                   border: "1px solid var(--border)",
                 }}
               >
-                <h3 style={{ fontSize: 22, fontWeight: 600, marginBottom: 12 }}>{value.title}</h3>
-                <p style={{ color: "var(--ink-muted)", lineHeight: 1.7 }}>{value.description}</p>
+                <div style={{ fontSize: 48, marginBottom: 16 }}>{useCase.icon}</div>
+                <h3 style={{ fontSize: 22, fontWeight: 600, marginBottom: 20 }}>{useCase.title}</h3>
+                <ul style={{ 
+                  listStyle: "none", 
+                  padding: 0, 
+                  margin: 0,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 12
+                }}>
+                  {useCase.points.map((point, j) => (
+                    <li key={j} style={{ 
+                      color: "var(--ink-muted)", 
+                      fontSize: 15,
+                      paddingLeft: 24,
+                      position: "relative"
+                    }}>
+                      <span style={{
+                        position: "absolute",
+                        left: 0,
+                        color: "var(--brand)",
+                        fontWeight: 600
+                      }}>✓</span>
+                      {point}
+                    </li>
+                  ))}
+                </ul>
               </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Team Section */}
-      <section style={{
-        padding: "100px 32px",
-        maxWidth: 1200,
-        margin: "0 auto",
-      }}>
-        <h2 style={{
-          fontSize: 40,
-          fontFamily: "var(--font-serif)",
-          marginBottom: 16,
-          textAlign: "center",
-        }}>Meet The Team</h2>
-        <p style={{
-          textAlign: "center",
-          color: "var(--ink-muted)",
-          fontSize: 18,
-          marginBottom: 64,
-        }}>
-          A small team obsessed with making AI work for humans
-        </p>
-
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-          gap: 40,
-        }}>
-          {team.map((member, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              style={{
-                textAlign: "center",
-                padding: 24,
-              }}
-            >
-              <div style={{
-                width: 80,
-                height: 80,
-                borderRadius: "50%",
-                background: "var(--brand)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                margin: "0 auto 16px",
-                fontSize: 32,
-                fontWeight: 600,
-                color: "white",
-              }}>{member.name.split(" ").map(n => n[0]).join("")}</div>
-              <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 4 }}>{member.name}</h3>
-              <div style={{
-                color: "var(--brand)",
-                fontSize: 14,
-                fontWeight: 500,
-                marginBottom: 12,
-              }}>{member.role}</div>
-              <p style={{
-                color: "var(--ink-muted)",
-                fontSize: 15,
-                lineHeight: 1.6,
-              }}>{member.bio}</p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* Backed By Section */}
-      <section style={{
-        padding: "60px 32px",
-        background: "var(--surface)",
-        borderTop: "1px solid var(--border)",
-      }}>
-        <div style={{ maxWidth: 1000, margin: "0 auto", textAlign: "center" }}>
-          <h3 style={{ fontSize: 16, color: "var(--ink-muted)", marginBottom: 32, fontWeight: 600 }}>
-            BACKED BY LEADING INVESTORS
-          </h3>
-          <div style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: 64,
-            flexWrap: "wrap",
-          }}>
-            {["Y Combinator", "Sequoia Capital", "Andreessen Horowitz", "OpenAI Startup Fund"].map((investor, i) => (
-              <div
-                key={i}
-                style={{
-                  fontSize: 18,
-                  fontWeight: 600,
-                  color: "var(--ink-muted)",
-                  opacity: 0.7,
-                }}
-              >{investor}</div>
             ))}
           </div>
         </div>
@@ -334,7 +291,7 @@ export default function AboutPage() {
           fontSize: 40,
           fontFamily: "var(--font-serif)",
           marginBottom: 24,
-        }}>Join Thousands of Happy Writers</h2>
+        }}>Ready to Get Started?</h2>
         <p style={{
           fontSize: 18,
           color: "var(--ink-muted)",
@@ -342,53 +299,26 @@ export default function AboutPage() {
           maxWidth: 600,
           margin: "0 auto 40px",
         }}>
-          Start humanizing your AI-generated content today. No credit card required.
+          Join 50,000+ users who trust CrownWrite for authentic AI humanization
         </p>
-        <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
-          <a
-            href="/#workspace"
-            style={{
-              display: "inline-block",
-              padding: "16px 40px",
-              background: "var(--brand)",
-              color: "white",
-              borderRadius: 12,
-              fontWeight: 600,
-              fontSize: 18,
-              textDecoration: "none",
-              transition: "transform 0.2s",
-            }}
-            onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-            onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
-          >
-            Try It Free
-          </a>
-          <a
-            href="/contact"
-            style={{
-              display: "inline-block",
-              padding: "16px 40px",
-              background: "var(--surface)",
-              color: "var(--ink)",
-              border: "2px solid var(--border)",
-              borderRadius: 12,
-              fontWeight: 600,
-              fontSize: 18,
-              textDecoration: "none",
-              transition: "all 0.2s",
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.borderColor = "var(--brand)";
-              e.currentTarget.style.color = "var(--brand)";
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.borderColor = "var(--border)";
-              e.currentTarget.style.color = "var(--ink)";
-            }}
-          >
-            Contact Us
-          </a>
-        </div>
+        <a
+          href="/#workspace"
+          style={{
+            display: "inline-block",
+            padding: "16px 48px",
+            background: "var(--brand)",
+            color: "white",
+            borderRadius: 12,
+            fontWeight: 600,
+            fontSize: 18,
+            textDecoration: "none",
+            transition: "transform 0.2s",
+          }}
+          onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+          onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
+        >
+          Try CrownWrite Free
+        </a>
       </section>
 
       <Footer />

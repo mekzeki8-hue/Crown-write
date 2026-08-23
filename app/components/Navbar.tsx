@@ -135,18 +135,29 @@ export default function Navbar() {
             <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
             </svg>
-            50% Off — {timeLeft.days}d {String(timeLeft.hours).padStart(2, '0')}h {String(timeLeft.minutes).padStart(2, '0')}m {String(timeLeft.seconds).padStart(2, '0')}s
+            50% Off
           </div>
 
-          {/* Clean Message */}
+          {/* Celebration Message */}
           <span style={{ 
             fontSize:13.5, 
             color:"rgba(255, 255, 255, 0.9)", 
             fontWeight:500,
             letterSpacing:"0.2px",
           }}>
-            Limited time offer — Save 50% on annual plans
+            Celebrating 50,000+ users — Save 50% on annual plans
           </span>
+
+          {/* Countdown Timer */}
+          <div style={{
+            fontSize:12,
+            fontWeight:600,
+            color:"rgba(192, 154, 114, 1)",
+            letterSpacing:"0.5px",
+            fontVariantNumeric:"tabular-nums",
+          }}>
+            Ends in: {timeLeft.days}d {String(timeLeft.hours).padStart(2, '0')}h {String(timeLeft.minutes).padStart(2, '0')}m {String(timeLeft.seconds).padStart(2, '0')}s
+          </div>
 
           {/* Professional CTA Button */}
           <a href="#pricing" style={{

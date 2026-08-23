@@ -29,8 +29,9 @@ export async function humanizeWithHuggingFace(
   }
 
   try {
-    // Prepare the prompt for the model
-    const prompt = `Humanize the following text to sound natural and authentic:\n\n${text}`;
+    // Send only the user's text directly to the model
+    // The model is fine-tuned to humanize, so no instruction prompt needed
+    const userInput = text;
 
     console.log("🤗 Calling Hugging Face model:", HF_MODEL);
     console.log("📝 Input length:", text.length, "characters");
@@ -42,7 +43,7 @@ export async function humanizeWithHuggingFace(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        inputs: prompt,
+        inputs: userInput,
         parameters: {
           max_new_tokens: 2048,
           temperature: 0.7,
@@ -76,35 +77,61 @@ export async function humanizeWithHuggingFace(
     const result = await response.json();
     const processingTime = Date.now() - startTime;
 
+    // Log the raw response for debugging (server-side only, HF_TOKEN never exposed)
+    console.log("🔍 Raw HF response structure:", JSON.stringify(result).substring(0, 200));
+
     // Handle different response formats
     let humanizedText = "";
 
     if (Array.isArray(result) && result.length > 0) {
-      // Response is an array (common format)
-      humanizedText = result[0].generated_text || result[0].text || "";
+      // Response is an array (most common format)
+      const firstResult = result[0];
+      humanizedText = firstResult.generated_text || firstResult.text || "";
     } else if (result.generated_text) {
       // Direct generated_text field
       humanizedText = result.generated_text;
-    } else if (result[0]?.generated_text) {
-      // Nested array format
-      humanizedText = result[0].generated_text;
+    } else if (typeof result === 'string') {
+      // Plain string response
+      humanizedText = result;
     } else {
-      console.error("❌ Unexpected response format:", result);
+      console.error("❌ Unexpected response format:", JSON.stringify(result));
       throw new Error("Unexpected response format from Hugging Face");
     }
 
-    // Clean up the output - remove the original prompt if it's included
-    if (humanizedText.includes(prompt)) {
-      humanizedText = humanizedText.replace(prompt, "").trim();
+    // The model may return: [input] + [generated_completion]
+    // We need to extract only the NEW generated part, not the echo of the input
+    
+    // Strategy 1: If response starts with the exact input, remove it
+    if (humanizedText.startsWith(userInput)) {
+      humanizedText = humanizedText.substring(userInput.length).trim();
+      console.log("📝 Removed input echo from response");
+    }
+    
+    // Strategy 2: If response contains input followed by newlines, split on double newline
+    else if (humanizedText.includes(userInput)) {
+      const parts = humanizedText.split(userInput);
+      if (parts.length > 1) {
+        // Take everything after the first occurrence of the input
+        humanizedText = parts.slice(1).join(userInput).trim();
+        console.log("📝 Extracted completion after input");
+      }
     }
 
-    // Remove any "Humanize the following text" instruction if model echoed it
-    humanizedText = humanizedText
-      .replace(/^Humanize the following text.*?:\s*/i, "")
-      .trim();
+    // Strategy 3: If nothing was generated (model just echoed), use the original
+    // This handles cases where the model's output IS the humanized version of the input
+    if (!humanizedText || humanizedText.length < 10) {
+      console.log("⚠️ Short/empty completion detected, using full response");
+      // Get the full response again
+      if (Array.isArray(result) && result.length > 0) {
+        humanizedText = result[0].generated_text || result[0].text || "";
+      }
+    }
 
-    if (!humanizedText) {
-      throw new Error("Model returned empty response");
+    // Final validation: if still empty, throw error
+    if (!humanizedText || humanizedText.trim().length === 0) {
+      console.error("❌ No valid text extracted from response");
+      console.error("Raw result:", JSON.stringify(result));
+      throw new Error("Model returned empty or invalid response");
     }
 
     console.log("✅ Hugging Face humanization successful");
@@ -112,7 +139,7 @@ export async function humanizeWithHuggingFace(
     console.log("⏱️ Processing time:", processingTime, "ms");
 
     return {
-      text: humanizedText,
+      text: humanizedText.trim(),
       modelUsed: HF_MODEL,
       processingTime,
     };

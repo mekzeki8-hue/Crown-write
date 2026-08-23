@@ -208,8 +208,8 @@ export default function Workspace() {
 
   return (
     <section id="workspace" style={{
-      background: "var(--bg-2)",
-      padding: "60px 0 80px",
+      background: "linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%)",
+      padding: "80px 0 100px",
       position: "relative",
       minHeight: 'calc(100vh - 200px)',
     }}>
@@ -227,7 +227,31 @@ export default function Workspace() {
         }}>{toast}</div>
       )}
 
-      <div style={{ maxWidth: 1500, margin: "0 auto", padding: "0 80px" }}> {/* Increased width and padding */}
+      <div style={{ maxWidth: 1500, margin: "0 auto", padding: "0 80px" }}>
+
+        {/* Section Title */}
+        <div style={{
+          textAlign: "center",
+          marginBottom: 48,
+        }}>
+          <h2 style={{
+            fontSize: "clamp(32px, 4vw, 48px)",
+            fontFamily: "var(--font-serif)",
+            fontWeight: 600,
+            color: "var(--ink)",
+            marginBottom: 12,
+          }}>
+            AI Text Humanizer
+          </h2>
+          <p style={{
+            fontSize: 16,
+            color: "var(--muted)",
+            maxWidth: 600,
+            margin: "0 auto",
+          }}>
+            Transform AI-generated content into naturally human-sounding text that bypasses all detectors
+          </p>
+        </div>
 
         {/* Credit Display - At top of workspace */}
         {user && (
@@ -255,8 +279,8 @@ export default function Workspace() {
         <div style={{
           background: "var(--surface)",
           border: "1px solid var(--border)",
-          borderRadius: 16,
-          boxShadow: "var(--sh-float)",
+          borderRadius: 20,
+          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08)",
           overflow: "hidden",
         }}>
 
@@ -265,9 +289,9 @@ export default function Workspace() {
             display: "flex", 
             alignItems: "center",
             justifyContent: "space-between",
-            padding: "16px 24px",
+            padding: "20px 32px",
             borderBottom: "1px solid var(--border)",
-            background: "var(--bg-2)",
+            background: "linear-gradient(180deg, var(--surface) 0%, var(--bg-2) 100%)",
             flexWrap: "wrap", 
             gap: 12,
           }}>
@@ -285,22 +309,24 @@ export default function Workspace() {
                     display: "inline-flex",
                     alignItems: "center",
                     gap: 6,
-                    padding: "8px 16px",
+                    padding: "10px 20px",
                     borderRadius: 999,
                     fontSize: 13,
                     fontWeight: tone === t.id ? 600 : 500,
                     color: tone === t.id ? "white" : "var(--muted)",
-                    background: tone === t.id ? "var(--g-brand)" : "var(--surface)",
-                    border: `1px solid ${tone === t.id ? "var(--brand)" : "var(--border)"}`,
+                    background: tone === t.id ? "linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%)" : "var(--surface)",
+                    border: `2px solid ${tone === t.id ? "var(--brand)" : "var(--border)"}`,
                     cursor: "pointer",
-                    transition: "all 0.2s",
+                    transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
                     whiteSpace: "nowrap",
+                    boxShadow: tone === t.id ? "0 4px 12px rgba(192, 154, 114, 0.3)" : "none",
                   }}
                   onMouseEnter={(e) => {
                     if (tone !== t.id) {
                       const el = e.currentTarget as HTMLElement;
-                      el.style.borderColor = "var(--border-2)";
-                      el.style.background = "var(--bg-3)";
+                      el.style.borderColor = "var(--brand)";
+                      el.style.background = "rgba(192, 154, 114, 0.08)";
+                      el.style.transform = "translateY(-2px)";
                     }
                   }}
                   onMouseLeave={(e) => {
@@ -308,6 +334,7 @@ export default function Workspace() {
                       const el = e.currentTarget as HTMLElement;
                       el.style.borderColor = "var(--border)";
                       el.style.background = "var(--surface)";
+                      el.style.transform = "translateY(0)";
                     }
                   }}
                 >
@@ -399,18 +426,18 @@ export default function Workspace() {
                 display: "flex", 
                 alignItems: "center",
                 justifyContent: "space-between",
-                padding: "14px 20px",
+                padding: "16px 24px",
                 borderBottom: "1px solid var(--border)",
-                background: "var(--bg-2)",
+                background: "linear-gradient(180deg, #FAFAFA 0%, #F5F5F5 100%)",
               }}>
                 <span style={{
-                  fontSize: 12, 
+                  fontSize: 13, 
                   fontWeight: 600, 
                   color: "var(--subtle)",
                   textTransform: "uppercase", 
-                  letterSpacing: "0.05em",
+                  letterSpacing: "0.08em",
                 }}>
-                  Input Text
+                  📝 Input Text
                 </span>
                 <div style={{ 
                   display: "flex", 
@@ -543,13 +570,34 @@ export default function Workspace() {
                 <button
                   onClick={run}
                   disabled={!input.trim() || loading}
-                  className="btn-humanize"
                   style={{
-                    minWidth: 120, 
-                    padding: "10px 24px", 
-                    fontSize: 14,
+                    minWidth: 140, 
+                    padding: "12px 32px", 
+                    fontSize: 15,
                     fontWeight: 600,
-                    opacity: !input.trim() || loading ? 0.4 : 1,
+                    opacity: !input.trim() || loading ? 0.5 : 1,
+                    background: !input.trim() || loading ? "var(--border)" : "linear-gradient(135deg, var(--brand) 0%, #B8895E 100%)",
+                    color: "white",
+                    border: "none",
+                    borderRadius: 10,
+                    cursor: !input.trim() || loading ? "not-allowed" : "pointer",
+                    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                    boxShadow: !input.trim() || loading ? "none" : "0 4px 14px rgba(192, 154, 114, 0.4)",
+                    transform: "translateY(0)",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (input.trim() && !loading) {
+                      const el = e.currentTarget as HTMLElement;
+                      el.style.transform = "translateY(-2px)";
+                      el.style.boxShadow = "0 6px 20px rgba(192, 154, 114, 0.5)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (input.trim() && !loading) {
+                      const el = e.currentTarget as HTMLElement;
+                      el.style.transform = "translateY(0)";
+                      el.style.boxShadow = "0 4px 14px rgba(192, 154, 114, 0.4)";
+                    }
                   }}
                 >
                   {loading
@@ -572,19 +620,19 @@ export default function Workspace() {
                 display: "flex", 
                 alignItems: "center",
                 justifyContent: "space-between",
-                padding: "14px 20px",
+                padding: "16px 24px",
                 borderBottom: "1px solid var(--border)",
-                background: "var(--bg-2)",
+                background: output ? "linear-gradient(135deg, #FFF9F0 0%, #FFF5E6 100%)" : "linear-gradient(180deg, #FAFAFA 0%, #F5F5F5 100%)",
               }}>
                 <span style={{
-                  fontSize: 12, 
+                  fontSize: 13, 
                   fontWeight: 600, 
                   color: output ? "var(--brand)" : "var(--subtle)",
                   textTransform: "uppercase", 
-                  letterSpacing: "0.05em",
+                  letterSpacing: "0.08em",
                   transition: "color 0.3s",
                 }}>
-                  Humanized Output
+                  ✨ Humanized Output
                 </span>
 
                 {output && (

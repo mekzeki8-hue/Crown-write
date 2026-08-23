@@ -51,208 +51,130 @@ export default function Navbar() {
   return (
     <div style={{ position:"fixed", inset:"0 0 auto 0", zIndex:200 }}>
 
-      {/* ── Ultra-Attractive Black Discount Banner - STRETCHED ── */}
+      {/* ── Professional Clean Discount Banner ── */}
       <div style={{
         height: banner ? bannerH : 0, overflow:"hidden",
         transition:"height .3s ease",
-        background:"linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%)",
-        backgroundSize: "200% 200%",
-        animation: "gradientShift 8s ease infinite",
-        borderBottom:"1px solid rgba(255, 215, 0, 0.3)",
+        background:"linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)",
+        borderBottom:"1px solid rgba(192, 154, 114, 0.2)",
         display:"flex", alignItems:"center", justifyContent:"center",
-        gap:16, position:"relative", 
-        padding: banner ? "0 80px" : 0, // Increased from 56px to 80px
-        boxShadow: "0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 215, 0, 0.1)",
+        gap:20,
+        position:"relative", 
+        padding: banner ? "0 80px" : 0,
+        boxShadow: "0 2px 12px rgba(0, 0, 0, 0.15)",
       }}>
-        {/* Animated gold shimmer effect */}
+        {/* Subtle gradient overlay */}
         <div aria-hidden style={{
           position:"absolute",
           inset:0,
-          background:"linear-gradient(90deg, transparent 0%, rgba(255, 215, 0, 0.15) 25%, rgba(255, 215, 0, 0.25) 50%, rgba(255, 215, 0, 0.15) 75%, transparent 100%)",
-          backgroundSize: "200% 100%",
-          animation: "shimmer 3s linear infinite",
+          background:"radial-gradient(ellipse at center, rgba(192, 154, 114, 0.06) 0%, transparent 70%)",
           pointerEvents:"none",
         }} />
 
-        {/* Multiple sparkle dots */}
-        <div aria-hidden style={{
-          position:"absolute",
-          inset:0,
-          background: `
-            radial-gradient(circle at 15% 50%, rgba(255, 215, 0, 0.4) 0%, transparent 2%),
-            radial-gradient(circle at 35% 60%, rgba(255, 215, 0, 0.3) 0%, transparent 2%),
-            radial-gradient(circle at 55% 40%, rgba(255, 215, 0, 0.35) 0%, transparent 2%),
-            radial-gradient(circle at 75% 55%, rgba(255, 215, 0, 0.3) 0%, transparent 2%),
-            radial-gradient(circle at 85% 45%, rgba(255, 215, 0, 0.4) 0%, transparent 2%)
-          `,
-          animation: "twinkle 2s ease-in-out infinite",
-          pointerEvents:"none",
-        }} />
-
-        {/* Content - WIDER SPREAD */}
+        {/* Content - Clean & Professional */}
         <div style={{ 
           position:"relative", 
           zIndex:1,
           display:"flex", 
           alignItems:"center", 
-          gap:24, // Increased from 14px
+          gap:20,
           flexWrap:"wrap",
           justifyContent:"center",
           width: "100%",
-          maxWidth: 1400, // Added max width constraint
+          maxWidth: 1400,
         }}>
-          {/* Pulsing Discount Badge */}
-          <span style={{
-            fontSize:12, 
-            fontWeight:900, 
-            padding:"5px 12px", 
-            borderRadius:8,
-            background:"linear-gradient(135deg, #FFD700 0%, #FFA500 100%)",
-            color:"#000",
-            letterSpacing:"1px",
-            textTransform:"uppercase",
-            boxShadow:"0 0 20px rgba(255, 215, 0, 0.6), 0 4px 12px rgba(255, 165, 0, 0.4)",
-            animation: "pulse 2s ease-in-out infinite",
-            border: "2px solid rgba(255, 255, 255, 0.3)",
-            position: "relative",
-          }}>
-            <span style={{
-              position: "absolute",
-              inset: -4,
-              background: "rgba(255, 215, 0, 0.3)",
-              borderRadius: 10,
-              animation: "pulseRing 2s ease-in-out infinite",
-              zIndex: -1,
-            }} />
-            🔥 50% OFF
-          </span>
-
-          {/* Animated text with icon */}
-          <span style={{ 
-            fontSize:14, 
-            color:"#FFFFFF", 
-            fontWeight:600,
-            letterSpacing:"0.3px",
-            textShadow: "0 2px 8px rgba(0, 0, 0, 0.5)",
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-          }}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFD700" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ animation: "spin 3s linear infinite" }}>
-              <circle cx="12" cy="12" r="10"/>
-              <polyline points="12 6 12 12 16 14"/>
-            </svg>
-            Limited time — Half price on all plans
-          </span>
-
-          {/* Ultra-attractive CTA Button */}
-          <a href="#pricing" style={{
+          {/* Clean Badge */}
+          <div style={{
             display:"inline-flex",
             alignItems:"center",
             gap:8,
-            fontSize:13,
-            fontWeight:800,
-            padding:"8px 20px",
-            borderRadius:10,
-            background:"linear-gradient(135deg, #FFFFFF 0%, #F0F0F0 100%)",
-            color:"#000000",
-            textDecoration:"none",
-            transition:"all .3s cubic-bezier(0.4, 0, 0.2, 1)",
-            letterSpacing:"0.5px",
+            padding:"4px 14px",
+            borderRadius:6,
+            background:"rgba(192, 154, 114, 0.15)",
+            border:"1px solid rgba(192, 154, 114, 0.3)",
+            fontSize:11,
+            fontWeight:700,
+            letterSpacing:"0.8px",
             textTransform:"uppercase",
-            boxShadow:"0 4px 16px rgba(255, 255, 255, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.8)",
-            border: "2px solid rgba(255, 215, 0, 0.5)",
-            position: "relative",
-            overflow: "hidden",
+            color:"#C09A72",
+          }}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            50% Off
+          </div>
+
+          {/* Clean Message */}
+          <span style={{ 
+            fontSize:13.5, 
+            color:"rgba(255, 255, 255, 0.9)", 
+            fontWeight:500,
+            letterSpacing:"0.2px",
+          }}>
+            Limited time offer — Save 50% on annual plans
+          </span>
+
+          {/* Professional CTA Button */}
+          <a href="#pricing" style={{
+            display:"inline-flex",
+            alignItems:"center",
+            gap:6,
+            fontSize:12,
+            fontWeight:600,
+            padding:"7px 18px",
+            borderRadius:6,
+            background:"rgba(255, 255, 255, 0.95)",
+            color:"#1a1a1a",
+            textDecoration:"none",
+            transition:"all .25s ease",
+            letterSpacing:"0.3px",
+            border:"none",
+            boxShadow:"0 1px 3px rgba(0, 0, 0, 0.12)",
           }}
           onMouseEnter={e => {
-            e.currentTarget.style.transform = "translateY(-2px) scale(1.05)";
-            e.currentTarget.style.boxShadow = "0 8px 24px rgba(255, 255, 255, 0.6), inset 0 1px 0 rgba(255, 255, 255, 1)";
-            e.currentTarget.style.borderColor = "#FFD700";
+            e.currentTarget.style.background = "#FFFFFF";
+            e.currentTarget.style.transform = "translateY(-1px)";
+            e.currentTarget.style.boxShadow = "0 3px 8px rgba(0, 0, 0, 0.18)";
           }}
           onMouseLeave={e => {
-            e.currentTarget.style.transform = "translateY(0) scale(1)";
-            e.currentTarget.style.boxShadow = "0 4px 16px rgba(255, 255, 255, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.8)";
-            e.currentTarget.style.borderColor = "rgba(255, 215, 0, 0.5)";
+            e.currentTarget.style.background = "rgba(255, 255, 255, 0.95)";
+            e.currentTarget.style.transform = "translateY(0)";
+            e.currentTarget.style.boxShadow = "0 1px 3px rgba(0, 0, 0, 0.12)";
           }}>
-            {/* Button shimmer effect */}
-            <span style={{
-              position: "absolute",
-              top: 0,
-              left: "-100%",
-              width: "100%",
-              height: "100%",
-              background: "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent)",
-              animation: "buttonShimmer 2s infinite",
-            }} />
-            <span style={{ position: "relative", zIndex: 1 }}>⚡ Claim Offer</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ position: "relative", zIndex: 1 }}>
+            View Plans
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
           </a>
         </div>
 
-        {/* Stylish close button */}
+        {/* Minimalist close button */}
         <button onClick={() => setBanner(false)} aria-label="Close" style={{
           position:"absolute", 
-          right:12,
-          background:"rgba(255, 255, 255, 0.1)", 
-          border:"1px solid rgba(255, 255, 255, 0.2)", 
-          borderRadius: 6,
+          right:16,
+          background:"transparent", 
+          border:"1px solid rgba(255, 255, 255, 0.15)", 
+          borderRadius: 4,
           cursor:"pointer",
-          color:"rgba(255, 255, 255, 0.7)", 
-          fontSize:18, 
+          color:"rgba(255, 255, 255, 0.6)", 
+          fontSize:16, 
           lineHeight:1, 
-          padding: "4px 8px",
+          padding: "4px 7px",
           transition:"all .2s ease",
-          backdropFilter: "blur(10px)",
+          fontWeight: 300,
         }}
         onMouseEnter={e => {
-          e.currentTarget.style.background = "rgba(255, 255, 255, 0.2)";
-          e.currentTarget.style.color = "#FFFFFF";
-          e.currentTarget.style.transform = "scale(1.1)";
+          e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
+          e.currentTarget.style.color = "rgba(255, 255, 255, 0.9)";
+          e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.25)";
         }}
         onMouseLeave={e => {
-          e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
-          e.currentTarget.style.color = "rgba(255, 255, 255, 0.7)";
-          e.currentTarget.style.transform = "scale(1)";
+          e.currentTarget.style.background = "transparent";
+          e.currentTarget.style.color = "rgba(255, 255, 255, 0.6)";
+          e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.15)";
         }}
         >×</button>
       </div>
-
-      {/* Animations */}
-      <style>{`
-        @keyframes shimmer {
-          0% { background-position: -200% 0; }
-          100% { background-position: 200% 0; }
-        }
-        
-        @keyframes pulse {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.05); }
-        }
-        
-        @keyframes pulseRing {
-          0% { transform: scale(0.95); opacity: 1; }
-          50% { transform: scale(1.1); opacity: 0.5; }
-          100% { transform: scale(0.95); opacity: 1; }
-        }
-        
-        @keyframes twinkle {
-          0%, 100% { opacity: 0.6; }
-          50% { opacity: 1; }
-        }
-        
-        @keyframes buttonShimmer {
-          0% { left: -100%; }
-          50%, 100% { left: 100%; }
-        }
-        
-        @keyframes gradientShift {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-      `}</style>
 
       {/* ── Modern Pill-Shaped Navbar ── */}
       <header style={{

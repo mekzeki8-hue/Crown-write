@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { motion } from "framer-motion";
@@ -106,7 +107,7 @@ export default function BlogPage() {
 
       {/* Hero Section */}
       <section style={{
-        padding: "120px 32px 60px",
+        padding: "160px 32px 60px", // Increased from 120px to 160px
         textAlign: "center",
         background: "linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%)",
       }}>
@@ -449,6 +450,3 @@ export default function BlogPage() {
     </div>
   );
 }
-
-// Import useState at the top
-import { useState } from "react";

@@ -65,7 +65,7 @@ export default function FeaturesPage() {
 
       {/* Hero Section */}
       <section style={{
-        padding: "120px 32px 80px",
+        padding: "160px 32px 80px", // Increased from 120px to 160px
         textAlign: "center",
         background: "linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%)",
       }}>

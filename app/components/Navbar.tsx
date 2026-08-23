@@ -8,7 +8,7 @@ import { User } from "@supabase/supabase-js";
 const NAV = [
   { l:"About",    h:"/about"     },
   { l:"Pricing",  h:"#pricing"   },
-  { l:"Blog",     h:"#"          },
+  { l:"Blog",     h:"/blog"      },
 ];
 
 export default function Navbar() {
@@ -17,6 +17,9 @@ export default function Navbar() {
   const [banner,   setBanner]   = useState(true);
   const [user,     setUser]     = useState<User | null>(null);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  
+  // Countdown timer state
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 20);
@@ -38,6 +41,37 @@ export default function Navbar() {
     });
 
     return () => subscription.unsubscribe();
+  }, []);
+
+  // Countdown timer - auto-rotating every 3 days
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      const now = new Date().getTime();
+      // Create end time: 3 days from now (auto-resets)
+      const endTime = now + (3 * 24 * 60 * 60 * 1000);
+      const distance = endTime - now;
+
+      if (distance > 0) {
+        return {
+          days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+          seconds: Math.floor((distance % (1000 * 60)) / 1000),
+        };
+      }
+      // Auto-reset when reaches zero
+      return { days: 2, hours: 23, minutes: 59, seconds: 59 };
+    };
+
+    // Initial calculation
+    setTimeLeft(calculateTimeLeft());
+
+    // Update every second
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
+
+    return () => clearInterval(timer);
   }, []);
 
   const handleSignOut = async () => {
@@ -83,7 +117,7 @@ export default function Navbar() {
           width: "100%",
           maxWidth: 1400,
         }}>
-          {/* Clean Badge */}
+          {/* Clean Badge with Countdown */}
           <div style={{
             display:"inline-flex",
             alignItems:"center",
@@ -101,7 +135,7 @@ export default function Navbar() {
             <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
             </svg>
-            50% Off
+            50% Off — {timeLeft.days}d {String(timeLeft.hours).padStart(2, '0')}h {String(timeLeft.minutes).padStart(2, '0')}m {String(timeLeft.seconds).padStart(2, '0')}s
           </div>
 
           {/* Clean Message */}

@@ -29,10 +29,18 @@ export async function humanizeWithHuggingFace(
   }
 
   try {
-    // This model is based on Qwen2.5-1.5B-Instruct and expects chat format
-    // Send as a chat message with proper role structure
+    // This model is based on Qwen2.5-1.5B-Instruct and uses chat format
+    // It expects messages array with role-content structure
     console.log("🤗 Calling Hugging Face model:", HF_MODEL);
     console.log("📝 Input length:", text.length, "characters");
+
+    // Format as chat message - the model is trained to humanize text
+    const messages = [
+      {
+        role: "user",
+        content: text
+      }
+    ];
 
     const response = await fetch(HF_API_URL, {
       method: "POST",
@@ -41,17 +49,17 @@ export async function humanizeWithHuggingFace(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        inputs: text,
+        inputs: messages,
         parameters: {
           max_new_tokens: 2048,
           temperature: 0.7,
           top_p: 0.9,
           repetition_penalty: 1.2,
           do_sample: true,
-          return_full_text: false, // IMPORTANT: Only return the generated completion
+          return_full_text: false, // Only return the generated completion
         },
         options: {
-          wait_for_model: true, // Wait if model is loading
+          wait_for_model: true, // Wait if model is loading (up to ~20 seconds)
           use_cache: false, // Get fresh results
         },
       }),

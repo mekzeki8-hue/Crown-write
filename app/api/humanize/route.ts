@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { getHumanizationPrompt } from '@/lib/prompts';
 import { humanizeWithGemini } from '@/lib/gemini';
+import { humanizeWithHuggingFace } from '@/lib/huggingface';
 import { createClient } from '@/lib/supabase/server';
 import { getUserCredits, deductCredits, saveHumanizationHistory } from '@/lib/supabase/setup-database';
 
@@ -103,15 +104,17 @@ export async function POST(request: NextRequest) {
     let humanizedText = '';
     let qualityScore: any = undefined;
     
-    // Auto-select provider: Gemini (free) first, then OpenAI if available
+    // Auto-select provider: Hugging Face (custom model) first, then Gemini, then OpenAI
     if (selectedProvider === 'auto') {
-      if (process.env.GOOGLE_GEMINI_API_KEY) {
+      if (process.env.HF_TOKEN) {
+        selectedProvider = 'huggingface';
+      } else if (process.env.GOOGLE_GEMINI_API_KEY) {
         selectedProvider = 'gemini';
       } else if (openai) {
         selectedProvider = 'openai';
       } else {
         return NextResponse.json(
-          { error: 'No AI provider configured. Please set up Gemini or OpenAI API key.' },
+          { error: 'No AI provider configured. Please set up Hugging Face, Gemini or OpenAI API key.' },
           { status: 500 }
         );
       }
@@ -120,7 +123,23 @@ export async function POST(request: NextRequest) {
     console.log(`🤖 Using AI provider: ${selectedProvider}`);
 
     // Call the appropriate AI provider
-    if (selectedProvider === 'gemini') {
+    if (selectedProvider === 'huggingface') {
+      if (!process.env.HF_TOKEN) {
+        return NextResponse.json(
+          { error: 'Hugging Face token is not configured.' },
+          { status: 500 }
+        );
+      }
+
+      console.log('🤗 Calling Hugging Face custom model (crownmerry/crown-humanizer-v2)...');
+      
+      const result = await humanizeWithHuggingFace(text, tone as any);
+      humanizedText = result.text;
+      
+      console.log('✅ Hugging Face humanization successful');
+      console.log(`📊 Model: ${result.modelUsed} | Processing time: ${result.processingTime}ms`);
+      
+    } else if (selectedProvider === 'gemini') {
       if (!process.env.GOOGLE_GEMINI_API_KEY) {
         return NextResponse.json(
           { error: 'Gemini API key is not configured.' },
@@ -253,13 +272,15 @@ export async function POST(request: NextRequest) {
 // Health check endpoint
 export async function GET() {
   try {
+    const hasHuggingFace = !!process.env.HF_TOKEN;
     const hasTunedModel = !!(process.env.GOOGLE_CLOUD_PROJECT && process.env.TUNED_MODEL_ENDPOINT);
     const hasGemini = !!process.env.GOOGLE_GEMINI_API_KEY;
     const hasOpenAI = !!process.env.OPENAI_API_KEY;
 
     // Determine default provider
     let defaultProvider = 'none';
-    if (hasTunedModel) defaultProvider = 'fine-tuned';
+    if (hasHuggingFace) defaultProvider = 'huggingface';
+    else if (hasTunedModel) defaultProvider = 'fine-tuned';
     else if (hasGemini) defaultProvider = 'gemini';
     else if (hasOpenAI) defaultProvider = 'openai';
 
@@ -267,6 +288,7 @@ export async function GET() {
       status: 'ok',
       defaultProvider,
       config: {
+        huggingface: hasHuggingFace ? 'configured ✅ (crownmerry/crown-humanizer-v2)' : 'missing',
         fineTuned: hasTunedModel ? 'configured' : 'missing',
         gemini: hasGemini ? 'configured (FREE)' : 'missing',
         openai: hasOpenAI ? 'configured (paid)' : 'missing',

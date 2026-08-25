@@ -29,18 +29,14 @@ export async function humanizeWithHuggingFace(
   }
 
   try {
-    // This model is based on Qwen2.5-1.5B-Instruct and uses chat format
-    // It expects messages array with role-content structure
+    // This model is based on Qwen2.5-1.5B-Instruct 
+    // For Inference API, we need to apply the chat template manually or send formatted text
     console.log("🤗 Calling Hugging Face model:", HF_MODEL);
     console.log("📝 Input length:", text.length, "characters");
 
-    // Format as chat message - the model is trained to humanize text
-    const messages = [
-      {
-        role: "user",
-        content: text
-      }
-    ];
+    // Apply Qwen chat template format manually
+    // Qwen format: <|im_start|>user\n{message}<|im_end|>\n<|im_start|>assistant\n
+    const formattedInput = `<|im_start|>user\n${text}<|im_end|>\n<|im_start|>assistant\n`;
 
     const response = await fetch(HF_API_URL, {
       method: "POST",
@@ -49,7 +45,7 @@ export async function humanizeWithHuggingFace(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        inputs: messages,
+        inputs: formattedInput,
         parameters: {
           max_new_tokens: 2048,
           temperature: 0.7,
@@ -57,6 +53,7 @@ export async function humanizeWithHuggingFace(
           repetition_penalty: 1.2,
           do_sample: true,
           return_full_text: false, // Only return the generated completion
+          stop: ["<|im_end|>", "<|endoftext|>"], // Stop tokens for Qwen
         },
         options: {
           wait_for_model: true, // Wait if model is loading (up to ~20 seconds)
@@ -108,10 +105,20 @@ export async function humanizeWithHuggingFace(
       throw new Error("Unexpected response format from Hugging Face");
     }
 
-    // Clean up: trim whitespace
-    humanizedText = humanizedText.trim();
+    // Clean up: trim whitespace and remove any stop tokens that leaked through
+    humanizedText = humanizedText
+      .trim()
+      .replace(/<\|im_end\|>/g, "")
+      .replace(/<\|endoftext\|>/g, "")
+      .trim();
 
-    // If the response includes the input at the start (model echoed it), remove it
+    // If the response includes the formatted input at the start, remove it
+    if (humanizedText.startsWith(formattedInput)) {
+      humanizedText = humanizedText.substring(formattedInput.length).trim();
+      console.log("📝 Removed formatted input from response");
+    }
+    
+    // If response just has the plain text input at start, remove it
     if (humanizedText.startsWith(text)) {
       humanizedText = humanizedText.substring(text.length).trim();
       console.log("📝 Removed input echo from beginning of response");

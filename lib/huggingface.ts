@@ -29,14 +29,19 @@ export async function humanizeWithHuggingFace(
   }
 
   try {
-    // This model is based on Qwen2.5-1.5B-Instruct 
-    // For Inference API, we need to apply the chat template manually or send formatted text
+    // This model was trained with system message + "Humanize this text:" instruction
+    // We need to match the EXACT format from training data
     console.log("🤗 Calling Hugging Face model:", HF_MODEL);
     console.log("📝 Input length:", text.length, "characters");
 
-    // Apply Qwen chat template format manually
-    // Qwen format: <|im_start|>user\n{message}<|im_end|>\n<|im_start|>assistant\n
-    const formattedInput = `<|im_start|>user\n${text}<|im_end|>\n<|im_start|>assistant\n`;
+    // System message from training data
+    const systemMessage = "You are an expert AI text humanizer. Your task is to transform AI-generated text into natural, human-sounding writing while preserving the original meaning and key information. Make the text flow naturally, vary sentence structures, use conversational language where appropriate, and ensure it sounds authentically human.";
+    
+    // User message with instruction (matches training format)
+    const userMessage = `Humanize this text:\n\n${text}`;
+
+    // Apply Qwen chat template WITH system message
+    const formattedInput = `<|im_start|>system\n${systemMessage}<|im_end|>\n<|im_start|>user\n${userMessage}<|im_end|>\n<|im_start|>assistant\n`;
 
     const response = await fetch(HF_API_URL, {
       method: "POST",

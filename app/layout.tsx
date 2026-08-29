@@ -15,10 +15,62 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   title: "CrownWrite — AI Writing, Undeniably Human",
-  description: "Transform AI-generated text into natural, human-like prose that bypasses every detector.",
+  description: "Transform AI-generated text into natural, human-like prose that bypasses every detector. Join 50,000+ writers who trust CrownWrite for authentic content.",
+  keywords: ["AI humanizer", "AI text humanizer", "AI detector bypass", "human-like writing", "content humanization", "AI writing tool"],
+  authors: [{ name: "CrownWrite" }],
+  creator: "CrownWrite",
+  publisher: "CrownWrite",
+  metadataBase: new URL('https://crownwrite.com'), // Update with your actual domain
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: "CrownWrite — AI Writing, Undeniably Human",
+    description: "Transform AI-generated text into natural, human-like prose that bypasses every detector.",
+    url: 'https://crownwrite.com',
+    siteName: 'CrownWrite',
+    images: [
+      {
+        url: '/logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'CrownWrite - AI Writing Humanizer',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "CrownWrite — AI Writing, Undeniably Human",
+    description: "Transform AI-generated text into natural, human-like prose that bypasses every detector.",
+    images: ['/logo.png'],
+    creator: '@crownwrite',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon.png', type: 'image/png', sizes: '32x32' },
+    ],
+    apple: [
+      { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
   verification: {
     google: "xn3uzP9Je3MF8ZrKDTU5pc4DAI99w7Rqehu2doRESPs",
   },
+  manifest: '/manifest.json',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

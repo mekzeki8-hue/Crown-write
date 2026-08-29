@@ -428,7 +428,7 @@ export default function Workspace() {
                 justifyContent: "space-between",
                 padding: "16px 24px",
                 borderBottom: "1px solid var(--border)",
-                background: "linear-gradient(180deg, #FAFAFA 0%, #F5F5F5 100%)",
+                background: "var(--bg-2)",
               }}>
                 <span style={{
                   fontSize: 13, 
@@ -622,7 +622,7 @@ export default function Workspace() {
                 justifyContent: "space-between",
                 padding: "16px 24px",
                 borderBottom: "1px solid var(--border)",
-                background: output ? "linear-gradient(135deg, #FFF9F0 0%, #FFF5E6 100%)" : "linear-gradient(180deg, #FAFAFA 0%, #F5F5F5 100%)",
+                background: output ? "var(--bg-2)" : "var(--bg-2)",
               }}>
                 <span style={{
                   fontSize: 13, 

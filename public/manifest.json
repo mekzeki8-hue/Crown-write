@@ -1,0 +1,23 @@
+{
+  "name": "CrownWrite - AI Writing Humanizer",
+  "short_name": "CrownWrite",
+  "description": "Transform AI-generated text into natural, human-like prose",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FDFBF7",
+  "theme_color": "#C09A72",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

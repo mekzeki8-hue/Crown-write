@@ -1,13 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { getDb } from "@/lib/db";
 import { getCreditsByProductId } from "@/lib/polar";
 import crypto from "crypto";
-
-// Use service role for webhook operations
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
 
 export async function POST(req: NextRequest) {
   try {
@@ -102,37 +96,33 @@ async function handleSuccessfulCheckout(checkout: any) {
       return;
     }
 
-    // Get current credits
-    const { data: profile } = await supabaseAdmin
-      .from("profiles")
-      .select("credits")
-      .eq("id", userId)
-      .single();
+    const pool = await getDb();
 
-    if (!profile) {
-      console.error("Profile not found for user:", userId);
+    // Get current credits
+    const { rows } = await pool.query(
+      'SELECT credits FROM users WHERE clerk_id = $1',
+      [userId]
+    );
+
+    if (rows.length === 0) {
+      console.error("User not found:", userId);
       return;
     }
 
     // Update credits
-    const newCredits = (profile.credits || 0) + creditsToAdd;
+    const newCredits = (rows[0].credits || 0) + creditsToAdd;
     
-    await supabaseAdmin
-      .from("profiles")
-      .update({ 
-        credits: newCredits,
-        updated_at: new Date().toISOString() 
-      })
-      .eq("id", userId);
+    await pool.query(
+      'UPDATE users SET credits = $1, updated_at = NOW() WHERE clerk_id = $2',
+      [newCredits, userId]
+    );
 
     // Log transaction
-    await supabaseAdmin.from("credit_transactions").insert({
-      user_id: userId,
-      amount: creditsToAdd,
-      transaction_type: "add",
-      description: `Payment via Polar: ${checkout.product?.name || "Purchase"}`,
-      created_at: new Date().toISOString(),
-    });
+    await pool.query(
+      `INSERT INTO credit_transactions (user_id, amount, type, description, created_at)
+       VALUES ($1, $2, $3, $4, NOW())`,
+      [userId, creditsToAdd, 'purchase', `Payment via Polar: ${checkout.product?.name || "Purchase"}`]
+    );
 
     console.log(`✅ Added ${creditsToAdd} credits to user ${userId}`);
 

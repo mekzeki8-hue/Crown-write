@@ -285,13 +285,13 @@ function PlanCard({ plan, yearly }: { plan: typeof PLANS[0]; yearly: boolean }) 
         width: "100%", padding: "12px", borderRadius: 99,
         fontSize: 14, fontWeight: 500,
         cursor: loading ? "not-allowed" : "pointer", border: ctaBorder,
-        background: ctaBg, color: ctaColor,
+        backgroundColor: ctaBg, color: ctaColor,
         letterSpacing: "-.01em",
         transition: "all .2s ease",
         opacity: loading ? 0.6 : 1,
       }}
-      onMouseEnter={e => { if (!loading) { const el = e.currentTarget as HTMLElement; el.style.background = ctaHoverBg; el.style.transform = "translateY(-1px)"; }}}
-      onMouseLeave={e => { if (!loading) { const el = e.currentTarget as HTMLElement; el.style.background = ctaBg; el.style.transform = "none"; }}}>
+      onMouseEnter={e => { if (!loading) { const el = e.currentTarget as HTMLElement; el.style.backgroundColor = ctaHoverBg; el.style.transform = "translateY(-1px)"; }}}
+      onMouseLeave={e => { if (!loading) { const el = e.currentTarget as HTMLElement; el.style.backgroundColor = ctaBg; el.style.transform = "none"; }}}>
         {loading ? "Loading..." : plan.cta}
       </button>
     </div>
@@ -408,7 +408,8 @@ function TopUpCard({ plan, yearly }: { plan: { name: string; price: number; cred
             fontWeight: 600,
             cursor: loading ? "not-allowed" : "pointer",
             border: "none",
-            background: hov && !loading ? "var(--brand-dark)" : "var(--g-brand)",
+            backgroundImage: hov && !loading ? "none" : "var(--g-brand)",
+            backgroundColor: hov && !loading ? "var(--brand-dark)" : "transparent",
             backgroundSize: "200% 200%",
             color: "white",
             letterSpacing: "-.01em",

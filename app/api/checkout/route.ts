@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { polar } from "@/lib/polar";
-import { createClient } from "@/lib/supabase/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,31 +13,24 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Get authenticated user
-    const supabase = await createClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    // Get authenticated user from Clerk
+    const { userId } = await auth();
+    const user = await currentUser();
     
-    if (authError || !user) {
+    if (!userId || !user) {
       return NextResponse.json(
         { error: "Unauthorized. Please sign in first." },
         { status: 401 }
       );
     }
 
-    // Get user profile for email
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("email, full_name")
-      .eq("id", user.id)
-      .single();
-
     // Create checkout session with Polar
     const checkout = await polar.checkouts.create({
       products: [productId],
-      successUrl: `${req.nextUrl.origin}/dashboard?checkout=success`,
-      customerEmail: profile?.email || user.email || "",
+      successUrl: `${req.nextUrl.origin}/?checkout=success`,
+      customerEmail: user.emailAddresses[0].emailAddress,
       metadata: {
-        userId: user.id,
+        userId: userId,
         source: "crownwrite_web",
       },
     });

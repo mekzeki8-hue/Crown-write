@@ -1,30 +1,24 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { useUser } from '@clerk/nextjs';
 
 export default function CreditDisplay({ initialCredits }: { initialCredits: number }) {
   const [credits, setCredits] = useState(initialCredits);
   const [isRefreshing, setIsRefreshing] = useState(false);
-
-  const supabase = createClient();
+  const { isSignedIn } = useUser();
 
   // Refresh credits from database
   const refreshCredits = async () => {
+    if (!isSignedIn) return;
+    
     try {
       setIsRefreshing(true);
-      const { data: { user } } = await supabase.auth.getUser();
+      const response = await fetch('/api/user/credits');
+      const data = await response.json();
       
-      if (user) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('credits')
-          .eq('id', user.id)
-          .single();
-        
-        if (profile) {
-          setCredits(profile.credits);
-        }
+      if (data.credits !== undefined) {
+        setCredits(data.credits);
       }
     } catch (error) {
       console.error('Error refreshing credits:', error);
@@ -55,7 +49,7 @@ export default function CreditDisplay({ initialCredits }: { initialCredits: numb
   useEffect(() => {
     const interval = setInterval(refreshCredits, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isSignedIn]);
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>

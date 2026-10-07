@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Logo from "./Logo";
 import ThemeToggle from "./ThemeToggle";
-import { useSession, signOut } from "next-auth/react";
+import { UserButton, useUser } from "@clerk/nextjs";
 
 const NAV = [
   { l:"About",    h:"/about"     },
@@ -14,9 +14,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open,     setOpen]     = useState(false);
   const [banner,   setBanner]   = useState(true);
-  const { data: session } = useSession();
-  const user = session?.user;
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const { isSignedIn, user } = useUser();
   
   // Countdown timer state
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -297,188 +295,12 @@ export default function Navbar() {
             </div>
 
             {/* User Profile or Get Started Button */}
-            {user ? (
-              <div style={{ position: "relative" }}>
-                <button
-                  onClick={() => setShowProfileMenu(!showProfileMenu)}
-                  style={{
-                    padding: "10px 18px",
-                    borderRadius: 999,
-                    fontSize: 14,
-                    fontWeight: 500,
-                    background: "var(--surface)",
-                    color: "var(--ink)",
-                    border: "1px solid var(--border)",
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
-                    transition: "all .25s cubic-bezier(0.4, 0, 0.2, 1)",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 10,
-                    textDecoration: "none",
-                    flexShrink: 0,
-                    cursor: "pointer",
-                  }}
-                  onMouseEnter={e => {
-                    const el = e.currentTarget as HTMLElement;
-                    el.style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)";
-                    el.style.borderColor = "var(--brand)";
-                  }}
-                  onMouseLeave={e => {
-                    const el = e.currentTarget as HTMLElement;
-                    el.style.boxShadow = "0 2px 8px rgba(0,0,0,0.04)";
-                    el.style.borderColor = "var(--border)";
-                  }}
-                >
-                  <div style={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: "50%",
-                    background: "var(--g-brand)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "white",
-                    fontSize: 12,
-                    fontWeight: 600,
-                  }}>
-                    {user.email?.charAt(0).toUpperCase()}
-                  </div>
-                  <div style={{ textAlign: "left", maxWidth: 150 }}>
-                    <div style={{
-                      fontSize: 13,
-                      fontWeight: 600,
-                      color: "var(--ink)",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    }}>
-                      {user.name || user.email?.split('@')[0]}
-                    </div>
-                    <div style={{
-                      fontSize: 11,
-                      color: "var(--muted)",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    }}>
-                      {user.email}
-                    </div>
-                  </div>
-                  <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    style={{
-                      transition: "transform .2s",
-                      transform: showProfileMenu ? "rotate(180deg)" : "rotate(0deg)",
-                    }}
-                  >
-                    <path d="M6 9l6 6 6-6"/>
-                  </svg>
-                </button>
-
-                {/* Profile Dropdown Menu */}
-                {showProfileMenu && (
-                  <>
-                    <div
-                      onClick={() => setShowProfileMenu(false)}
-                      style={{
-                        position: "fixed",
-                        inset: 0,
-                        zIndex: 199,
-                      }}
-                    />
-                    <div style={{
-                      position: "absolute",
-                      top: "calc(100% + 8px)",
-                      right: 0,
-                      minWidth: 220,
-                      background: "var(--surface)",
-                      border: "1px solid var(--border)",
-                      borderRadius: 12,
-                      boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
-                      padding: "8px",
-                      zIndex: 200,
-                      backdropFilter: "blur(20px)",
-                      WebkitBackdropFilter: "blur(20px)",
-                    }}>
-                      <a
-                        href="/dashboard"
-                        onClick={() => setShowProfileMenu(false)}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 10,
-                          padding: "10px 12px",
-                          borderRadius: 8,
-                          fontSize: 14,
-                          fontWeight: 500,
-                          color: "var(--ink)",
-                          textDecoration: "none",
-                          transition: "background .15s",
-                        }}
-                        onMouseEnter={e => {
-                          e.currentTarget.style.background = "var(--bg-2)";
-                        }}
-                        onMouseLeave={e => {
-                          e.currentTarget.style.background = "transparent";
-                        }}
-                      >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                          <line x1="9" y1="3" x2="9" y2="21"/>
-                        </svg>
-                        Dashboard
-                      </a>
-                      <div style={{
-                        height: 1,
-                        background: "var(--border)",
-                        margin: "4px 0",
-                      }} />
-                      <button
-                        onClick={handleSignOut}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 10,
-                          padding: "10px 12px",
-                          borderRadius: 8,
-                          fontSize: 14,
-                          fontWeight: 500,
-                          color: "#e53e3e",
-                          textDecoration: "none",
-                          transition: "background .15s",
-                          width: "100%",
-                          background: "transparent",
-                          border: "none",
-                          cursor: "pointer",
-                          textAlign: "left",
-                        }}
-                        onMouseEnter={e => {
-                          e.currentTarget.style.background = "rgba(229, 62, 62, 0.08)";
-                        }}
-                        onMouseLeave={e => {
-                          e.currentTarget.style.background = "transparent";
-                        }}
-                      >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                          <polyline points="16 17 21 12 16 7"/>
-                          <line x1="21" y1="12" x2="9" y2="12"/>
-                        </svg>
-                        Sign Out
-                      </button>
-                    </div>
-                  </>
-                )}
+            {isSignedIn ? (
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <UserButton afterSignOutUrl="/" />
               </div>
             ) : (
-              <a href="/login" style={{
+              <a href="/sign-in" style={{
                 padding: "10px 24px",
                 borderRadius: 999,
                 fontSize: 14,
@@ -565,50 +387,37 @@ export default function Navbar() {
               }}>{l.l}</a>
             ))}
             <div style={{ display:"flex", flexDirection: "column", gap:10, marginTop:14 }}>
-              {user ? (
+              {isSignedIn ? (
                 <>
                   <div style={{
                     padding: "12px",
                     background: "var(--bg-2)",
                     borderRadius: 12,
                     border: "1px solid var(--border)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 12,
                   }}>
-                    <div style={{
-                      fontSize: 14,
-                      fontWeight: 600,
-                      color: "var(--ink)",
-                      marginBottom: 4,
-                    }}>
-                      {user.name || user.email?.split('@')[0]}
-                    </div>
-                    <div style={{
-                      fontSize: 12,
-                      color: "var(--muted)",
-                    }}>
-                      {user.email}
+                    <UserButton afterSignOutUrl="/" />
+                    <div>
+                      <div style={{
+                        fontSize: 14,
+                        fontWeight: 600,
+                        color: "var(--ink)",
+                      }}>
+                        {user?.firstName || user?.emailAddresses[0].emailAddress.split('@')[0]}
+                      </div>
+                      <div style={{
+                        fontSize: 12,
+                        color: "var(--muted)",
+                      }}>
+                        {user?.emailAddresses[0].emailAddress}
+                      </div>
                     </div>
                   </div>
-                  <a href="/dashboard" onClick={() => setOpen(false)} className="btn btn-primary"
-                    style={{ flex:1, padding:"12px", fontSize:14, borderRadius:99, textAlign:"center", textDecoration: "none" }}>
-                    Dashboard →
-                  </a>
-                  <button onClick={() => { handleSignOut(); setOpen(false); }}
-                    style={{
-                      padding:"12px",
-                      fontSize:14,
-                      borderRadius:99,
-                      textAlign:"center",
-                      background: "transparent",
-                      border: "1px solid #e53e3e",
-                      color: "#e53e3e",
-                      fontWeight: 500,
-                      cursor: "pointer",
-                    }}>
-                    Sign Out
-                  </button>
                 </>
               ) : (
-                <a href="/login" onClick={() => setOpen(false)} className="btn btn-primary"
+                <a href="/sign-in" onClick={() => setOpen(false)} className="btn btn-primary"
                   style={{ flex:1, padding:"12px", fontSize:14, borderRadius:99, textAlign:"center", textDecoration: "none" }}>
                   Get started →
                 </a>

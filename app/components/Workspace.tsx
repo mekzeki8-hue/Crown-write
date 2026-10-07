@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import Logo from "./Logo";
-import { useSession } from "next-auth/react";
+import { useUser } from "@clerk/nextjs";
 import CreditDisplay from './CreditDisplay';
 
 type ToneId = "auto"|"academic"|"professional"|"friendly"|"formal"|"casual"|"creative";
@@ -89,7 +89,7 @@ export default function Workspace() {
     if (!input.trim() || loading) return;
     
     // Check if user is logged in
-    if (!user) {
+    if (!isSignedIn) {
       setError("Please sign in to use the Humanizer");
       showToast("Sign in required");
       return;
@@ -120,10 +120,8 @@ export default function Workspace() {
       setQualityScore(result.stats?.qualityScore || null);
       showToast("Humanized successfully");
       
-      // Dispatch event to update credits display
-      window.dispatchEvent(new CustomEvent('creditsUpdated', { 
-        detail: { refresh: true } 
-      }));
+      // Refresh credits
+      fetchCredits();
     } catch (err: any) {
       const errorMsg = err.message || "Humanization failed. Please try again.";
       setError(errorMsg);

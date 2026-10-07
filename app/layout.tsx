@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import Script from "next/script";
 import { ThemeProvider } from "./components/ThemeProvider";
-import SessionProvider from "./components/SessionProvider";
+import { ClerkProvider } from '@clerk/nextjs';
 import "./globals.css";
 
 const inter = Inter({
@@ -76,27 +76,27 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
-      <head>
-        {/* Google Analytics */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-37FDMMJJWF"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-37FDMMJJWF');
-          `}
-        </Script>
-      </head>
-      <body>
-        <SessionProvider>
+    <ClerkProvider>
+      <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
+        <head>
+          {/* Google Analytics */}
+          <Script
+            src="https://www.googletagmanager.com/gtag/js?id=G-37FDMMJJWF"
+            strategy="afterInteractive"
+          />
+          <Script id="google-analytics" strategy="afterInteractive">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-37FDMMJJWF');
+            `}
+          </Script>
+        </head>
+        <body>
           <ThemeProvider>{children}</ThemeProvider>
-        </SessionProvider>
-      </body>
-    </html>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

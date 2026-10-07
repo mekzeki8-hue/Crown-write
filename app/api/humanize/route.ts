@@ -2,9 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { getHumanizationPrompt } from '@/lib/prompts';
 import { humanizeWithGemini } from '@/lib/gemini';
-import { humanizeWithHuggingFace } from '@/lib/huggingface';
-import { createClient } from '@/lib/supabase/server';
-import { getUserCredits, deductCredits, saveHumanizationHistory } from '@/lib/supabase/setup-database';
+import { auth } from '@clerk/nextjs/server';
+import { getDb } from '@/lib/db';
 
 // Initialize OpenAI client (optional, for paid users)
 const openai = process.env.OPENAI_API_KEY ? new OpenAI({
@@ -33,11 +32,10 @@ function checkRateLimit(ip: string): boolean {
 
 export async function POST(request: NextRequest) {
   try {
-    // Get authenticated user
-    const supabase = await createClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    // Get authenticated user from Clerk
+    const { userId } = await auth();
 
-    if (authError || !user) {
+    if (!userId) {
       return NextResponse.json(
         { error: 'Unauthorized. Please sign in.' },
         { status: 401 }
@@ -82,8 +80,21 @@ export async function POST(request: NextRequest) {
     // Calculate word count (1 word = 1 credit)
     const wordCount = text.trim().split(/\s+/).length;
     
-    // Check if user has enough credits
-    const currentCredits = await getUserCredits(user.id);
+    // Get user's current credits from Neon
+    const pool = await getDb();
+    const { rows } = await pool.query(
+      'SELECT credits FROM users WHERE clerk_id = $1',
+      [userId]
+    );
+
+    if (rows.length === 0) {
+      return NextResponse.json(
+        { error: 'User not found. Please sign in again.' },
+        { status: 404 }
+      );
+    }
+
+    const currentCredits = rows[0].credits || 0;
     
     if (currentCredits < wordCount) {
       return NextResponse.json(
@@ -96,25 +107,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Load the humanization system prompt (minimal for fine-tuned model)
+    // Load the humanization system prompt
     const systemPrompt = getHumanizationPrompt(tone as any);
 
-    // Determine which AI provider to use
+    // Determine which AI provider to use (Gemini as primary)
     let selectedProvider = provider;
     let humanizedText = '';
     let qualityScore: any = undefined;
     
-    // Auto-select provider: Hugging Face (custom model) first, then Gemini, then OpenAI
+    // Auto-select provider: Gemini first, then OpenAI
     if (selectedProvider === 'auto') {
-      if (process.env.HF_TOKEN) {
-        selectedProvider = 'huggingface';
-      } else if (process.env.GOOGLE_GEMINI_API_KEY) {
+      if (process.env.GOOGLE_GEMINI_API_KEY) {
         selectedProvider = 'gemini';
       } else if (openai) {
         selectedProvider = 'openai';
       } else {
         return NextResponse.json(
-          { error: 'No AI provider configured. Please set up Hugging Face, Gemini or OpenAI API key.' },
+          { error: 'No AI provider configured. Please set up Gemini or OpenAI API key.' },
           { status: 500 }
         );
       }
@@ -123,23 +132,7 @@ export async function POST(request: NextRequest) {
     console.log(`🤖 Using AI provider: ${selectedProvider}`);
 
     // Call the appropriate AI provider
-    if (selectedProvider === 'huggingface') {
-      if (!process.env.HF_TOKEN) {
-        return NextResponse.json(
-          { error: 'Hugging Face token is not configured.' },
-          { status: 500 }
-        );
-      }
-
-      console.log('🤗 Calling Hugging Face custom model (crownmerry/crown-humanizer-v2)...');
-      
-      const result = await humanizeWithHuggingFace(text, tone as any);
-      humanizedText = result.text;
-      
-      console.log('✅ Hugging Face humanization successful');
-      console.log(`📊 Model: ${result.modelUsed} | Processing time: ${result.processingTime}ms`);
-      
-    } else if (selectedProvider === 'gemini') {
+    if (selectedProvider === 'gemini') {
       if (!process.env.GOOGLE_GEMINI_API_KEY) {
         return NextResponse.json(
           { error: 'Gemini API key is not configured.' },
@@ -147,7 +140,7 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      console.log('🤖 Calling Google Gemini (fine-tuned) with humanization...');
+      console.log('🤖 Calling Google Gemini with humanization...');
       
       const result = await humanizeWithGemini(text, tone as any, systemPrompt);
       humanizedText = result.text;
@@ -164,6 +157,7 @@ export async function POST(request: NextRequest) {
         );
       }
 
+      console.log('🤖 Calling OpenAI with humanization...');
       
       const userMessage = `Humanize the following text. Output ONLY the humanized version with no explanations, notes, or meta-commentary:\n\n${text}`;
       
@@ -189,36 +183,33 @@ export async function POST(request: NextRequest) {
       throw new Error('No response from AI provider');
     }
 
-    // Deduct credits (1 word = 1 credit)
-    const deductResult = await deductCredits(
-      user.id,
-      wordCount,
-      `Humanized ${wordCount} words (${tone} tone)`
+    // Deduct credits and update database
+    const newCredits = currentCredits - wordCount;
+    
+    await pool.query(
+      'UPDATE users SET credits = $1, updated_at = NOW() WHERE clerk_id = $2',
+      [newCredits, userId]
     );
 
-    if (!deductResult.success) {
-      return NextResponse.json(
-        { error: 'Failed to deduct credits. Please try again.' },
-        { status: 500 }
-      );
-    }
+    // Log transaction
+    await pool.query(
+      `INSERT INTO credit_transactions (user_id, amount, type, description, created_at)
+       VALUES ($1, $2, $3, $4, NOW())`,
+      [userId, -wordCount, 'usage', `Humanized ${wordCount} words (${tone} tone)`]
+    );
 
     // Save to history
-    await saveHumanizationHistory({
-      userId: user.id,
-      originalText: text,
-      humanizedText: humanizedText,
-      tone,
-      ultraMode: false,
-      wordCount,
-      creditsUsed: wordCount,
-    });
+    await pool.query(
+      `INSERT INTO humanization_history (user_id, original_text, humanized_text, tone, word_count, credits_used, created_at)
+       VALUES ($1, $2, $3, $4, $5, $6, NOW())`,
+      [userId, text, humanizedText, tone, wordCount, wordCount]
+    );
 
     // Log success
     console.log(`📊 Input length: ${text.length} chars`);
     console.log(`📊 Output length: ${humanizedText.length} chars`);
     console.log(`💳 Credits deducted: ${wordCount}`);
-    console.log(`💰 Remaining credits: ${deductResult.remainingCredits}`);
+    console.log(`💰 Remaining credits: ${newCredits}`);
 
     // Return humanized text with credit info
     return NextResponse.json({
@@ -231,7 +222,7 @@ export async function POST(request: NextRequest) {
         provider: selectedProvider,
         wordCount,
         creditsUsed: wordCount,
-        remainingCredits: deductResult.remainingCredits,
+        remainingCredits: newCredits,
         qualityScore: selectedProvider === 'gemini' && typeof qualityScore !== 'undefined' ? qualityScore : null,
       },
     });
@@ -272,26 +263,20 @@ export async function POST(request: NextRequest) {
 // Health check endpoint
 export async function GET() {
   try {
-    const hasHuggingFace = !!process.env.HF_TOKEN;
-    const hasTunedModel = !!(process.env.GOOGLE_CLOUD_PROJECT && process.env.TUNED_MODEL_ENDPOINT);
     const hasGemini = !!process.env.GOOGLE_GEMINI_API_KEY;
     const hasOpenAI = !!process.env.OPENAI_API_KEY;
 
     // Determine default provider
     let defaultProvider = 'none';
-    if (hasHuggingFace) defaultProvider = 'huggingface';
-    else if (hasTunedModel) defaultProvider = 'fine-tuned';
-    else if (hasGemini) defaultProvider = 'gemini';
+    if (hasGemini) defaultProvider = 'gemini';
     else if (hasOpenAI) defaultProvider = 'openai';
 
     return NextResponse.json({
       status: 'ok',
       defaultProvider,
       config: {
-        huggingface: hasHuggingFace ? 'configured ✅ (crownmerry/crown-humanizer-v2)' : 'missing',
-        fineTuned: hasTunedModel ? 'configured' : 'missing',
-        gemini: hasGemini ? 'configured (FREE)' : 'missing',
-        openai: hasOpenAI ? 'configured (paid)' : 'missing',
+        gemini: hasGemini ? 'configured ✅' : 'missing',
+        openai: hasOpenAI ? 'configured' : 'missing',
       },
       timestamp: new Date().toISOString(),
     });

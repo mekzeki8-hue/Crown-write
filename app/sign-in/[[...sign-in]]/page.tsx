@@ -109,6 +109,10 @@ export default function SignInPage() {
         background: 'var(--surface)',
       }}>
         <SignIn 
+          routing="path"
+          path="/sign-in"
+          signUpUrl="/sign-up"
+          forceRedirectUrl="/"
           appearance={{
             elements: {
               rootBox: 'mx-auto',

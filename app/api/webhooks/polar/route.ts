@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     const webhookSecret = process.env.POLAR_WEBHOOK_SECRET;
     
     if (!webhookSecret) {
-      console.error("POLAR_WEBHOOK_SECRET not configured");
+      console.error("❌ POLAR_WEBHOOK_SECRET not configured");
       return NextResponse.json(
         { error: "Webhook not configured" },
         { status: 500 }
@@ -26,7 +26,9 @@ export async function POST(req: NextRequest) {
       .digest("hex");
 
     if (signature !== expectedSignature) {
-      console.error("Webhook signature validation failed");
+      console.error("❌ Webhook signature validation failed");
+      console.error(`   Expected: ${expectedSignature}`);
+      console.error(`   Received: ${signature}`);
       return NextResponse.json(
         { error: "Invalid signature" },
         { status: 401 }
@@ -34,15 +36,16 @@ export async function POST(req: NextRequest) {
     }
 
     const event = JSON.parse(payload);
-    console.log(`Received Polar webhook: ${event.type}`);
+    console.log(`📨 Received Polar webhook: ${event.type}`);
 
     // Handle different event types
     switch (event.type) {
       case "checkout.created":
-        console.log("Checkout created:", event.data.id);
+        console.log("   Checkout created:", event.data.id);
         break;
 
       case "checkout.updated":
+        console.log("   Checkout updated:", event.data.id, "→", event.data.status);
         if (event.data.status === "succeeded") {
           await handleSuccessfulCheckout(event.data);
         }
@@ -61,17 +64,17 @@ export async function POST(req: NextRequest) {
         break;
 
       case "order.created":
-        console.log("Order created:", event.data.id);
+        console.log("   Order created:", event.data.id);
         break;
 
       default:
-        console.log(`Unhandled event type: ${event.type}`);
+        console.log(`   Unhandled event type: ${event.type}`);
     }
 
     return NextResponse.json({ received: true });
 
   } catch (error: any) {
-    console.error("Webhook processing error:", error);
+    console.error("❌ Webhook processing error:", error);
     return NextResponse.json(
       { error: "Webhook processing failed" },
       { status: 500 }
@@ -87,8 +90,15 @@ async function handleSuccessfulCheckout(checkout: any) {
       return;
     }
 
-    // Get product ID and determine credits
-    const productId = checkout.product_id;
+    // Get product ID from checkout
+    // Polar sends product info in different ways depending on the checkout structure
+    const productId = checkout.product_id || checkout.products?.[0]?.product_id || checkout.products?.[0];
+    
+    if (!productId) {
+      console.error("No product ID found in checkout:", checkout);
+      return;
+    }
+
     const creditsToAdd = getCreditsByProductId(productId);
 
     if (creditsToAdd === 0) {
@@ -98,7 +108,7 @@ async function handleSuccessfulCheckout(checkout: any) {
 
     const pool = await getDb();
 
-    // Get current credits
+    // Get current credits (user should already exist from Clerk auth)
     const { rows } = await pool.query(
       'SELECT credits FROM users WHERE clerk_id = $1',
       [userId]
@@ -106,10 +116,29 @@ async function handleSuccessfulCheckout(checkout: any) {
 
     if (rows.length === 0) {
       console.error("User not found:", userId);
+      // Try to get user email from checkout and create user
+      const userEmail = checkout.customer_email;
+      if (userEmail) {
+        console.log(`Creating user ${userId} with email ${userEmail}`);
+        await pool.query(
+          `INSERT INTO users (id, clerk_id, email, credits, created_at, updated_at)
+           VALUES ($1, $2, $3, $4, NOW(), NOW())`,
+          [userId, userId, userEmail, creditsToAdd]
+        );
+        
+        // Log transaction
+        await pool.query(
+          `INSERT INTO credit_transactions (user_id, amount, type, description, created_at)
+           VALUES ($1, $2, $3, $4, NOW())`,
+          [userId, creditsToAdd, 'purchase', `Initial purchase via Polar: ${creditsToAdd} credits`]
+        );
+        
+        console.log(`✅ Created user ${userId} with ${creditsToAdd} credits`);
+      }
       return;
     }
 
-    // Update credits
+    // Update credits for existing user
     const newCredits = (rows[0].credits || 0) + creditsToAdd;
     
     await pool.query(
@@ -121,10 +150,10 @@ async function handleSuccessfulCheckout(checkout: any) {
     await pool.query(
       `INSERT INTO credit_transactions (user_id, amount, type, description, created_at)
        VALUES ($1, $2, $3, $4, NOW())`,
-      [userId, creditsToAdd, 'purchase', `Payment via Polar: ${checkout.product?.name || "Purchase"}`]
+      [userId, creditsToAdd, 'purchase', `Payment via Polar: ${creditsToAdd} credits added`]
     );
 
-    console.log(`✅ Added ${creditsToAdd} credits to user ${userId}`);
+    console.log(`✅ Added ${creditsToAdd} credits to user ${userId}. New balance: ${newCredits}`);
 
   } catch (error) {
     console.error("Error handling successful checkout:", error);

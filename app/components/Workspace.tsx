@@ -70,18 +70,31 @@ export default function Workspace() {
   const [qualityScore, setQualityScore] = useState<any>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const { data: session } = useSession();
+  const { isSignedIn, user: clerkUser } = useUser();
 
   // Check if user is logged in and get credits
   useEffect(() => {
-    if (session?.user) {
-      setUser(session.user);
-      setCredits((session.user as any).credits || 0);
+    if (isSignedIn && clerkUser) {
+      setUser(clerkUser);
+      // Fetch credits from our database
+      fetchCredits();
     } else {
       setUser(null);
       setCredits(0);
     }
-  }, [session]);
+  }, [isSignedIn, clerkUser]);
+
+  const fetchCredits = async () => {
+    if (!clerkUser) return;
+    
+    try {
+      const response = await fetch('/api/user/credits');
+      const data = await response.json();
+      setCredits(data.credits || 0);
+    } catch (error) {
+      console.error('Error fetching credits:', error);
+    }
+  };
 
   const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(""), 2400); };
 

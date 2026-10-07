@@ -2,8 +2,7 @@
 import { useState, useEffect } from "react";
 import Logo from "./Logo";
 import ThemeToggle from "./ThemeToggle";
-import { createClient } from "@/lib/supabase/client";
-import { User } from "@supabase/supabase-js";
+import { useSession, signOut } from "next-auth/react";
 
 const NAV = [
   { l:"About",    h:"/about"     },
@@ -15,7 +14,8 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open,     setOpen]     = useState(false);
   const [banner,   setBanner]   = useState(true);
-  const [user,     setUser]     = useState<User | null>(null);
+  const { data: session } = useSession();
+  const user = session?.user;
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   
   // Countdown timer state
@@ -25,22 +25,6 @@ export default function Navbar() {
     const fn = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", fn, { passive: true });
     return () => window.removeEventListener("scroll", fn);
-  }, []);
-
-  useEffect(() => {
-    const supabase = createClient();
-    
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-    });
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
   }, []);
 
   // Countdown timer - auto-rotating every 3 days
@@ -75,9 +59,7 @@ export default function Navbar() {
   }, []);
 
   const handleSignOut = async () => {
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    window.location.href = '/';
+    await signOut({ callbackUrl: '/' });
   };
 
   const bannerH = 40;
@@ -370,7 +352,7 @@ export default function Navbar() {
                       overflow: "hidden",
                       textOverflow: "ellipsis",
                     }}>
-                      {user.user_metadata?.full_name || user.email?.split('@')[0]}
+                      {user.name || user.email?.split('@')[0]}
                     </div>
                     <div style={{
                       fontSize: 11,
@@ -597,7 +579,7 @@ export default function Navbar() {
                       color: "var(--ink)",
                       marginBottom: 4,
                     }}>
-                      {user.user_metadata?.full_name || user.email?.split('@')[0]}
+                      {user.name || user.email?.split('@')[0]}
                     </div>
                     <div style={{
                       fontSize: 12,

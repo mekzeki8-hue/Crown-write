@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import Script from "next/script";
 import { ThemeProvider } from "./components/ThemeProvider";
+import SessionProvider from "./components/SessionProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -91,7 +92,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           `}
         </Script>
       </head>
-      <body><ThemeProvider>{children}</ThemeProvider></body>
+      <body>
+        <SessionProvider>
+          <ThemeProvider>{children}</ThemeProvider>
+        </SessionProvider>
+      </body>
     </html>
   );
 }

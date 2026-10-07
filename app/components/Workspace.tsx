@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import Logo from "./Logo";
-import { createClient } from '@/lib/supabase/client';
+import { useSession } from "next-auth/react";
 import CreditDisplay from './CreditDisplay';
 
 type ToneId = "auto"|"academic"|"professional"|"friendly"|"formal"|"casual"|"creative";
@@ -70,44 +70,18 @@ export default function Workspace() {
   const [qualityScore, setQualityScore] = useState<any>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const supabase = createClient();
+  const { data: session } = useSession();
 
   // Check if user is logged in and get credits
   useEffect(() => {
-    const checkUser = async () => {
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
-        setUser(user);
-
-        if (user) {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('credits')
-            .eq('id', user.id)
-            .single();
-          
-          if (profile) {
-            setCredits(profile.credits);
-          }
-        }
-      } catch (error) {
-        console.error('Error checking user:', error);
-      }
-    };
-
-    checkUser();
-
-    // Listen for credit updates
-    const handleCreditUpdate = () => {
-      checkUser();
-    };
-
-    window.addEventListener('creditsUpdated' as any, handleCreditUpdate);
-
-    return () => {
-      window.removeEventListener('creditsUpdated' as any, handleCreditUpdate);
-    };
-  }, []);
+    if (session?.user) {
+      setUser(session.user);
+      setCredits((session.user as any).credits || 0);
+    } else {
+      setUser(null);
+      setCredits(0);
+    }
+  }, [session]);
 
   const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(""), 2400); };
 

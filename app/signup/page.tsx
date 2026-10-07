@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -11,7 +11,6 @@ export default function SignupPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const router = useRouter();
-  const supabase = createClient();
 
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault();
@@ -25,36 +24,52 @@ export default function SignupPage() {
       return;
     }
 
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
+    try {
+      // Register user
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (error) {
-      setError(error.message);
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || 'Signup failed');
+        setLoading(false);
+        return;
+      }
+
+      setSuccess('Account created! Signing you in...');
+      
+      // Auto sign in
+      const result = await signIn('credentials', {
+        redirect: false,
+        email,
+        password,
+      });
+
+      if (result?.error) {
+        setError('Account created but login failed. Please login manually.');
+        setLoading(false);
+        return;
+      }
+
+      setTimeout(() => {
+        router.push('/');
+        router.refresh();
+      }, 1000);
+    } catch (err) {
+      setError('An error occurred. Please try again.');
       setLoading(false);
-      return;
     }
-
-    setSuccess('Account created! Redirecting...');
-    setTimeout(() => {
-      router.push('/dashboard');
-      router.refresh();
-    }, 1500);
   }
 
   async function handleGoogleSignup() {
     setError('');
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
+    await signIn('google', {
+      callbackUrl: '/',
     });
-
-    if (error) {
-      setError(error.message);
-    }
   }
 
   return (

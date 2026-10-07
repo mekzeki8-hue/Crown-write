@@ -183,10 +183,10 @@ export default function Workspace() {
   // Smart word count feedback
   const getWordCountMessage = (wordCount: number) => {
     if (wordCount === 0) return null;
-    if (wordCount < 100) return { icon: "⚠️", text: "Short text may have limited improvement", color: "#F59E0B" };
-    if (wordCount < 250) return { icon: "💡", text: "Good length for humanization", color: "#3B82F6" };
-    if (wordCount <= 1000) return { icon: "✅", text: "Optimal length for best results", color: "#10B981" };
-    return { icon: "⏱️", text: "Large text, will take 30-45 seconds", color: "#8B5CF6" };
+    if (wordCount < 100) return { text: "Short text may have limited improvement", color: "#F59E0B" };
+    if (wordCount < 250) return { text: "Good length for humanization", color: "#3B82F6" };
+    if (wordCount <= 1000) return { text: "Optimal length for best results", color: "#10B981" };
+    return { text: "Large text, will take 30-45 seconds", color: "#8B5CF6" };
   };
   
   const wordCountFeedback = getWordCountMessage(inputWords);
@@ -329,26 +329,9 @@ export default function Workspace() {
               ))}
             </div>
 
-            {/* Right controls */}
-            <div style={{
-              display: "flex", 
-              alignItems: "center",
-              gap: 10,
-            }}>
-              {/* Version badge */}
-              <div style={{
-                display: "flex", 
-                alignItems: "center", 
-                gap: 6,
-                padding: "6px 12px", 
-                borderRadius: "var(--r-sm)",
-                border: "1px solid var(--border)", 
-                background: "var(--surface)",
-                fontSize: 12, 
-                color: "var(--muted)",
-              }}>
-                <span style={{ fontWeight: 600, color: "var(--brand)" }}>CrownWrite</span>
-              </div>
+            {/* Right controls - REMOVED */}
+            <div style={{ display: "none" }}>
+              {/* Version badge removed for professionalism */}
             </div>
           </div>
 
@@ -422,7 +405,7 @@ export default function Workspace() {
                   textTransform: "uppercase", 
                   letterSpacing: "0.08em",
                 }}>
-                  📝 Input Text
+                  Input Text
                 </span>
                 <div style={{ 
                   display: "flex", 
@@ -484,7 +467,6 @@ export default function Workspace() {
                   alignItems: "center",
                   gap: 8,
                 }}>
-                  <span style={{ fontSize: 14 }}>{wordCountFeedback.icon}</span>
                   <span style={{
                     fontSize: 12,
                     color: wordCountFeedback.color,
@@ -617,7 +599,7 @@ export default function Workspace() {
                   letterSpacing: "0.08em",
                   transition: "color 0.3s",
                 }}>
-                  ✨ Humanized Output
+                  Humanized Output
                 </span>
 
                 {output && (

@@ -109,10 +109,8 @@ export default function SignUpPage() {
         background: 'var(--surface)',
       }}>
         <SignUp 
-          routing="path"
-          path="/sign-up"
+          fallbackRedirectUrl="/"
           signInUrl="/sign-in"
-          forceRedirectUrl="/"
           appearance={{
             elements: {
               rootBox: 'mx-auto',

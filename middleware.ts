@@ -18,7 +18,11 @@ const isPublicRoute = createRouteMatcher([
   '/api/webhooks(.*)',
 ]);
 
-export default clerkMiddleware();
+// Simple middleware - no forced protection
+export default clerkMiddleware((auth, request) => {
+  // Let Clerk handle authentication naturally
+  // Don't force protection on any routes
+});
 
 export const config = {
   matcher: [

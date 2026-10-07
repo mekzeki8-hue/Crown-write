@@ -236,7 +236,7 @@ export default function SignupPage() {
             </div>
           )}
 
-          {/* Google Button */}
+          {/* Google Button - TEMPORARILY DISABLED
           <button
             onClick={handleGoogleSignup}
             type="button"
@@ -278,8 +278,9 @@ export default function SignupPage() {
             </svg>
             Continue with Google
           </button>
+          */}
 
-          {/* Divider */}
+          {/* Divider - HIDDEN WHILE GOOGLE DISABLED
           <div style={{
             display: 'flex',
             alignItems: 'center',
@@ -290,6 +291,7 @@ export default function SignupPage() {
             <span style={{ fontSize: 13, color: '#9CA3AF', fontWeight: 500 }}>OR</span>
             <div style={{ flex: 1, height: 1, background: '#E5E7EB' }} />
           </div>
+          */}
 
           {/* Email/Password Form */}
           <form onSubmit={handleSignup}>

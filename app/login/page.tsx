@@ -184,7 +184,7 @@ export default function LoginPage() {
             </div>
           )}
 
-          {/* Google Button */}
+          {/* Google Button - TEMPORARILY DISABLED
           <button
             onClick={handleGoogleLogin}
             type="button"
@@ -226,8 +226,9 @@ export default function LoginPage() {
             </svg>
             Continue with Google
           </button>
+          */}
 
-          {/* Divider */}
+          {/* Divider - HIDDEN WHILE GOOGLE DISABLED
           <div style={{
             display: 'flex',
             alignItems: 'center',
@@ -238,6 +239,7 @@ export default function LoginPage() {
             <span style={{ fontSize: 13, color: '#9CA3AF', fontWeight: 500 }}>OR</span>
             <div style={{ flex: 1, height: 1, background: '#E5E7EB' }} />
           </div>
+          */}
 
           {/* Email/Password Form */}
           <form onSubmit={handleLogin}>

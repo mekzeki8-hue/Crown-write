@@ -1,13 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Pool } from 'pg';
+import { getDb } from '@/lib/db';
 import bcrypt from 'bcryptjs';
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
-});
 
 export async function POST(request: NextRequest) {
   try {
@@ -26,6 +19,8 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    const pool = await getDb();
 
     // Check if user already exists
     const existingUser = await pool.query(

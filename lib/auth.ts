@@ -1,23 +1,10 @@
 import { NextAuthOptions } from 'next-auth';
-import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { Pool } from 'pg';
+import { getDb } from './db';
 import bcrypt from 'bcryptjs';
-
-// Create PostgreSQL connection pool
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
-});
 
 export const authOptions: NextAuthOptions = {
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || '',
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
-    }),
     CredentialsProvider({
       name: 'credentials',
       credentials: {
@@ -30,6 +17,8 @@ export const authOptions: NextAuthOptions = {
         }
 
         try {
+          const pool = await getDb();
+          
           // Check if user exists
           const result = await pool.query(
             'SELECT * FROM users WHERE email = $1',
@@ -62,30 +51,6 @@ export const authOptions: NextAuthOptions = {
     })
   ],
   callbacks: {
-    async signIn({ user, account }) {
-      if (account?.provider === 'google') {
-        try {
-          // Check if user exists
-          const existingUser = await pool.query(
-            'SELECT * FROM users WHERE email = $1',
-            [user.email]
-          );
-
-          if (existingUser.rows.length === 0) {
-            // Create new user with 300 credits
-            await pool.query(
-              `INSERT INTO users (id, email, name, image, credits, created_at, updated_at) 
-               VALUES (gen_random_uuid(), $1, $2, $3, 300, NOW(), NOW())`,
-              [user.email, user.name, user.image]
-            );
-          }
-        } catch (error) {
-          console.error('Sign in error:', error);
-          return false;
-        }
-      }
-      return true;
-    },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
@@ -98,6 +63,7 @@ export const authOptions: NextAuthOptions = {
         
         // Fetch user credits
         try {
+          const pool = await getDb();
           const result = await pool.query(
             'SELECT credits FROM users WHERE email = $1',
             [session.user.email]
@@ -125,6 +91,7 @@ export const authOptions: NextAuthOptions = {
 // Helper function to get user credits
 export async function getUserCredits(email: string): Promise<number> {
   try {
+    const pool = await getDb();
     const result = await pool.query(
       'SELECT credits FROM users WHERE email = $1',
       [email]
@@ -139,6 +106,7 @@ export async function getUserCredits(email: string): Promise<number> {
 // Helper function to deduct credits
 export async function deductCredits(email: string, amount: number): Promise<boolean> {
   try {
+    const pool = await getDb();
     const result = await pool.query(
       `UPDATE users 
        SET credits = credits - $1, 

@@ -14,42 +14,42 @@ interface Testimonial {
 const testimonials: Testimonial[] = [
   {
     id: 1,
-    text: ""I recommend CrownWrite to all my students. It's been an absolute game changer for refining their academic writing while maintaining authenticity and consistently passing detection systems."",
+    text: `"I recommend CrownWrite to all my students. It's been an absolute game changer for refining their academic writing while maintaining authenticity and consistently passing detection systems."`,
     highlights: ["game changer"],
     author: "Dr. Marcus Chen",
     role: "Professor of English, Columbia University"
   },
   {
     id: 2,
-    text: ""This tool has completely transformed my content workflow. The humanization is so seamless that I honestly can't distinguish it from naturally written text. CrownWrite has become absolutely essential to how I create content."",
+    text: `"This tool has completely transformed my content workflow. The humanization is so seamless that I honestly can't distinguish it from naturally written text. CrownWrite has become absolutely essential to how I create content."`,
     highlights: ["completely transformed"],
     author: "Sarah Goldstein",
     role: "Content Director, Manhattan"
   },
   {
     id: 3,
-    text: ""As a freelance writer in New York, achieving good results with AI detection while maintaining quality was critical. CrownWrite delivers consistently - every single time. My clients have never been more satisfied with my submissions."",
+    text: `"As a freelance writer in New York, achieving good results with AI detection while maintaining quality was critical. CrownWrite delivers consistently - every single time. My clients have never been more satisfied with my submissions."`,
     highlights: ["delivers consistently"],
     author: "Jamal Washington",
     role: "Freelance Writer, Brooklyn"
   },
   {
     id: 4,
-    text: ""The difference between CrownWrite and competing tools is absolutely night and day. It doesn't just swap synonyms - it genuinely makes text sound naturally human. Worth every single penny."",
+    text: `"The difference between CrownWrite and competing tools is absolutely night and day. It doesn't just swap synonyms - it genuinely makes text sound naturally human. Worth every single penny."`,
     highlights: ["night and day"],
     author: "Rachel Bernstein",
     role: "Digital Marketing Consultant"
   },
   {
     id: 5,
-    text: ""I was honestly skeptical at first, but CrownWrite completely proved me wrong. It helped me pass every AI detector while preserving my authentic voice. This is genuinely a game changer for graduate students."",
+    text: `"I was honestly skeptical at first, but CrownWrite completely proved me wrong. It helped me pass every AI detector while preserving my authentic voice. This is genuinely a game changer for graduate students."`,
     highlights: ["proved me wrong"],
     author: "Michael Torres",
     role: "PhD Candidate, NYU"
   },
   {
     id: 6,
-    text: ""Using CrownWrite has literally saved me countless hours of manual rewriting. The quality is remarkably consistent, the output reads completely natural, and the processing is incredibly fast. I genuinely can't imagine my workflow without it."",
+    text: `"Using CrownWrite has literally saved me countless hours of manual rewriting. The quality is remarkably consistent, the output reads completely natural, and the processing is incredibly fast. I genuinely can't imagine my workflow without it."`,
     highlights: ["saved me countless hours"],
     author: "Jennifer Park",
     role: "SEO Specialist, Queens"

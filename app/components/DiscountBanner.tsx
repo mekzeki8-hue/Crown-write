@@ -18,16 +18,22 @@ export default function DiscountBanner() {
   });
 
   useEffect(() => {
-    // Calculate end time: 3 days from now (auto-rotating)
+    // Set a fixed end date that rotates every 3 days
     const getEndTime = () => {
-      const now = new Date();
-      const end = new Date(now.getTime() + (3 * 24 * 60 * 60 * 1000)); // 3 days from now
-      return end;
+      const CYCLE_DURATION = 3 * 24 * 60 * 60 * 1000; // 3 days in milliseconds
+      const LAUNCH_DATE = new Date('2024-01-01').getTime(); // Reference point
+      
+      const now = Date.now();
+      const elapsed = now - LAUNCH_DATE;
+      const currentCycle = Math.floor(elapsed / CYCLE_DURATION);
+      const nextCycleStart = LAUNCH_DATE + ((currentCycle + 1) * CYCLE_DURATION);
+      
+      return nextCycleStart;
     };
 
     const updateCountdown = () => {
-      const now = new Date().getTime();
-      const endTime = getEndTime().getTime();
+      const now = Date.now();
+      const endTime = getEndTime();
       const distance = endTime - now;
 
       if (distance > 0) {
@@ -38,8 +44,8 @@ export default function DiscountBanner() {
 
         setTimeLeft({ days, hours, minutes, seconds });
       } else {
-        // Auto-reset: When countdown ends, it automatically restarts with 3 days
-        setTimeLeft({ days: 2, hours: 23, minutes: 59, seconds: 59 });
+        // Auto-reset to next cycle (should never happen with the calculation above)
+        updateCountdown();
       }
     };
 

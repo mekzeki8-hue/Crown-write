@@ -56,9 +56,7 @@ export default function Navbar() {
     return () => clearInterval(timer);
   }, []);
 
-  const handleSignOut = async () => {
-    await signOut({ callbackUrl: '/' });
-  };
+
 
   const bannerH = 40;
 
@@ -307,7 +305,7 @@ export default function Navbar() {
             {/* User Profile or Get Started Button */}
             {isSignedIn ? (
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <UserButton afterSignOutUrl="/" />
+                <UserButton />
               </div>
             ) : (
               <a href="/sign-in" style={{
@@ -408,7 +406,7 @@ export default function Navbar() {
                     alignItems: "center",
                     gap: 12,
                   }}>
-                    <UserButton afterSignOutUrl="/" />
+                    <UserButton />
                     <div>
                       <div style={{
                         fontSize: 14,

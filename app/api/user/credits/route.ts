@@ -1,4 +1,4 @@
-import { auth } from '@clerk/nextjs/server';
+import { auth, clerkClient } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 import { ensureUser, getUserCredits } from '@/lib/db';
 
@@ -11,8 +11,8 @@ export async function GET() {
     }
 
     // Get user from Clerk
-    const { users } = await import('@clerk/nextjs/server');
-    const clerkUser = await users.getUser(userId);
+    const clerk = await clerkClient();
+    const clerkUser = await clerk.users.getUser(userId);
     
     // Ensure user exists in our database
     await ensureUser(

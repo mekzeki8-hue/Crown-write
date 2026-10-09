@@ -224,7 +224,7 @@ export default function DiscountBanner() {
                 <circle cx="12" cy="12" r="10"/>
                 <polyline points="12 6 12 12 16 14"/>
               </svg>
-              Automatically renews every 3 days
+              Don't miss out on this exclusive offer!
             </p>
           </div>
 

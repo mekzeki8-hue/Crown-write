@@ -22,6 +22,12 @@ export const metadata: Metadata = {
   creator: "CrownWrite",
   publisher: "CrownWrite",
   metadataBase: new URL('https://crownwrite.com'), // Update with your actual domain
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+    userScalable: true,
+  },
   alternates: {
     canonical: '/',
   },

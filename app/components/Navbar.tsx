@@ -74,7 +74,7 @@ export default function Navbar() {
         display:"flex", alignItems:"center", justifyContent:"center",
         gap:20,
         position:"relative", 
-        padding: banner ? "0 80px" : 0,
+        padding: banner ? "0 16px" : 0,
         boxShadow: "0 2px 12px rgba(0, 0, 0, 0.15)",
       }}>
         {/* Subtle gradient overlay */}
@@ -124,8 +124,18 @@ export default function Navbar() {
             color:"rgba(255, 255, 255, 0.9)", 
             fontWeight:500,
             letterSpacing:"0.2px",
-          }}>
+          }} className="hide-sm">
             Celebrating 50,000+ users — Save 50% on annual plans
+          </span>
+          
+          <span style={{ 
+            fontSize:12, 
+            color:"rgba(255, 255, 255, 0.9)", 
+            fontWeight:500,
+            letterSpacing:"0.2px",
+            textAlign: "center",
+          }} className="show-sm">
+            50% Off Annual Plans
           </span>
 
           {/* Countdown Timer */}

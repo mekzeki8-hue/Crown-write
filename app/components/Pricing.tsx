@@ -470,7 +470,7 @@ export default function Pricing() {
   return (
     <section id="pricing" style={{ 
       background: "var(--g-soft)", 
-      padding: "88px 0 108px",
+      padding: "clamp(60px, 12vw, 88px) 0 clamp(80px, 15vw, 108px)",
       position: "relative",
       overflow: "hidden",
     }}>
@@ -487,7 +487,7 @@ export default function Pricing() {
         opacity: 0.4,
       }} />
 
-      <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 80px", position: "relative", zIndex: 1 }}>
+      <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 clamp(16px, 5vw, 80px)", position: "relative", zIndex: 1 }}>
 
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 48 }}>
@@ -620,9 +620,16 @@ export default function Pricing() {
       </div>
 
       <style>{`
+        @media (max-width: 1100px) {
+          .price-grid { grid-template-columns: 1fr !important; max-width: 500px; margin: 0 auto; gap: 24px !important; }
+        }
         @media (max-width: 860px) {
-          .price-grid { grid-template-columns: 1fr !important; max-width: 420px; margin: 0 auto; }
+          .price-grid { max-width: 420px; }
           .topup-grid { grid-template-columns: 1fr !important; max-width: 360px; margin: 0 auto; }
+        }
+        @media (max-width: 540px) {
+          .price-grid { max-width: 100%; }
+          .topup-grid { max-width: 100%; }
         }
       `}</style>
     </section>

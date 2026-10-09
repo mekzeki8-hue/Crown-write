@@ -103,13 +103,13 @@ export default function Testimonials() {
   return (
     <section style={{
       background: 'var(--bg)',
-      padding: '120px 0',
+      padding: 'clamp(60px, 15vw, 120px) 0',
       position: 'relative',
     }}>
       <div style={{
-        maxWidth: '1300px', // Increased from 1100px
+        maxWidth: '1300px',
         margin: '0 auto',
-        padding: '0 80px', // Increased from 40px
+        padding: '0 clamp(16px, 5vw, 80px)',
       }}>
         {/* Header */}
         <div style={{
@@ -161,15 +161,16 @@ export default function Testimonials() {
               {/* Quote */}
               <blockquote style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: 'clamp(24px, 3.2vw, 38px)',
+                fontSize: 'clamp(18px, 4vw, 38px)',
                 fontWeight: 400,
                 fontStyle: 'italic',
                 lineHeight: 1.65,
                 color: 'var(--ink)',
                 marginBottom: '56px',
                 letterSpacing: '-0.5px',
-                maxWidth: '1000px', // Increased from 900px
+                maxWidth: '1000px',
                 margin: '0 auto 56px',
+                padding: '0 16px',
               }}>
                 {textParts.map((part, index) => (
                   part.isHighlight ? (

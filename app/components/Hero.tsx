@@ -4,7 +4,7 @@ export default function Hero() {
   return (
     <section style={{
       background: "var(--g-hero)",
-      padding: "100px 0 80px",
+      padding: "clamp(60px, 15vw, 100px) 0 clamp(40px, 10vw, 80px)",
       position: "relative",
       overflow: "hidden",
     }}>
@@ -35,7 +35,7 @@ export default function Hero() {
 
       <div style={{
         position:"relative", zIndex:1,
-        maxWidth:1400, margin:"0 auto", padding:"0 80px", // Increased from 1200px and 32px
+        maxWidth:1400, margin:"0 auto", padding:"0 clamp(16px, 5vw, 80px)",
         textAlign: "center",
       }}>
         {/* Trust badge */}
@@ -157,12 +157,12 @@ export default function Hero() {
 
         {/* Stat cards row */}
         <div style={{
-          display: "flex",
-          gap: 24, // Increased from 16px
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+          gap: 16,
           justifyContent: "center",
-          flexWrap: "wrap",
           marginTop: 56,
-          maxWidth: 1100, // Added constraint
+          maxWidth: 1100,
           margin: "56px auto 0",
         }}>
           {[
@@ -171,21 +171,22 @@ export default function Hero() {
             { icon: "⚡", label: "Blazing fast Rewriting" }
           ].map((stat, i) => (
             <div key={i} style={{
-              padding: "16px 28px",
+              padding: "16px 20px",
               background: "var(--surface)",
               border: "1px solid var(--border)",
               borderRadius: 12,
               display: "flex",
               alignItems: "center",
+              justifyContent: "center",
               gap: 10,
               boxShadow: "var(--sh-xs)",
+              minWidth: 0,
             }}>
-              <span style={{ fontSize: 20 }}>{stat.icon}</span>
+              <span style={{ fontSize: 20, flexShrink: 0 }}>{stat.icon}</span>
               <span style={{ 
                 fontSize: 14, 
                 fontWeight: 500, 
                 color: "var(--ink-2)",
-                whiteSpace: "nowrap",
               }}>
                 {stat.label}
               </span>

@@ -1,0 +1,80 @@
+================================================================================
+COPY AND PASTE THESE COMMANDS INTO YOUR TERMINAL
+================================================================================
+
+Step 1: Navigate to project
+----------------------------
+cd /Users/mac/Desktop/true/Crownwrite
+
+
+Step 2: Get GitHub Personal Access Token
+-----------------------------------------
+1. Open this URL in your browser:
+   https://github.com/settings/tokens/new
+
+2. Fill in:
+   - Note: "CrownWrite Deploy"
+   - Expiration: 90 days (or your preference)
+   - Select scopes: ✓ repo (check this box)
+
+3. Click "Generate token"
+
+4. COPY the token (starts with ghp_)
+   IMPORTANT: Save it somewhere - you won't see it again!
+
+
+Step 3: Push to GitHub (REPLACE YOUR_TOKEN with actual token)
+--------------------------------------------------------------
+git push https://YOUR_TOKEN@github.com/mekzeki8-hue/Crown-write.git main
+
+
+EXAMPLE:
+If your token is: ghp_abc123xyz789
+Then run:
+git push https://ghp_abc123xyz789@github.com/mekzeki8-hue/Crown-write.git main
+
+
+Step 4: Verify Push Success
+----------------------------
+You should see:
+✓ Branch 'main' set up to track remote branch 'main' from 'origin'.
+✓ Everything up-to-date (or similar success message)
+
+
+Step 5: Check on GitHub
+------------------------
+Visit: https://github.com/mekzeki8-hue/Crown-write
+You should see your 17 commits!
+
+
+Step 6: Redeploy on Vercel
+---------------------------
+1. Go to: https://vercel.com/dashboard
+2. Find your CrownWrite project
+3. Click "Redeploy" or it may auto-deploy
+4. Wait 2-3 minutes
+5. Your auth fix will be LIVE!
+
+
+================================================================================
+ALTERNATIVE: Use GitHub Desktop (No Terminal Needed)
+================================================================================
+
+1. Download: https://desktop.github.com
+2. Sign in with mekzeki8-hue account
+3. Add repository: /Users/mac/Desktop/true/Crownwrite
+4. Click "Push origin" button
+5. Done!
+
+
+================================================================================
+What's Being Pushed (17 commits):
+================================================================================
+✓ Authentication loop fix (LATEST)
+✓ Modern UI redesign with Tailwind
+✓ Professional workspace (no emojis)
+✓ Credit system & history
+✓ Clerk + Neon + Polar integration
+✓ All bug fixes
+
+================================================================================

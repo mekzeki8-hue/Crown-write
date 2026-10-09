@@ -107,7 +107,10 @@ export default function BlogPage() {
 
       {/* Hero Section */}
       <section style={{
-        padding: "160px 32px 60px", // Increased from 120px to 160px
+        paddingTop: "clamp(140px, 20vh, 180px)",
+        paddingBottom: 60,
+        paddingLeft: "clamp(16px, 5vw, 32px)",
+        paddingRight: "clamp(16px, 5vw, 32px)",
         textAlign: "center",
         background: "linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%)",
       }}>
@@ -118,11 +121,12 @@ export default function BlogPage() {
           style={{ maxWidth: 800, margin: "0 auto" }}
         >
           <h1 style={{
-            fontSize: "clamp(40px, 6vw, 64px)",
+            fontSize: "clamp(32px, 6vw, 64px)",
             fontFamily: "var(--font-serif)",
             fontWeight: 600,
             marginBottom: 24,
             lineHeight: 1.2,
+            letterSpacing: "-1px",
           }}>
             The CrownWrite Blog
           </h1>
@@ -138,7 +142,7 @@ export default function BlogPage() {
 
       {/* Category Filter */}
       <section style={{
-        padding: "40px 32px",
+        padding: "40px clamp(16px, 5vw, 32px)",
         maxWidth: 1400,
         margin: "0 auto",
       }}>
@@ -185,7 +189,7 @@ export default function BlogPage() {
       {/* Featured Article */}
       {selectedCategory === "All" && (
         <section style={{
-          padding: "0 32px 60px",
+          padding: "0 clamp(16px, 5vw, 32px) 60px",
           maxWidth: 1400,
           margin: "0 auto",
         }}>
@@ -199,9 +203,10 @@ export default function BlogPage() {
               border: "1px solid var(--border)",
               boxShadow: "var(--sh-lg)",
               display: "grid",
-              gridTemplateColumns: "1fr 1fr",
+              gridTemplateColumns: "1fr",
               gap: 0,
             }}
+            className="featured-article"
           >
             <div style={{
               background: "var(--brand)",
@@ -283,15 +288,16 @@ export default function BlogPage() {
 
       {/* Articles Grid */}
       <section style={{
-        padding: "0 32px 100px",
+        padding: "0 clamp(16px, 5vw, 32px) 100px",
         maxWidth: 1400,
         margin: "0 auto",
       }}>
         <div style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))",
+          gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
           gap: 32,
-        }}>
+        }}
+        className="blog-grid">
           {filteredArticles.slice(selectedCategory === "All" ? 1 : 0).map((article, i) => (
             <motion.article
               key={article.id}
@@ -381,7 +387,7 @@ export default function BlogPage() {
 
       {/* Newsletter CTA */}
       <section style={{
-        padding: "80px 32px",
+        padding: "clamp(60px, 12vw, 80px) clamp(16px, 5vw, 32px)",
         background: "var(--brand)",
         color: "white",
       }}>
@@ -447,6 +453,44 @@ export default function BlogPage() {
       </section>
 
       <Footer />
+      
+      <style>{`
+        @media (min-width: 769px) {
+          .featured-article {
+            grid-template-columns: 1fr 1fr !important;
+          }
+        }
+        
+        @media (max-width: 768px) {
+          .featured-article {
+            grid-template-columns: 1fr !important;
+          }
+          
+          .featured-article > div:first-child {
+            padding: 40px !important;
+            min-height: 200px;
+          }
+          
+          .featured-article > div:last-child {
+            padding: 32px !important;
+          }
+          
+          .blog-grid {
+            grid-template-columns: 1fr !important;
+            gap: 24px !important;
+          }
+        }
+        
+        @media (max-width: 540px) {
+          .featured-article h2 {
+            font-size: 24px !important;
+          }
+          
+          .blog-grid article h3 {
+            font-size: 18px !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
